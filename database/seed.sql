@@ -1,0 +1,1 @@
+-- Add reviewed demo data only after the products schema and sourcing rules are agreed.

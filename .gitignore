@@ -1,0 +1,19 @@
+# Frontend
+node_modules/
+frontend/dist/
+frontend/.npm-cache/
+frontend/.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Environment and local tooling
+.env
+.tmp/
+.idea/
+.vscode/
+Thumbs.db

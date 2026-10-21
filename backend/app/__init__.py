@@ -1,0 +1,1 @@
+"""ONFIT FastAPI application package."""
