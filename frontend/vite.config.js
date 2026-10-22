@@ -3,8 +3,11 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
+  server: {
+    allowedHosts: true
+  },
   preview: {
-    allowedHosts: ['onfit3.onrender.com']
+    allowedHosts: true
   }
 })
