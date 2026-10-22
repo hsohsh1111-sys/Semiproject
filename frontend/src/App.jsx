@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Header from './components/common/Header.jsx'
 import Footer from './components/common/Footer.jsx'
 import AuthModal from './components/common/AuthModal.jsx'
+import ScrollToTopButton from './components/common/ScrollToTopButton.jsx'
 import HomePage from './pages/HomePage.jsx'
 import StyleProfilePage from './pages/StyleProfilePage.jsx'
 import OutfitPage from './pages/OutfitPage.jsx'
@@ -40,6 +41,7 @@ export default function App() {
     <Header onAuth={setAuthMode} />
     <Page />
     <Footer />
+    <ScrollToTopButton />
     <AuthModal mode={authMode} onClose={(nextMode) => setAuthMode(nextMode || null)} />
   </div>
 }

@@ -43,7 +43,7 @@ img {
   max-width:100%
 }
 .app-shell {
-  overflow:hidden
+  overflow-x:clip
 }
 .announcement {
   height:34px;
@@ -82,8 +82,9 @@ img {
   padding:0 6.3%;
   background:#f5f1ec;
   border-bottom:1px solid rgba(45,36,43,.09);
-  position:relative;
-  z-index:30
+  position:sticky;
+  top:0;
+  z-index:50
 }
 .brand-mark {
   display:flex;
@@ -1680,7 +1681,39 @@ img {
   right:15px;
   top:15px;
   border:0;
-  background:transparent
+  background:transparent;
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  color:#574f51;
+  z-index:2;
+  transition:background .2s,color .2s
+}
+.modal-close:hover {
+  background:#f1e8df;
+  color:#c65b78
+}
+.scroll-top-button {
+  position:fixed;
+  right:30px;
+  bottom:30px;
+  z-index:80;
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:50%;
+  color:#fff;
+  background:linear-gradient(135deg,#ff9e69,#df648f 58%,#a85cc4);
+  box-shadow:0 8px 24px rgba(91,48,77,.24);
+  transition:transform .2s,box-shadow .2s
+}
+.scroll-top-button:hover {
+  transform:translateY(-3px);
+  box-shadow:0 12px 28px rgba(91,48,77,.32)
 }
 .auth-monogram {
   width:43px;
@@ -1817,6 +1850,12 @@ img {
     height:70px;
     padding:0 18px;
     justify-content:space-between
+  }
+  .scroll-top-button {
+    right:18px;
+    bottom:20px;
+    width:44px;
+    height:44px
   }
   .brand-mark {
     gap:8px

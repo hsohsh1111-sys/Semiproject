@@ -12,7 +12,7 @@ export default function AuthModal({ mode, onClose }) {
   return (
     <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <section className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
-        <button className="modal-close" onClick={onClose} aria-label="닫기"><Icon name="X" /></button>
+        <button type="button" className="modal-close" onClick={() => onClose()} aria-label="닫기"><Icon name="X" /></button>
         <div className="auth-monogram">O</div>
         <p className="eyebrow">WELCOME TO ONFIT</p>
         <h2 id="auth-title">{signup ? '나만의 핏을 시작해요' : '다시 만나 반가워요'}</h2>
