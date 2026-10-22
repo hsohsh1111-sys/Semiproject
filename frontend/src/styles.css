@@ -375,7 +375,26 @@ img {
   align-items:center;
   justify-content:center;
   flex-direction:column;
-  transform:rotate(9deg)
+  padding:0;
+  font-family:inherit;
+  cursor:pointer;
+  transform:rotate(9deg);
+  transition:scale .2s,background .2s
+}
+.hero-stamp:hover {
+  scale:1.06;
+  background:#fff1b814
+}
+.hero-stamp:focus-visible {
+  outline:2px solid #fff;
+  outline-offset:4px
+}
+.hero-stamp.is-spinning {
+  animation:hero-stamp-spin 3.2s linear infinite
+}
+@keyframes hero-stamp-spin {
+  from { transform:rotate(9deg) }
+  to { transform:rotate(369deg) }
 }
 .hero-stamp span {
   font-size:7px;
