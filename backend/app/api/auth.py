@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy import select, text
+from sqlalchemy import func, select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.security import create_access_token, hash_password, read_access_token, verify_password
 from app.db.session import get_db
 from app.models import User
-from app.schemas.auth import AuthOutput, LoginInput, SignupInput, UserOutput
+from app.schemas.auth import AuthOutput, LoginInput, PublicMember, PublicMemberPage, SignupInput, UserOutput
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
@@ -52,6 +52,45 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 @router.get("/me", response_model=UserOutput)
 def current_user(user: User = Depends(get_current_user)) -> UserOutput:
     return user_output(user)
+
+
+@router.get("/public-members", response_model=PublicMemberPage)
+def public_members(db: Session = Depends(get_db)) -> PublicMemberPage:
+    total_count = db.scalar(select(func.count()).select_from(User)) or 0
+    users = db.scalars(
+        select(User).order_by(User.created_at.desc(), User.id.desc()).limit(100)
+    ).all()
+    members = [
+        PublicMember(
+            id=user.id,
+            member_label=f"회원 #{user.id:04d}",
+            masked_name=mask_name(user.display_name),
+            masked_email=mask_email(user.email),
+            created_at=user.created_at,
+        )
+        for user in users
+    ]
+    return PublicMemberPage(
+        total_count=total_count,
+        visible_count=len(members),
+        members=members,
+    )
+
+
+def mask_email(email: str) -> str:
+    local_part, separator, domain = email.partition("@")
+    if not separator:
+        return "***"
+    return f"{local_part[:1]}***@{domain}"
+
+
+def mask_name(name: str) -> str:
+    name = name.strip()
+    if not name:
+        return "***"
+    if len(name) == 1:
+        return f"{name}*"
+    return f"{name[0]}{'*' * (len(name) - 1)}"
 
 
 @router.get("/status")

@@ -51,6 +51,9 @@ export default function AuthModal({ mode, onClose }) {
         </form>
         {notice && <p className="auth-notice" role="status">{notice}</p>}
         <p className="auth-switch">{signup ? '이미 계정이 있나요?' : '아직 회원이 아니신가요?'} <button onClick={() => { setNotice(''); onClose(signup ? 'login' : 'signup') }}>{signup ? '로그인' : '회원가입'}</button></p>
+        <button type="button" className="auth-admin-link" onClick={() => { onClose(); window.location.hash = '#/admin' }}>
+          관리자 화면 미리보기
+        </button>
       </section>
     </div>
   )

@@ -9,6 +9,7 @@ import OutfitPage from './pages/OutfitPage.jsx'
 import WardrobePage from './pages/WardrobePage.jsx'
 import PriceTimingPage from './pages/PriceTimingPage.jsx'
 import PriceComparePage from './pages/PriceComparePage.jsx'
+import AdminPage from './pages/AdminPage.jsx'
 
 function readRoute() {
   const value = window.location.hash.replace(/^#/, '')
@@ -22,6 +23,7 @@ const pages = {
   '/wardrobe': WardrobePage,
   '/price': PriceTimingPage,
   '/compare': PriceComparePage,
+  '/admin': AdminPage,
 }
 
 export default function App() {

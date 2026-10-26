@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
@@ -30,3 +32,17 @@ class AuthOutput(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserOutput
+
+
+class PublicMember(BaseModel):
+    id: int
+    member_label: str
+    masked_name: str
+    masked_email: str
+    created_at: datetime
+
+
+class PublicMemberPage(BaseModel):
+    total_count: int
+    visible_count: int
+    members: list[PublicMember]
