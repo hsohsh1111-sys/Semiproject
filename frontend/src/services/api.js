@@ -1,4 +1,8 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (
+  import.meta.env.DEV
+    ? 'http://localhost:8000/api'
+    : 'https://onfit-api.onrender.com/api'
+)
 
 export const mockProducts = [
   { id: 'p1', name: 'Sculpted Knit Top', category: 'TOP · OATMEAL', price: 89000, image: 'https://images.unsplash.com/photo-1551163943-3f6a855d1153?auto=format&fit=crop&w=900&q=85', tag: 'YOUR COLOR', tone: 'warm' },
