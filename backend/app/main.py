@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.router import api_router
 from app.core.config import settings
+from app.db.session import Base, engine
+from app import models  # noqa: F401
 
 app = FastAPI(title="ONFIT API", version="0.1.0", description="Personal styling and smart shopping API")
 app.add_middleware(
@@ -13,6 +15,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(api_router, prefix="/api")
+
+
+@app.on_event("startup")
+def initialize_auth_table() -> None:
+    if engine is None:
+        return
+    Base.metadata.create_all(bind=engine)
+    # Existing project schema predates password-based accounts.
+    from sqlalchemy import inspect, text
+
+    if "users" in inspect(engine).get_table_names():
+        columns = {column["name"] for column in inspect(engine).get_columns("users")}
+        if "password_hash" not in columns:
+            with engine.begin() as connection:
+                connection.execute(text("ALTER TABLE users ADD COLUMN password_hash VARCHAR(255) NULL"))
 
 
 @app.get("/health", tags=["health"])

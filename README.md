@@ -65,7 +65,7 @@ Copy-Item ..\.env.example .env
 uvicorn app.main:app --reload
 ```
 
-Set `DATABASE_URL` and `SECRET_KEY` in `backend/.env` before connecting real accounts or data. The example prices and product images are presentation data until the team connects approved sources and TiDB.
+Create the target database in TiDB first, then set TiDB `TIDB_HOST`, `TIDB_PORT`, `TIDB_USERNAME`, `TIDB_PASSWORD`, and `TIDB_DATABASE` plus a strong `SECRET_KEY` in `.env` (or `backend/.env`) before starting FastAPI. The backend builds a TLS-verified TiDB URL from those fields. It creates the account table on startup and adds `password_hash` to an existing `users` table when needed. Signup is `POST /api/auth/signup`, login is `POST /api/auth/login`, and the signed-in account is `GET /api/auth/me` with a bearer token. Passwords are stored as Argon2 hashes. The example prices and product images are presentation data until the team connects approved sources and TiDB.
 
 ## Team ownership
 

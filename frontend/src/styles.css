@@ -1745,6 +1745,11 @@ img {
   font:24px "Playfair Display";
   color:#9d765d
 }
+.auth-logo {
+  width:54px;
+  height:54px;
+  margin:0 auto 14px
+}
 .auth-modal>.eyebrow {
   font-size:8px
 }
