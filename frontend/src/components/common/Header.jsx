@@ -13,7 +13,7 @@ export default function Header({ onAuth }) {
     <>
       <div className="announcement"><span>ONFIT PERSONAL EDIT</span><i /> 나만을 위한 스타일, 지금 시작해 보세요 <a href="#/style">스타일 진단하기 <Icon name="ArrowRight" size={13} /></a></div>
       <header className="site-header">
-        <button className="icon-button mobile-menu" aria-label="메뉴 열기" onClick={() => setMenuOpen(!menuOpen)}><Icon name={menuOpen ? 'X' : 'Menu'} /></button>
+        <button className="icon-button mobile-menu" aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><Icon name={menuOpen ? 'X' : 'Menu'} /></button>
         <BrandMark />
         <nav className={`main-nav ${menuOpen ? 'main-nav-open' : ''}`} aria-label="주요 메뉴">
           {nav.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}

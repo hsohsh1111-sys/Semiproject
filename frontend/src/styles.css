@@ -1997,9 +1997,11 @@ img {
     display:none
   }
   .site-header {
+    display:grid;
+    grid-template-columns:44px minmax(120px,1fr) auto;
+    gap:4px;
     height:70px;
-    padding:0 18px;
-    justify-content:space-between
+    padding:0 12px
   }
   .scroll-top-button {
     right:18px;
@@ -2023,26 +2025,28 @@ img {
   .mobile-menu {
     display:grid;
     order:0;
-    width:28px
+    width:44px;
+    height:44px
   }
   .site-header>.brand-mark {
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%)
+    position:static;
+    justify-self:center
   }
   .header-actions {
-    gap:7px
+    justify-self:end;
+    gap:4px
   }
   .header-actions .search-action,.header-divider,.text-action {
     display:none
   }
   .signup-button {
-    height:32px;
-    padding:0 9px;
+    height:44px;
+    padding:0 6px;
     font-size:9px
   }
   .bag-action {
-    width:30px
+    width:44px;
+    height:44px
   }
   .main-nav {
     display:none;
@@ -2062,7 +2066,10 @@ img {
   }
   .main-nav a {
     width:100%;
+    min-height:44px;
     padding:12px 0;
+    display:flex;
+    align-items:center;
     border-bottom:1px solid #e8dfd7
   }
   .hero-shell {
@@ -2226,19 +2233,19 @@ img {
     font-size:14px
   }
   .product-meta {
-    font-size:6px;
+    font-size:8px;
     margin-top:10px
   }
   .product-price {
     font-size:11px
   }
   .product-tag {
-    font-size:6px;
-    padding:6px
+    font-size:8px;
+    padding:7px
   }
   .favorite-button {
-    width:28px;
-    height:28px
+    width:44px;
+    height:44px
   }
   .price-feature {
     width:100%;
@@ -2327,8 +2334,27 @@ img {
     font-size:11px
   }
   .style-chips button,.fit-options button {
-    font-size:9px;
-    padding:9px 10px
+    min-height:44px;
+    font-size:10px;
+    padding:10px
+  }
+  .color-swatches {
+    flex-wrap:wrap;
+    gap:8px
+  }
+  .color-swatches button {
+    width:44px;
+    height:44px;
+    border-width:8px
+  }
+  .auth-form input {
+    font-size:16px
+  }
+  .auth-form label {
+    font-size:11px
+  }
+  .auth-copy,.auth-switch {
+    font-size:12px
   }
   .outfit-results,.wardrobe-content,.price-dashboard,.compare-content {
     padding-top:57px;
@@ -2378,10 +2404,17 @@ img {
     margin-left:53px
   }
   .wardrobe-filters {
-    gap:15px
+    flex-wrap:wrap;
+    gap:4px
   }
   .wardrobe-filters button {
-    font-size:9px
+    min-width:44px;
+    min-height:44px;
+    padding:10px 8px;
+    font-size:11px
+  }
+  .sort-button,.filter-link {
+    min-height:44px
   }
   .dashboard-heading {
     align-items:flex-start;
@@ -2471,6 +2504,23 @@ img {
   }
   .auth-modal {
     padding:38px 24px 29px
+  }
+  .modal-backdrop {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))
+  }
+  .auth-modal {
+    flex:0 0 auto;
+    margin-block:auto
+  }
+  .modal-close {
+    width:44px;
+    height:44px
   }
   .desktop-break {
     display:none
