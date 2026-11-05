@@ -1,3 +1,6 @@
+from pathlib import Path
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -5,6 +8,12 @@ from app.api.router import api_router
 from app.core.config import settings
 from app.db.session import Base, engine
 from app import models  # noqa: F401
+
+backend_dir = Path(__file__).resolve().parents[1]
+load_dotenv(backend_dir / '.env', override=False)
+load_dotenv(backend_dir.parent / '.env', override=False)
+
+from routers.circle_search import router as circle_search_router
 
 app = FastAPI(title="ONFIT API", version="0.1.0", description="Personal styling and smart shopping API")
 app.add_middleware(
@@ -19,6 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(api_router, prefix="/api")
+app.include_router(circle_search_router)
 
 
 @app.on_event("startup")

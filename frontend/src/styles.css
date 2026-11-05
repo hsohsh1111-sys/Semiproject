@@ -235,6 +235,9 @@ img {
   gap:28px;
   margin-top:35px
 }
+.ai-fashion-cta {
+  margin-top:12px
+}
 .button {
   display:inline-flex;
   align-items:center;
