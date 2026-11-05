@@ -1,6 +1,10 @@
 # Frontend
 node_modules/
 frontend/dist/
+ai-fashion/node_modules/
+ai-fashion/dist/
+ai-fashion/.env.local
+ai-fashion/.npm-cache/
 frontend/.npm-cache/
 frontend/.env.local
 
@@ -8,6 +12,7 @@ frontend/.env.local
 __pycache__/
 *.py[cod]
 .venv/
+backend/.pip-cache/
 venv/
 .pytest_cache/
 
