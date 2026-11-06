@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import LandingPage from './LandingPage.jsx'
 
 const MAX_SIDE = 2400
 
@@ -68,13 +69,14 @@ export async function captureCameraFrame(video, zoomOptions) {
     sourceWidth: video.videoWidth, sourceHeight: video.videoHeight }
 }
 
-export default function CameraView({ onImage }) {
+export default function CameraView({ onImage, landing = false }) {
   const videoRef = useRef(null)
   const streamRef = useRef(null)
   const pickerRef = useRef(null)
   const [active, setActive] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [showCameraView, setShowCameraView] = useState(false)
 
   function stopCamera() {
     streamRef.current?.getTracks().forEach((track) => track.stop())
@@ -86,6 +88,10 @@ export default function CameraView({ onImage }) {
   useEffect(() => () => {
     streamRef.current?.getTracks().forEach((track) => track.stop())
   }, [])
+
+  useEffect(() => {
+    if (showCameraView) startCamera()
+  }, [showCameraView])
 
   async function startCamera() {
     setError('')
@@ -157,6 +163,13 @@ export default function CameraView({ onImage }) {
       setBusy(false)
     }
   }
+
+  if (landing && !showCameraView) return <>
+    <LandingPage onCamera={() => setShowCameraView(true)} onUpload={() => pickerRef.current?.click()}
+      busy={busy} error={error} />
+    <input ref={pickerRef} type="file" accept="image/*" onChange={upload}
+      className="visually-hidden" aria-label="이미지 파일 선택" />
+  </>
 
   return (
     <section className="card camera-card" aria-label="사진 준비">

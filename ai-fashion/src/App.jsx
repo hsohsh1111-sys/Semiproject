@@ -363,15 +363,15 @@ export default function App() {
   </div>
 
   return (
-    <main className="app-shell">
-      <header className="hero">
+    <main className={`app-shell${image ? '' : ' landing-shell'}`}>
+      {image && <header className="hero">
         <a className="onfit-return" href="/#/home">← ONFIT 쇼핑몰</a>
         <div className="eyebrow">ONFIT · 독립 기능 테스트</div>
         <h1>Circle to Search</h1>
         <p>사진 속 패션 상품을 둘러 그리면 상품 정보와 추정 윤곽을 분석합니다.</p>
-      </header>
+      </header>}
 
-      {!image ? <CameraView onImage={acceptImage} /> : (
+      {!image ? <CameraView onImage={acceptImage} landing /> : (
         <>
           <div className="toolbar"><button className="text-button" onClick={resetImage}>← 다시 촬영 또는 업로드</button></div>
           <CircleSelector image={image} selection={selection} onSelectionChange={changeSelection}
@@ -476,7 +476,7 @@ export default function App() {
           </>}
         </>
       )}
-      <footer>분홍색 영역은 Vision 추정치입니다. 상품 추천 결과는 실제 무신사 검색 결과를 바탕으로 표시합니다.</footer>
+      {image && <footer>분홍색 영역은 Vision 추정치입니다. 상품 추천 결과는 실제 무신사 검색 결과를 바탕으로 표시합니다.</footer>}
     </main>
   )
 }
