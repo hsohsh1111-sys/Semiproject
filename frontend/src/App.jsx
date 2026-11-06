@@ -9,6 +9,7 @@ import OutfitPage from './pages/OutfitPage.jsx'
 import WardrobePage from './pages/WardrobePage.jsx'
 import PriceTimingPage from './pages/PriceTimingPage.jsx'
 import PriceComparePage from './pages/PriceComparePage.jsx'
+import SeasonalOutfitPage from './pages/SeasonalOutfitPage.jsx'
 import AdminPage from './pages/AdminPage.jsx'
 
 function readRoute() {
@@ -23,6 +24,7 @@ const pages = {
   '/wardrobe': WardrobePage,
   '/price': PriceTimingPage,
   '/compare': PriceComparePage,
+  '/seasonal': SeasonalOutfitPage,
   '/admin': AdminPage,
 }
 
