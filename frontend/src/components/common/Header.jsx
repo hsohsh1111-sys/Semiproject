@@ -5,7 +5,11 @@ import { FAVORITES_CHANGE_EVENT, getSeasonalFavorites } from '../../services/sea
 
 const nav = [
   ['관리자 데모', '#/admin'],
-  ['스타일 추천', '#/outfits'], ['시즌 코디', '#/seasonal'], ['나의 옷장', '#/wardrobe'], ['가격 인사이트', '#/price'],
+  ['스타일 추천', '#/outfits'],
+  ['시즌 코디', '#/seasonal'],
+  ['AI 패션 검색', '/ai-fashion/'],
+  ['나의 옷장', '#/wardrobe'],
+  ['가격 인사이트', '#/price'],
 ]
 
 export default function Header({ onAuth }) {

@@ -127,16 +127,16 @@ export default function MobileTryOn({ product, searchImage, personImage, result,
           </button>
         </div>
       </> : <>
+        <button type="button" className="mobile-tryon-generate" onClick={onGenerate}
+          disabled={loading || photoLoading || !person?.file || !product?.image_url}>
+          {loading ? '생성 중…' : error ? '다시 시도' : '가상 착용 생성'}
+        </button>
         <div className="mobile-tryon-action-row">
           <button type="button" className="mobile-tryon-secondary" onClick={() => pickerRef.current?.click()}
             disabled={loading || photoLoading}>다른 사진 업로드</button>
           <button type="button" className="mobile-tryon-secondary" onClick={onRestorePerson}
             disabled={!personImage || loading || photoLoading}>원본 사진 되돌리기</button>
         </div>
-        <button type="button" className="mobile-tryon-generate" onClick={onGenerate}
-          disabled={loading || photoLoading || !person?.file || !product?.image_url}>
-          {loading ? '생성 중…' : error ? '다시 시도' : '가상 착용 생성'}
-        </button>
       </>}
     </footer>
     <input ref={pickerRef} type="file" className="mobile-file-input"
