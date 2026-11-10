@@ -9,6 +9,8 @@ from urllib.parse import urlencode, urljoin, urlparse
 from bs4 import BeautifulSoup
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
 
+from services.memory_diagnostics import log_memory
+
 SELECTOR = 'a.gtm-view-item-list[data-item-id][data-item-list-id="goods_list"]'
 MAX_PRODUCTS = 30
 MAX_POOL = 120  # Four result pages, at most 30 cards each; only 30 reach Vision.
@@ -219,7 +221,9 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
     try:
         with sync_playwright() as playwright:
             stage, stage_started = 'browser_launch', time.monotonic()
+            log_memory('chromium_before_launch')
             browser = playwright.chromium.launch(headless=True)
+            log_memory('chromium_after_launch')
             context = None
             try:
                 stage, stage_started = 'context_create', time.monotonic()
@@ -241,7 +245,11 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                     try:
                         keyword_index, http_status = index + 1, None
                         stage, stage_started = 'navigation', time.monotonic()
-                        response = page.goto(url, wait_until='domcontentloaded', timeout=NAVIGATION_TIMEOUT_MS)
+                        log_memory('navigation_before', keyword_index)
+                        try:
+                            response = page.goto(url, wait_until='domcontentloaded', timeout=NAVIGATION_TIMEOUT_MS)
+                        finally:
+                            log_memory('navigation_after', keyword_index)
                         status = response.status if response else None
                         stage, stage_started, http_status = 'http_status', time.monotonic(), status
                         if status in (403, 429):
@@ -336,6 +344,8 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                         log_failure(exc)
                         failure_logged = True
                         raise
+                    finally:
+                        log_memory('chromium_after_close')
             stage, stage_started = 'playwright_stop', time.monotonic()
     except SearchError as exc:
         if not failure_logged:

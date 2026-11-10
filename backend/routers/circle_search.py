@@ -10,6 +10,7 @@ from starlette.concurrency import run_in_threadpool
 from services.vision_service import VisionError, analyze
 from services.recommendation_service import RecommendationError, recommend
 from services.tryon_service import TryOnError, generate_tryon
+from services.memory_diagnostics import log_image
 
 router = APIRouter(prefix="/api/circle-search", tags=["circle-search"])
 MAX_FILE_BYTES = 10 * 1024 * 1024
@@ -112,6 +113,7 @@ async def segment(
     if not (1 <= width <= MAX_IMAGE_SIDE and 1 <= height <= MAX_IMAGE_SIDE):
         fail("width와 height는 1~8000 px 범위여야 합니다.")
     image_bytes, actual_size = await read_image(image)
+    log_image('segment_upload', len(image_bytes), actual_size)
     if actual_size != (width, height):
         fail("전달한 이미지 크기와 실제 이미지 크기가 다릅니다.")
     checked_point, checked_box, checked_polygon = validate_selection(
@@ -158,7 +160,8 @@ async def recommend_products(crop: UploadFile = File(...), analysis: str = Form(
     if (len(keywords) != 4 or any(not isinstance(word, str) or
                                   not (1 <= len(word.strip()) <= 100) for word in keywords)):
         fail('analysis: 핵심·대체 2개·광범위 검색어가 필요합니다.')
-    crop_bytes, _ = await read_image(crop)
+    crop_bytes, crop_size = await read_image(crop)
+    log_image('recommend_crop_upload', len(crop_bytes), crop_size)
     try:
         return await run_in_threadpool(recommend, crop_bytes, selected, keywords)
     except RecommendationError as exc:
@@ -199,6 +202,7 @@ async def try_on(image: UploadFile = File(...), product: str = Form(...),
             (category is not None and (not isinstance(category, str) or len(category) > 100))):
         fail('기존 상품 분석 정보가 올바르지 않습니다.')
     person_bytes, (width, height) = await read_image(image)
+    log_image('tryon_upload', len(person_bytes), (width, height))
     if box is not None:
         if (not isinstance(box, list) or len(box) != 4 or
                 any(type(value) not in (int, float) or not math.isfinite(value) for value in box)):

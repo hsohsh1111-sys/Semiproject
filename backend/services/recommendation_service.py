@@ -24,6 +24,7 @@ from PIL import Image, ImageDraw, ImageOps, UnidentifiedImageError
 from pydantic import BaseModel
 
 from services.musinsa_service import SearchError, _candidate_score, search_products
+from services.memory_diagnostics import log_image, log_memory
 from services.vision_service import DEFAULT_MODEL
 
 logger = logging.getLogger('uvicorn.error')
@@ -163,6 +164,7 @@ def _comparison_candidates(candidates, selected):
 def _contact_sheet(candidates, timings=None):
     started = time.monotonic()
     products = candidates[:MAX_CANDIDATES]
+    log_memory('image_download_before')
     pool = ThreadPoolExecutor(max_workers=2)
     try:
         futures = {url: pool.submit(_thumbnail, url) for url in
@@ -178,6 +180,7 @@ def _contact_sheet(candidates, timings=None):
                     loaded[url] = None
     finally:
         pool.shutdown(wait=True, cancel_futures=True)
+        log_memory('image_download_after')
     download_ms = round((time.monotonic() - started) * 1000)
     if timings is not None:
         timings['image_download_elapsed_ms'] = download_ms
@@ -213,6 +216,7 @@ def _contact_sheet(candidates, timings=None):
 
 def _small_crop(crop_bytes, dimensions=None):
     with Image.open(io.BytesIO(crop_bytes)) as source:
+        original_size = source.size
         if source.width * source.height > MAX_CROP_PIXELS:
             raise RecommendationError('선택 이미지가 너무 큽니다. 더 작은 사진을 사용해 주세요.',
                                       'image_too_large', 413)
@@ -223,7 +227,9 @@ def _small_crop(crop_bytes, dimensions=None):
             dimensions['crop_width_px'], dimensions['crop_height_px'] = image.size
         output = io.BytesIO()
         image.save(output, format='JPEG', quality=85, optimize=True)
-    return output.getvalue()
+    prepared = output.getvalue()
+    log_image('recommend_crop_prepared', len(crop_bytes), original_size, len(prepared), image.size)
+    return prepared
 
 
 def _data_url(data):
@@ -263,6 +269,7 @@ def compare_candidates(crop_bytes, selected_object, candidates, model, include_d
     started = time.monotonic()
     crop_dimensions = {}
     try:
+        log_memory('comparison_before')
         client = OpenAI(api_key=os.environ['OPENAI_API_KEY'], timeout=45.0, max_retries=0)
         crop_input = _small_crop(crop_bytes, crop_dimensions)
         response = client.responses.parse(
@@ -291,6 +298,7 @@ def compare_candidates(crop_bytes, selected_object, candidates, model, include_d
         logger.error('Recommendation comparison error_type=%s', type(exc).__name__)
         raise RecommendationError('유사도 비교 결과를 처리하지 못했습니다.', 'vision_error') from exc
     finally:
+        log_memory('comparison_after')
         logger.info('Recommendation openai_comparison_ms=%s',
                     round((time.monotonic() - started) * 1000))
     if response.output_parsed is None:
@@ -348,6 +356,7 @@ def compare_candidates(crop_bytes, selected_object, candidates, model, include_d
 
 def recommend(crop_bytes, selected_object, keywords):
     started = time.monotonic()
+    log_memory('recommend_start')
     if not os.getenv('OPENAI_API_KEY', '').strip():
         raise RecommendationError('backend/.env에 OPENAI_API_KEY를 설정하세요.', 'vision_error', 503)
     model = os.getenv('OPENAI_VISION_MODEL', DEFAULT_MODEL).strip() or DEFAULT_MODEL
