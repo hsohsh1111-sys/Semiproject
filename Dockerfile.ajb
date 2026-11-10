@@ -19,7 +19,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 WORKDIR /app/backend
 COPY backend/requirements.txt ./
-RUN pip install -r requirements.txt \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libatomic1 \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install -r requirements.txt \
     && python -m playwright install --with-deps chromium
 COPY backend/ ./
 COPY --from=frontend-build /build/frontend/dist /app/frontend/dist
