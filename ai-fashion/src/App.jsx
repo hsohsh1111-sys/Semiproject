@@ -4,6 +4,8 @@ import MobileCamera from './components/MobileCamera.jsx'
 import CircleSelector from './components/CircleSelector.jsx'
 import SelectionPreview from './components/SelectionPreview.jsx'
 import SearchDiagnostics from './components/SearchDiagnostics.jsx'
+import PcTryOnPanel, { downloadTryOnImage } from './components/PcTryOnPanel.jsx'
+import BeforeAfterSlider from './components/BeforeAfterSlider.jsx'
 import { sendRecommendations, sendSelection, sendTryOn } from './services/api.js'
 import { createSearchImageCrop } from './services/searchCrop.js'
 import './App.css'
@@ -69,6 +71,7 @@ class SearchResultBoundary extends React.Component {
 export default function App() {
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 768px)').matches)
   const [image, setImage] = useState(null)
+  const [selectorReset, setSelectorReset] = useState(0)
   const [selection, setSelection] = useState(null)
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
@@ -80,13 +83,22 @@ export default function App() {
   const [searchAttempt, setSearchAttempt] = useState(0)
   const [tryOnProduct, setTryOnProduct] = useState(null)
   const [tryOnResult, setTryOnResult] = useState(null)
+  const [completedTryOnProduct, setCompletedTryOnProduct] = useState(null)
   const [lastMobileTryOn, setLastMobileTryOn] = useState(null)
   const [tryOnError, setTryOnError] = useState('')
   const [tryOnLoading, setTryOnLoading] = useState(false)
   const [tryOnPerson, setTryOnPerson] = useState(null)
   const [tryOnPhotoError, setTryOnPhotoError] = useState('')
   const [tryOnPhotoLoading, setTryOnPhotoLoading] = useState(false)
+  const [downloadError, setDownloadError] = useState('')
+  const [downloading, setDownloading] = useState(false)
+  const [carouselEdges, setCarouselEdges] = useState({ start: true, end: true })
+  const [viewerSize, setViewerSize] = useState(null)
   const tryOnPickerRef = useRef(null)
+  const carouselRef = useRef(null)
+  const carouselDragRef = useRef(null)
+  const suppressCarouselClickRef = useRef(false)
+  const viewerFrameRef = useRef(null)
   const inFlight = useRef(false)
   const searchInFlight = useRef(null)
   const tryOnInFlight = useRef(false)
@@ -113,14 +125,49 @@ export default function App() {
     if (lastMobileTryOn?.personImage?.url) URL.revokeObjectURL(lastMobileTryOn.personImage.url)
   }, [lastMobileTryOn])
 
+  useEffect(() => {
+    if (isMobile || !image || !viewerFrameRef.current) return undefined
+    const frame = viewerFrameRef.current
+    const measure = () => {
+      const width = frame.clientWidth - 20
+      const height = frame.clientHeight - 20
+      if (!width || !height) return
+      const scale = Math.min(width / image.width, height / image.height)
+      setViewerSize({ imageUrl: image.url, width: image.width * scale, height: image.height * scale })
+    }
+    const observer = new ResizeObserver(measure)
+    observer.observe(frame)
+    measure()
+    return () => observer.disconnect()
+  }, [isMobile, image])
+
+  useEffect(() => {
+    if (isMobile || !carouselRef.current) return undefined
+    const carousel = carouselRef.current
+    const update = () => setCarouselEdges({
+      start: carousel.scrollLeft <= 1,
+      end: carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 1,
+    })
+    const observer = new ResizeObserver(update)
+    observer.observe(carousel)
+    update()
+    carousel.addEventListener('scroll', update, { passive: true })
+    return () => {
+      observer.disconnect()
+      carousel.removeEventListener('scroll', update)
+    }
+  }, [isMobile, recommendations])
+
   function clearTryOnOutcome() {
     tryOnVersion.current += 1
     setTryOnResult(null)
+    setCompletedTryOnProduct(null)
     setTryOnError('')
   }
 
   function resetTryOn() {
     clearTryOnOutcome()
+    setDownloadError('')
     tryOnAbortRef.current?.abort()
     tryOnAbortRef.current = null
     tryOnInFlight.current = false
@@ -212,7 +259,11 @@ export default function App() {
 
   function selectTryOn(product) {
     if (tryOnInFlight.current || !canTryOnProduct(product, image)) return
-    clearTryOnOutcome()
+    if (isMobile) clearTryOnOutcome()
+    else {
+      setTryOnError('')
+      setTryOnPhotoError('')
+    }
     setTryOnProduct(product)
   }
 
@@ -273,7 +324,7 @@ export default function App() {
     tryOnAbortRef.current = controller
     setTryOnLoading(true)
     setTryOnError('')
-    setTryOnResult(null)
+    if (isMobile) setTryOnResult(null)
     try {
       const box = tryOnPerson ? null : result.geometry?.bounding_box || selection?.box
       const analysis = tryOnPerson
@@ -281,7 +332,12 @@ export default function App() {
         : result
       const next = await sendTryOn(person.file, tryOnProduct, analysis, box, controller.signal)
       if (currentVersion === tryOnVersion.current) {
-        setTryOnResult(next)
+        if (!isMobile && !next?.image_data_url) {
+          setTryOnError('가상 착용 결과를 받지 못했어요. 다시 시도해 주세요.')
+        } else {
+          setTryOnResult(next)
+          if (!isMobile) setCompletedTryOnProduct(tryOnProduct)
+        }
         if (isMobile && typeof next?.image_data_url === 'string' && next.image_data_url) {
           setLastMobileTryOn({
             product: tryOnProduct,
@@ -303,8 +359,60 @@ export default function App() {
     }
   }
 
+  async function saveTryOnResult() {
+    if (downloading || !tryOnResult?.image_data_url) return
+    setDownloadError('')
+    setDownloading(true)
+    try {
+      await downloadTryOnImage(tryOnResult.image_data_url)
+    } catch {
+      setDownloadError('이미지 다운로드를 시작하지 못했습니다. 다시 시도해 주세요.')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  function moveCarousel(direction) {
+    const carousel = carouselRef.current
+    const card = carousel?.querySelector('.studio-product-card')
+    if (carousel && card) carousel.scrollBy({ left: direction * (card.getBoundingClientRect().width + 12), behavior: 'smooth' })
+  }
+
+  function startCarouselDrag(event) {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return
+    const carousel = carouselRef.current
+    carouselDragRef.current = { pointerId: event.pointerId, x: event.clientX, left: carousel.scrollLeft, moved: false }
+  }
+
+  function moveCarouselDrag(event) {
+    const drag = carouselDragRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    const distance = event.clientX - drag.x
+    if (!drag.moved && Math.abs(distance) > 4) {
+      drag.moved = true
+      carouselRef.current.classList.add('is-dragging')
+      carouselRef.current.setPointerCapture(event.pointerId)
+    }
+    if (drag.moved) {
+      event.preventDefault()
+      carouselRef.current.scrollLeft = drag.left - distance
+    }
+  }
+
+  function endCarouselDrag(event) {
+    const drag = carouselDragRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    carouselDragRef.current = null
+    carouselRef.current?.classList.remove('is-dragging')
+    if (carouselRef.current?.hasPointerCapture(event.pointerId)) carouselRef.current.releasePointerCapture(event.pointerId)
+    if (drag.moved) {
+      suppressCarouselClickRef.current = true
+      window.setTimeout(() => { suppressCarouselClickRef.current = false }, 0)
+    }
+  }
+
   async function submit() {
-    if (!image || !selection || result || inFlight.current) return
+    if (!image || !selection || result?.status === 'success' || inFlight.current) return
     inFlight.current = true
     const submittedVersion = selectionVersion.current
     setSending(true)
@@ -351,132 +459,151 @@ export default function App() {
     onCreateTryOn={createTryOn} onLeaveTryOn={leaveMobileTryOn} />
 
   const hasRecommendationList = Array.isArray(recommendations?.recommendations)
+  const showDebug = import.meta.env.DEV && new URLSearchParams(window.location.search).get('debug') === '1'
+  const analysisFailed = !!result && result.status !== 'success'
+  const progressMessage = sending ? 'AI가 선택한 패션 아이템을 분석하고 있어요.'
+    : searching ? '비슷한 패션 상품을 찾고 있어요.'
+      : hasRecommendationList ? '비슷한 상품을 찾았어요.'
+        : analysisFailed ? '상품을 분석하지 못했어요. 다시 시도해 주세요.'
+          : '선택한 아이템과 비슷한 상품을 찾아보세요.'
   const recommendedProducts = hasRecommendationList
     ? recommendations.recommendations.filter((product) => product && typeof product === 'object' && !Array.isArray(product))
     : []
   const activeTryOnPerson = tryOnPerson || image
-  const tryOnPhotoActions = <div className="tryon-photo-actions">
-    <button type="button" className="secondary" onClick={() => tryOnPickerRef.current?.click()}
-      disabled={tryOnLoading || tryOnPhotoLoading}>다른 사진 업로드</button>
-    <button type="button" className="secondary" onClick={restoreTryOnPerson}
-      disabled={!tryOnPerson || tryOnLoading || tryOnPhotoLoading}>원본 사진으로 되돌리기</button>
-  </div>
 
   return (
-    <main className={`app-shell${image ? '' : ' landing-shell'}`}>
-      {image && <header className="hero">
-        <a className="onfit-return" href="/#/home">← ONFIT 쇼핑몰</a>
-        <div className="eyebrow">ONFIT · 독립 기능 테스트</div>
-        <h1>Circle to Search</h1>
-        <p>사진 속 패션 상품을 둘러 그리면 상품 정보와 추정 윤곽을 분석합니다.</p>
-      </header>}
-
-      {!image ? <CameraView onImage={acceptImage} landing /> : (
-        <>
-          <div className="toolbar"><button className="text-button" onClick={resetImage}>← 다시 촬영 또는 업로드</button></div>
-          <CircleSelector image={image} selection={selection} onSelectionChange={changeSelection}
-            visionGeometry={result?.geometry} />
-          {selection && <>
-            <SelectionPreview image={image} selection={selection} visionGeometry={result?.geometry} />
-            <section className="card send-card" aria-label="서버 전송">
-              <div className="section-heading"><span className="step">04</span><h2>서버에 전송</h2></div>
-              <p className="hint">선택한 이미지와 좌표를 전송해 패션 상품 한 개를 분석합니다.</p>
-              <button onClick={submit} disabled={sending || !!result}>{sending ? '분석 중…' : result ? '분석 완료' : '선택 영역 전송'}</button>
-              {error && <p className="error" role="alert">{error}</p>}
-              {result && <div className="response" role="status">
-                <strong>{result.status === 'success' ? '패션 상품 분석 결과' : '분석 결과'} · {result.status}</strong>
-                <p>{result.message}</p>
-                {result.selected_object && <>
-                  <p><b>상품:</b> {[result.selected_object.category, result.selected_object.product_type].filter(Boolean).join(' / ') || '종류 확인 불가'}</p>
-                  {result.selected_object.description && <p><b>설명:</b> {result.selected_object.description}</p>}
-                  <p><b>색상·디자인:</b> {[result.selected_object.dominant_color,
-                    ...result.selected_object.secondary_colors, result.selected_object.pattern,
-                    result.selected_object.visible_text_or_logo, result.selected_object.material_appearance,
-                    result.selected_object.fit_or_shape, result.selected_object.style].filter(Boolean).join(' · ') || '확인 불가'}</p>
-                  {result.search_keywords && <p><b>검색어:</b> {[result.search_keywords.primary,
-                    ...result.search_keywords.alternatives, result.search_keywords.broad].join(' / ')}</p>}
-                  <p><b>추정 윤곽:</b> {result.geometry?.polygon && !result.geometry?.needs_review
-                    ? '사진의 핑크색 영역으로 표시' : '추정 실패/재확인 필요'}</p>
-                  <p><b>검색용 crop:</b> {result.search_image_crop
-                    ? `원본 사진의 [${result.search_image_crop.crop_bounding_box.join(', ')}] 영역 준비 완료`
-                    : '준비되지 않음'}</p>
-                </>}
-                {result.metadata && <small>모델: {result.metadata.model} · 처리 시간: {(result.metadata.duration_ms / 1000).toFixed(1)}초
-                  {' · '}토큰: {result.metadata.usage?.total_tokens ?? '확인 불가'}{result.metadata.cached ? ' · 캐시 사용' : ''}</small>}
-              </div>}
-            </section>
-            {result?.status === 'success' && <section className="card recommendations" aria-label="무신사 유사 상품 추천">
-              <div className="section-heading"><span className="step">05</span><h2>무신사 유사 상품 추천</h2></div>
-              <p className="hint">분석한 상품의 원본 crop과 검색어로 무신사 상품을 찾습니다.</p>
-              <button onClick={searchSimilar} disabled={searching || hasRecommendationList || !result.search_image_crop?.file}>
-                {searching ? '상품 검색 및 이미지 비교 중…' : hasRecommendationList ? '검색 완료' : '유사 상품 검색'}
-              </button>
-              {searchError && <p className="error" role="alert">{searchError}</p>}
-              <SearchResultBoundary key={searchAttempt} onError={() => { setRecommendations(null); setSearchDiagnostics(null) }}>
-                {(recommendations?.search_diagnostics || searchDiagnostics) &&
-                  <SearchDiagnostics data={recommendations?.search_diagnostics || searchDiagnostics} />}
-                {recommendations && <>
-                <p className="hint" role="status">후보 {Number.isFinite(recommendations.candidate_count) ? recommendations.candidate_count : '—'}개 중 추천 {Number.isFinite(recommendations.recommended_count) ? recommendations.recommended_count : '—'}개</p>
-                {!hasRecommendationList && <p className="error" role="alert">추천 상품 목록을 읽을 수 없습니다. 다시 검색해 주세요.</p>}
-                {hasRecommendationList && recommendedProducts.length === 0 && <p>비슷한 상품을 찾지 못했습니다.</p>}
-                <div className="recommendation-grid">
-                  {recommendedProducts.map((product, index) => <article className="recommendation-card" key={product.product_id ?? index}>
-                    <a className="recommendation-link" href={typeof product.product_url === 'string' ? product.product_url : undefined} target="_blank" rel="noopener noreferrer">
-                    {typeof product.image_url === 'string' && <img src={product.image_url} alt={typeof product.product_name === 'string' ? product.product_name : '상품 이미지'} loading="lazy" />}
-                    <div className="recommendation-copy">
-                      <small>{typeof product.brand === 'string' && product.brand ? product.brand : '브랜드 정보 없음'}</small>
-                      <strong>{typeof product.product_name === 'string' ? product.product_name : '상품명 정보 없음'}</strong>
-                      <span>{Number.isFinite(product.price) ? `${product.price.toLocaleString('ko-KR')}원` : '가격 정보 없음'}</span>
-                      {similarityLabels[product.similarity_grade] &&
-                        <small className="similarity-grade">{similarityLabels[product.similarity_grade]}</small>}
-                    </div>
-                    </a>
-                    <button className="tryon-select" type="button" onClick={() => selectTryOn(product)}
-                      disabled={tryOnLoading || !canTryOnProduct(product, image)}
-                      title={tryOnUnavailableReason(product, image) || undefined}>
-                      착용하기
-                    </button>
-                    {tryOnUnavailableReason(product, image) &&
-                      <small className="hint">{tryOnUnavailableReason(product, image)}</small>}
-                  </article>)}
+    <main className="studio-shell">
+      <header className="studio-header">
+        <a className="studio-home-link" href="/#/home">← ONFIT 쇼핑몰</a>
+        <div className="studio-title"><span>ONFIT AI FASHION SEARCH</span>
+          <h1>{image ? '나만의 가상 피팅 스튜디오' : 'AI 패션 검색 스튜디오'}</h1></div>
+        <span className="studio-header-note">사진에서 찾고, 나에게 입혀보세요</span>
+      </header>
+      <div className="studio-grid">
+        <section className="studio-viewer" aria-label="사진 및 가상 착용 결과">
+          <div className="studio-viewer-head">
+            <strong>{tryOnResult?.image_data_url ? '가상 착용 결과' : image ? '선택한 사진' : '사진 준비'}</strong>
+            {tryOnResult?.image_data_url && completedTryOnProduct &&
+              <span>{completedTryOnProduct.brand} · {completedTryOnProduct.product_name}</span>}
+          </div>
+          <div ref={viewerFrameRef} className="studio-viewer-frame">
+            {!image ? <CameraView onImage={acceptImage} /> : tryOnResult?.image_data_url
+              ? <BeforeAfterSlider beforeSrc={activeTryOnPerson.url} afterSrc={tryOnResult.image_data_url} actual />
+              : <CircleSelector key={image.url + '-' + selectorReset} image={image} selection={selection}
+                  onSelectionChange={changeSelection} visionGeometry={result?.geometry} embedded
+                  stageStyle={viewerSize?.imageUrl === image.url ? { width: viewerSize.width, height: viewerSize.height } : undefined} />}
+            {tryOnLoading && <div className="studio-viewer-loading" role="status">
+              <strong>AI가 가상 착용 이미지를 만들고 있어요.</strong>
+              <span>기존 결과는 새 이미지가 완성될 때까지 유지됩니다.</span>
+            </div>}
+          </div>
+          {image && <div className="studio-viewer-actions">
+            <button type="button" className="secondary" onClick={resetImage}>새 사진 시작</button>
+            {tryOnResult?.image_data_url && <>
+              <button type="button" onClick={saveTryOnResult} disabled={downloading}>
+                {downloading ? '저장 준비 중…' : '결과 저장'}</button>
+              <button type="button" className="secondary" onClick={createTryOn}
+                disabled={!tryOnProduct || tryOnLoading}>다시 생성</button>
+            </>}
+            {downloadError && <p className="error" role="alert">{downloadError}</p>}
+          </div>}
+        </section>
+        <aside className="studio-side" aria-label="아이템 분석과 추천 상품">
+          <div className="studio-side-scroll">
+            {!image ? <div className="studio-intro">
+              <span className="eyebrow">START YOUR EDIT</span>
+              <h2>사진 한 장으로<br />스타일을 찾아보세요.</h2>
+              <p>왼쪽에서 사진을 업로드하거나 웹캠으로 촬영하세요. 원하는 옷이나 소품을 둘러 그리면 비슷한 상품을 찾아드립니다.</p>
+              <ol><li>사진 준비</li><li>아이템 선택</li><li>상품 탐색</li><li>가상 착용</li></ol>
+            </div> : <>
+              <div className="studio-analysis">
+                <span className="eyebrow">{hasRecommendationList ? 'YOUR STYLE MATCH' : 'SELECT YOUR ITEM'}</span>
+                <h2>{result?.selected_object?.product_type || result?.selected_object?.category ||
+                  (selection ? '선택한 아이템을 확인하세요' : '찾고 싶은 아이템을 선택하세요')}</h2>
+                <p>{result?.selected_object?.description ||
+                  (selection ? '선택한 영역을 확인하고 비슷한 상품을 찾아보세요.' : '사진 위에서 원하는 옷이나 소품을 둘러 그려주세요.')}</p>
+                {result?.selected_object?.dominant_color && <span className="studio-color-note">색상 · {result.selected_object.dominant_color}</span>}
+                <span className="studio-progress" role="status">{progressMessage}</span>
+              </div>
+              {recommendations && <section className="studio-products" aria-label="추천 상품">
+                <div className="studio-products-head">
+                  <div><span className="eyebrow">CURATED FOR YOU</span><h3>비슷한 상품</h3></div>
+                  <div className="studio-carousel-controls">
+                    <button type="button" aria-label="이전 상품" onClick={() => moveCarousel(-1)}
+                      disabled={recommendedProducts.length < 2 || carouselEdges.start}>←</button>
+                    <button type="button" aria-label="다음 상품" onClick={() => moveCarousel(1)}
+                      disabled={recommendedProducts.length < 2 || carouselEdges.end}>→</button>
+                  </div>
                 </div>
-              </>}
-              </SearchResultBoundary>
-            </section>}
-            {result?.status === 'success' && hasRecommendationList &&
-              <section className="card tryon-section" aria-label="AI 가상 착용">
-                <div className="section-heading"><span className="step">06</span><h2>AI 가상 착용 (Virtual Try-On)</h2></div>
-                      {tryOnProduct ? <div className="tryon-product">
-                        {typeof tryOnProduct.image_url === 'string' && <img src={tryOnProduct.image_url} alt={tryOnProduct.product_name || '선택한 상품'} />}
-                        <div><small>{tryOnProduct.brand || '브랜드 정보 없음'}</small><strong>{tryOnProduct.product_name}</strong></div>
-                      </div> : <p className="hint">추천 상품 카드에서 착용하기를 선택하세요.</p>}
-                      <input ref={tryOnPickerRef} type="file" className="visually-hidden"
-                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                        aria-label="가상 착용용 인물 사진 선택" onChange={uploadTryOnPerson} />
-                      {tryOnPhotoError && <p className="error" role="alert">{tryOnPhotoError}</p>}
-                      {tryOnProduct && <>
-                      <button type="button" onClick={createTryOn} disabled={tryOnLoading || tryOnInFlight.current}>
-                        {tryOnLoading ? '가상 착용 이미지 생성 중…' : '가상 착용 생성'}
+                <SearchResultBoundary key={searchAttempt} onError={() => { setRecommendations(null); setSearchDiagnostics(null) }}>
+                  {!hasRecommendationList && <p className="error" role="alert">추천 상품을 표시하지 못했어요. 다시 검색해 주세요.</p>}
+                  {hasRecommendationList && recommendedProducts.length === 0 &&
+                    <p className="studio-empty">비슷한 상품을 찾지 못했어요. 다시 검색하거나 다른 아이템을 선택해 주세요.</p>}
+                  {recommendedProducts.length > 0 && <div ref={carouselRef} className="studio-carousel-track"
+                    onPointerDown={startCarouselDrag} onPointerMove={moveCarouselDrag}
+                    onPointerUp={endCarouselDrag} onPointerCancel={endCarouselDrag}
+                    onClickCapture={(event) => {
+                      if (suppressCarouselClickRef.current) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                      }
+                    }}>
+                    {recommendedProducts.map((product, index) => <article className={'studio-product-card' +
+                      (tryOnProduct?.product_id === product.product_id ? ' is-selected' : '')} key={product.product_id ?? index}>
+                      <button type="button" className="studio-product-select" onClick={() => selectTryOn(product)}
+                        aria-pressed={tryOnProduct?.product_id === product.product_id}
+                        disabled={tryOnLoading || !canTryOnProduct(product, image)}
+                        title={tryOnUnavailableReason(product, image) || undefined}>
+                        {typeof product.image_url === 'string' && <img src={product.image_url}
+                          alt={product.product_name || '상품 이미지'} loading="lazy" />}
+                        <span className="studio-product-brand">{product.brand || '브랜드 정보 없음'}</span>
+                        <strong>{product.product_name || '상품명 정보 없음'}</strong>
+                        <span className="studio-product-price">{Number.isFinite(product.price) ?
+                          product.price.toLocaleString('ko-KR') + '원' : '가격 정보 없음'}</span>
+                        <small>{similarityLabels[product.similarity_grade] || '추천 상품'}</small>
                       </button>
-                      {selectedTryOnRegion(result.selected_object) === 'watch' &&
-                        <p className="hint">사진에 손목이 보이지 않으면 시계를 자연스럽게 착용시키기 어렵습니다.</p>}
-                      <p className="hint">생성 이미지의 로고·프린트는 원본과 다를 수 있습니다.</p>
-                      {tryOnError && <p className="error" role="alert">{tryOnError}</p>}
-                      </>}
-                      <div className="tryon-images">
-                        <figure>
-                          <img src={activeTryOnPerson.url} alt="가상 착용 전 인물 사진" />
-                          <figcaption>착용 전</figcaption>
-                          {tryOnPhotoActions}
-                        </figure>
-                        {tryOnResult?.image_data_url && <figure><img src={tryOnResult.image_data_url} alt="AI 가상 착용 결과" /><figcaption>가상 착용 결과</figcaption></figure>}
-                      </div>
-                      {tryOnResult && <small className="tryon-metadata">모델: {tryOnResult.model} · 생성 시간: {(tryOnResult.elapsed_ms / 1000).toFixed(1)}초{Number.isFinite(tryOnResult.usage?.total_tokens) ? ` · 토큰: ${tryOnResult.usage.total_tokens}` : ''}</small>}
+                      {typeof product.product_url === 'string' && product.product_url &&
+                        <a href={product.product_url} target="_blank" rel="noopener noreferrer">상품 상세 보기 ↗</a>}
+                    </article>)}
+                  </div>}
+                </SearchResultBoundary>
               </section>}
-          </>}
-        </>
-      )}
-      {image && <footer>분홍색 영역은 Vision 추정치입니다. 상품 추천 결과는 실제 무신사 검색 결과를 바탕으로 표시합니다.</footer>}
+              {searchError && <p className="error" role="alert">{searchError}</p>}
+              {showDebug && selection && <SelectionPreview image={image} selection={selection} visionGeometry={result?.geometry} />}
+              {showDebug && (recommendations?.search_diagnostics || searchDiagnostics) &&
+                <SearchDiagnostics data={recommendations?.search_diagnostics || searchDiagnostics} />}
+            </>}
+          </div>
+          {image && <div className="studio-side-actions">
+            {!hasRecommendationList ? <>
+              <button type="button" className="secondary" onClick={() => {
+                setSelectorReset((value) => value + 1)
+                changeSelection(null)
+              }} disabled={!selection || sending || searching}>다시 선택</button>
+              <button type="button" onClick={result?.status === 'success' ? searchSimilar : submit}
+                disabled={!selection || sending || searching || (result?.status === 'success' && !result.search_image_crop?.file)}>
+                {sending ? '분석 중…' : searching ? '상품 검색 중…' : searchError ? '다시 검색' :
+                  analysisFailed ? '다시 분석하기' : '비슷한 상품 찾기'}
+              </button>
+              {error && <p className="error" role="alert">{error}</p>}
+            </> : recommendedProducts.length === 0 ? <div className="studio-empty-actions">
+              <button type="button" onClick={searchSimilar} disabled={searching}>다시 검색</button>
+              <button type="button" className="secondary" onClick={() => {
+                setSelectorReset((value) => value + 1)
+                changeSelection(null)
+              }}>다른 아이템 선택</button>
+            </div> : <PcTryOnPanel product={tryOnProduct} hasAlternatePerson={!!tryOnPerson}
+              loading={tryOnLoading} error={tryOnError} photoError={tryOnPhotoError}
+              photoLoading={tryOnPhotoLoading} watchWarning={selectedTryOnRegion(result?.selected_object) === 'watch'}
+              showDebug={showDebug} result={tryOnResult}
+              onUploadPerson={() => tryOnPickerRef.current?.click()} onRestorePerson={restoreTryOnPerson}
+              onGenerate={createTryOn} />}
+          </div>}
+        </aside>
+      </div>
+      {image && hasRecommendationList && <input ref={tryOnPickerRef} type="file" className="visually-hidden"
+        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+        aria-label="가상 착용용 인물 사진 선택" onChange={uploadTryOnPerson} />}
     </main>
   )
 }

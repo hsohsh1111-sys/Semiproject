@@ -1,5 +1,13 @@
 .app-shell.landing-shell { max-width: none; padding: 0; }
 .landing-shell .camera-card { max-width: 940px; margin: 24px auto; }
+.landing-shell .pc-camera { width: min(calc(100% - 48px), 1100px); max-width: 1100px; padding: 28px; border-radius: 0; }
+.pc-camera .camera-video,
+.pc-camera-photo { display: block; width: 100%; max-height: 65vh; object-fit: contain; background: var(--onfit-ink); border-radius: 0; }
+.pc-camera .camera-video.hidden { display: none; }
+.pc-camera-device { display: flex; align-items: center; gap: 12px; margin-top: 16px; font-weight: 700; }
+.pc-camera-device select { max-width: min(100%, 420px); padding: 10px 12px; border: 1px solid var(--onfit-border); border-radius: 0; background: var(--onfit-card); color: var(--onfit-ink); }
+.pc-camera-actions button { border-radius: 0; background: var(--onfit-ink); }
+.pc-camera-actions button.secondary { background: var(--onfit-surface); }
 .landing-page {
   display: flex;
   flex-direction: column;
