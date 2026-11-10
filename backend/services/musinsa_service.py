@@ -220,6 +220,7 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
         with sync_playwright() as playwright:
             stage, stage_started = 'browser_launch', time.monotonic()
             browser = playwright.chromium.launch(headless=True)
+            context = None
             try:
                 stage, stage_started = 'context_create', time.monotonic()
                 context = browser.new_context(viewport={'width': 1440, 'height': 900}, locale='ko-KR')
@@ -317,21 +318,24 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                                     index + 1, elapsed_ms,
                                     collected, type_filtered,
                                     len(products) - before, len(products))
-                stage, stage_started = 'context_close', time.monotonic()
-                try:
-                    context.close()
-                except Exception as exc:
-                    log_failure(exc)
-                    failure_logged = True
-                    raise
             finally:
-                stage, stage_started = 'browser_close', time.monotonic()
                 try:
-                    browser.close()
-                except Exception as exc:
-                    log_failure(exc)
-                    failure_logged = True
-                    raise
+                    if context is not None:
+                        stage, stage_started = 'context_close', time.monotonic()
+                        try:
+                            context.close()
+                        except Exception as exc:
+                            log_failure(exc)
+                            failure_logged = True
+                            raise
+                finally:
+                    stage, stage_started = 'browser_close', time.monotonic()
+                    try:
+                        browser.close()
+                    except Exception as exc:
+                        log_failure(exc)
+                        failure_logged = True
+                        raise
             stage, stage_started = 'playwright_stop', time.monotonic()
     except SearchError as exc:
         if not failure_logged:

@@ -14,7 +14,7 @@ from collections import OrderedDict
 from concurrent.futures import Future
 from concurrent.futures import TimeoutError as FutureTimeoutError
 from concurrent.futures import ThreadPoolExecutor, wait
-from threading import Lock
+from threading import BoundedSemaphore, Lock
 from typing import Literal
 from urllib.parse import urlparse
 
@@ -31,9 +31,11 @@ MAX_IMAGE_BYTES = 2 * 1024 * 1024
 MAX_CANDIDATES = 30
 MAX_RESULTS = 10
 IMAGE_PREPARATION_TIMEOUT = 18
+MAX_CROP_PIXELS = 32_000_000
 _cache: OrderedDict[str, dict] = OrderedDict()
 _pending: dict[str, Future] = {}
 _lock = Lock()
+_recommend_slot = BoundedSemaphore(1)
 _thumbnail_cache: OrderedDict[str, Image.Image] = OrderedDict()
 _catalog_image_cache: OrderedDict[str, bytes] = OrderedDict()
 _thumbnail_lock = Lock()
@@ -82,8 +84,8 @@ def cache_catalog_image(url: str, data: bytes) -> None:
     with _thumbnail_lock:
         _catalog_image_cache[url] = data
         _catalog_image_cache.move_to_end(url)
-        while (len(_catalog_image_cache) > 32 or
-               sum(map(len, _catalog_image_cache.values())) > 32 * 1024 * 1024):
+        while (len(_catalog_image_cache) > 8 or
+               sum(map(len, _catalog_image_cache.values())) > 8 * 1024 * 1024):
             _catalog_image_cache.popitem(last=False)
 
 
@@ -113,12 +115,13 @@ def _thumbnail(url):
             if source.format not in ('JPEG', 'PNG', 'WEBP') or max(source.size) > 3000:
                 return None
             actual_mime = {'JPEG': 'image/jpeg', 'PNG': 'image/png', 'WEBP': 'image/webp'}[source.format]
-            image = ImageOps.contain(source.convert('RGB'), (185, 185))
+            source.draft('RGB', (185, 185))
+            image = ImageOps.contain(source, (185, 185)).convert('RGB')
             image.load()
             with _thumbnail_lock:
                 _thumbnail_cache[url] = image
                 _thumbnail_cache.move_to_end(url)
-                if len(_thumbnail_cache) > 128:
+                if len(_thumbnail_cache) > 32:
                     _thumbnail_cache.popitem(last=False)
             if mime == actual_mime:
                 cache_catalog_image(url, original_bytes)
@@ -160,7 +163,7 @@ def _comparison_candidates(candidates, selected):
 def _contact_sheet(candidates, timings=None):
     started = time.monotonic()
     products = candidates[:MAX_CANDIDATES]
-    pool = ThreadPoolExecutor(max_workers=4)
+    pool = ThreadPoolExecutor(max_workers=2)
     try:
         futures = {url: pool.submit(_thumbnail, url) for url in
                    dict.fromkeys(product.get('image_url') for product in products)
@@ -174,7 +177,7 @@ def _contact_sheet(candidates, timings=None):
                 except Exception:
                     loaded[url] = None
     finally:
-        pool.shutdown(wait=False, cancel_futures=True)
+        pool.shutdown(wait=True, cancel_futures=True)
     download_ms = round((time.monotonic() - started) * 1000)
     if timings is not None:
         timings['image_download_elapsed_ms'] = download_ms
@@ -210,8 +213,12 @@ def _contact_sheet(candidates, timings=None):
 
 def _small_crop(crop_bytes, dimensions=None):
     with Image.open(io.BytesIO(crop_bytes)) as source:
+        if source.width * source.height > MAX_CROP_PIXELS:
+            raise RecommendationError('선택 이미지가 너무 큽니다. 더 작은 사진을 사용해 주세요.',
+                                      'image_too_large', 413)
+        source.draft('RGB', (768, 768))
+        source.thumbnail((768, 768), Image.Resampling.LANCZOS, reducing_gap=3.0)
         image = source.convert('RGB')
-        image.thumbnail((768, 768), Image.Resampling.LANCZOS)
         if dimensions is not None:
             dimensions['crop_width_px'], dimensions['crop_height_px'] = image.size
         output = io.BytesIO()
@@ -278,6 +285,8 @@ def compare_candidates(crop_bytes, selected_object, candidates, model, include_d
         logger.warning('Recommendation OpenAI status=%s model=%s', exc.status_code, model)
         raise RecommendationError('OpenAI 유사도 비교에 실패했습니다.', 'vision_error',
                                   429 if exc.status_code == 429 else 502) from exc
+    except RecommendationError:
+        raise
     except Exception as exc:
         logger.error('Recommendation comparison error_type=%s', type(exc).__name__)
         raise RecommendationError('유사도 비교 결과를 처리하지 못했습니다.', 'vision_error') from exc
@@ -371,7 +380,11 @@ def recommend(crop_bytes, selected_object, keywords):
         except FutureTimeoutError as exc:
             raise RecommendationError('진행 중인 검색 시간이 초과됐습니다.', 'search_error', 504) from exc
     search_diagnostics = None
+    slot_acquired = _recommend_slot.acquire(blocking=False)
     try:
+        if not slot_acquired:
+            raise RecommendationError('다른 상품 검색이 진행 중입니다. 잠시 후 다시 시도해 주세요.',
+                                      'busy', 503)
         candidates, searched, search_ms, search_diagnostics = search_products(
             unique_keywords, selected_object, include_diagnostics=True)
         if not candidates:
@@ -430,6 +443,8 @@ def recommend(crop_bytes, selected_object, keywords):
         pending.set_exception(exc)
         raise
     finally:
+        if slot_acquired:
+            _recommend_slot.release()
         logger.info('Recommendation total_elapsed_ms=%s', round((time.monotonic() - started) * 1000))
         with _lock:
             _pending.pop(key, None)
