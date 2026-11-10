@@ -3,6 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.api.router import api_router
 from app.core.config import settings
@@ -49,3 +50,12 @@ def initialize_auth_table() -> None:
 @app.get("/health", tags=["health"])
 def health_check() -> dict[str, str]:
     return {"status": "ok", "service": "onfit-api"}
+
+
+# Built assets are optional locally, where Vite serves both React apps.
+ai_fashion_dist = backend_dir.parent / "ai-fashion" / "dist"
+frontend_dist = backend_dir.parent / "frontend" / "dist"
+if ai_fashion_dist.is_dir():
+    app.mount("/ai-fashion", StaticFiles(directory=ai_fashion_dist, html=True), name="ai-fashion")
+if frontend_dist.is_dir():
+    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")

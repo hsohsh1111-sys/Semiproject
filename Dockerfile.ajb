@@ -1,0 +1,28 @@
+FROM node:22-bookworm-slim AS frontend-build
+WORKDIR /build/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN VITE_API_BASE_URL=/api npm run build
+
+FROM node:22-bookworm-slim AS ai-fashion-build
+WORKDIR /build/ai-fashion
+COPY ai-fashion/package.json ai-fashion/package-lock.json ./
+RUN npm ci
+COPY ai-fashion/ ./
+RUN VITE_API_URL= npm run build
+
+FROM python:3.12-slim-bookworm
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+WORKDIR /app/backend
+COPY backend/requirements.txt ./
+RUN pip install -r requirements.txt \
+    && python -m playwright install --with-deps chromium
+COPY backend/ ./
+COPY --from=frontend-build /build/frontend/dist /app/frontend/dist
+COPY --from=ai-fashion-build /build/ai-fashion/dist /app/ai-fashion/dist
+EXPOSE 10000
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-10000}"]
