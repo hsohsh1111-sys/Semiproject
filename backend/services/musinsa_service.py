@@ -297,6 +297,13 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                                 products.append(product)
                             else:
                                 capacity_skipped += 1
+                    except PlaywrightTimeoutError as exc:
+                        query_status = 'failed'
+                        log_failure(exc)
+                        failure_logged = True
+                        if products:
+                            break  # Keep earlier candidates when a later keyword times out.
+                        raise
                     except Exception as exc:
                         query_status = 'failed'
                         log_failure(exc)
