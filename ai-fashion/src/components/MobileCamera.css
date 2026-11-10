@@ -1,4 +1,5 @@
 .mobile-app {
+  --mobile-action-accent: #c7b5e8;
   --mobile-card-width: 48%;
   position: fixed;
   inset: 0;
@@ -337,14 +338,14 @@
   overflow: hidden;
   scroll-snap-align: start;
   padding: 9px;
-  border: 1px solid var(--onfit-border);
+  border: 1px solid rgba(255, 255, 255, .36);
   border-radius: 17px;
-  background: rgba(245, 241, 236, .88);
+  background: rgba(41, 33, 42, .42);
   box-shadow: 0 10px 26px rgba(0, 0, 0, .26);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  color: var(--onfit-ink);
-  text-shadow: 0 1px 3px rgba(255, 255, 255, .7);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .7);
 }
 .mobile-scroll-indicator {
   position: absolute;
@@ -424,7 +425,7 @@
 .mobile-card-navigation {
   position: absolute;
   left: 50%;
-  color: var(--onfit-muted);
+  color: var(--onfit-cream);
   font-size: .78rem;
   line-height: 1.2;
   font-variant-numeric: tabular-nums;
@@ -434,7 +435,7 @@
 .mobile-recommendation-actions .mobile-product-grade {
   display: block;
   overflow: hidden;
-  color: var(--onfit-brown);
+  color: var(--onfit-gold);
   font-size: .75rem;
   line-height: 1.25;
   white-space: nowrap;
@@ -445,12 +446,13 @@
   width: 100%;
   min-height: 40px;
   padding: 8px 5px;
-  background: var(--onfit-ink);
-  color: var(--onfit-cream);
+  border: 1px solid var(--onfit-border);
+  background: var(--onfit-cream);
+  color: var(--onfit-ink);
   font-size: .8rem;
   text-shadow: none;
 }
-.mobile-recommendation-card .mobile-tryon-selected { color: var(--onfit-brown); font-size: .7rem; text-align: center; }
+.mobile-recommendation-card .mobile-tryon-selected { color: var(--onfit-gold); font-size: .7rem; text-align: center; }
 
 .mobile-app .mobile-close {
   position: absolute;
@@ -620,6 +622,12 @@
   white-space: nowrap;
 }
 .mobile-photo-actions .mobile-primary svg { flex: 0 0 auto; }
+.mobile-app .mobile-photo-actions .mobile-action-row .mobile-primary {
+  border: 1px solid var(--mobile-action-accent);
+  background: var(--mobile-action-accent);
+  color: var(--onfit-ink);
+  font-weight: 800;
+}
 .mobile-app .mobile-photo-actions .mobile-action-row .mobile-secondary {
   display: inline-flex;
   align-items: center;
@@ -627,7 +635,7 @@
   gap: 5px;
   min-height: 48px;
   padding: 8px 6px;
-  border: 1px solid rgba(255, 255, 255, .35);
+  border: 1px solid rgba(255, 255, 255, .72);
   border-radius: 999px;
   background: rgba(41, 33, 42, .48);
   -webkit-backdrop-filter: blur(8px);
@@ -861,7 +869,7 @@
   line-height: 1.2;
 }
 .mobile-app .mobile-tryon-secondary {
-  border: 1px solid var(--onfit-border);
+  border: 2px solid var(--onfit-brown);
   border-radius: 999px;
   background: rgba(245, 241, 236, .9);
   -webkit-backdrop-filter: blur(8px);
@@ -876,11 +884,13 @@
 }
 .mobile-app .mobile-tryon-generate,
 .mobile-app .mobile-tryon-save {
-  background: var(--onfit-ink);
-  color: var(--onfit-cream);
+  border: 1px solid var(--mobile-action-accent);
+  background: var(--mobile-action-accent);
+  color: var(--onfit-ink);
+  font-weight: 800;
 }
 .mobile-app .mobile-tryon-return {
-  border: 1px solid var(--onfit-border);
+  border: 2px solid var(--onfit-brown);
   background: rgba(245, 241, 236, .9);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);

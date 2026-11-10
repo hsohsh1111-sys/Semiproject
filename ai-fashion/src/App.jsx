@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import CameraView from './components/CameraView.jsx'
+import CameraView, { prepareUploadedImage } from './components/CameraView.jsx'
 import MobileCamera from './components/MobileCamera.jsx'
 import CircleSelector from './components/CircleSelector.jsx'
 import SelectionPreview from './components/SelectionPreview.jsx'
 import SearchDiagnostics from './components/SearchDiagnostics.jsx'
-import PcTryOnPanel, { downloadTryOnImage } from './components/PcTryOnPanel.jsx'
+import { downloadTryOnImage } from './components/PcTryOnPanel.jsx'
 import BeforeAfterSlider from './components/BeforeAfterSlider.jsx'
 import { sendRecommendations, sendSelection, sendTryOn } from './services/api.js'
 import { createSearchImageCrop } from './services/searchCrop.js'
@@ -83,7 +83,8 @@ export default function App() {
   const [searchAttempt, setSearchAttempt] = useState(0)
   const [tryOnProduct, setTryOnProduct] = useState(null)
   const [tryOnResult, setTryOnResult] = useState(null)
-  const [completedTryOnProduct, setCompletedTryOnProduct] = useState(null)
+  const [pcTryOnHistory, setPcTryOnHistory] = useState([])
+  const [activePcTryOnId, setActivePcTryOnId] = useState(null)
   const [lastMobileTryOn, setLastMobileTryOn] = useState(null)
   const [tryOnError, setTryOnError] = useState('')
   const [tryOnLoading, setTryOnLoading] = useState(false)
@@ -94,6 +95,13 @@ export default function App() {
   const [downloading, setDownloading] = useState(false)
   const [carouselEdges, setCarouselEdges] = useState({ start: true, end: true })
   const [viewerSize, setViewerSize] = useState(null)
+  const [pcStep, setPcStep] = useState(1)
+  const [viewerTab, setViewerTab] = useState('original')
+  const [showDrawingGuide, setShowDrawingGuide] = useState(true)
+  const [photoChanging, setPhotoChanging] = useState(false)
+  const [photoChangeError, setPhotoChangeError] = useState('')
+  const photoPickerRef = useRef(null)
+  const photoRequestRef = useRef(0)
   const tryOnPickerRef = useRef(null)
   const carouselRef = useRef(null)
   const carouselDragRef = useRef(null)
@@ -104,6 +112,8 @@ export default function App() {
   const tryOnInFlight = useRef(false)
   const tryOnAbortRef = useRef(null)
   const tryOnVersion = useRef(0)
+  const pcTryOnSequence = useRef(0)
+  const pcHistoryUrls = useRef(new Set())
   const selectionVersion = useRef(0)
 
   useEffect(() => {
@@ -120,6 +130,19 @@ export default function App() {
   useEffect(() => () => {
     if (tryOnPerson?.url) URL.revokeObjectURL(tryOnPerson.url)
   }, [tryOnPerson])
+
+  useEffect(() => {
+    const currentUrls = new Set(pcTryOnHistory.filter((entry) => entry.person.alternate)
+      .map((entry) => entry.person.url))
+    pcHistoryUrls.current.forEach((url) => {
+      if (!currentUrls.has(url)) URL.revokeObjectURL(url)
+    })
+    pcHistoryUrls.current = currentUrls
+  }, [pcTryOnHistory])
+
+  useEffect(() => () => {
+    pcHistoryUrls.current.forEach((url) => URL.revokeObjectURL(url))
+  }, [])
 
   useEffect(() => () => {
     if (lastMobileTryOn?.personImage?.url) URL.revokeObjectURL(lastMobileTryOn.personImage.url)
@@ -161,7 +184,9 @@ export default function App() {
   function clearTryOnOutcome() {
     tryOnVersion.current += 1
     setTryOnResult(null)
-    setCompletedTryOnProduct(null)
+    setPcTryOnHistory([])
+    setActivePcTryOnId(null)
+    pcTryOnSequence.current = 0
     setTryOnError('')
   }
 
@@ -185,6 +210,12 @@ export default function App() {
   }
 
   function acceptImage(data) {
+    photoRequestRef.current += 1
+    setPhotoChanging(false)
+    setPhotoChangeError('')
+    setPcStep(1)
+    setViewerTab('original')
+    setShowDrawingGuide(true)
     selectionVersion.current += 1
     resetTryOn()
     setLastMobileTryOn(null)
@@ -198,9 +229,16 @@ export default function App() {
     setSearchError('')
     setSearchDiagnostics(null)
     setSearching(false)
+    setSending(false)
   }
 
   function resetImage() {
+    photoRequestRef.current += 1
+    setPhotoChanging(false)
+    setPhotoChangeError('')
+    setPcStep(1)
+    setViewerTab('original')
+    setShowDrawingGuide(true)
     selectionVersion.current += 1
     resetTryOn()
     setLastMobileTryOn(null)
@@ -214,9 +252,29 @@ export default function App() {
     setSearchError('')
     setSearchDiagnostics(null)
     setSearching(false)
+    setSending(false)
+  }
+
+  async function changePhoto(event) {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+    const request = ++photoRequestRef.current
+    setPhotoChanging(true)
+    setPhotoChangeError('')
+    try {
+      const data = await prepareUploadedImage(file)
+      if (request === photoRequestRef.current) acceptImage(data)
+    } catch {
+      if (request === photoRequestRef.current) setPhotoChangeError('사진을 읽지 못했어요. 다른 사진을 선택해 주세요.')
+    } finally {
+      if (request === photoRequestRef.current) setPhotoChanging(false)
+    }
   }
 
   function changeSelection(next) {
+    setPcStep(2)
+    if (next) setViewerTab('selection')
     selectionVersion.current += 1
     resetTryOn()
     setLastMobileTryOn(null)
@@ -229,9 +287,27 @@ export default function App() {
     setSearching(false)
   }
 
-  async function searchSimilar() {
-    const submittedVersion = selectionVersion.current
-    if (searchInFlight.current === submittedVersion || result?.status !== 'success' || !result.search_image_crop?.file) return
+  function restartDrawing() {
+    photoRequestRef.current += 1
+    setPhotoChanging(false)
+    setPhotoChangeError('')
+    setSelectorReset((value) => value + 1)
+    changeSelection(null)
+    setTryOnPerson(null)
+    setTryOnPhotoError('')
+    setTryOnPhotoLoading(false)
+    setViewerTab('original')
+    setShowDrawingGuide(true)
+    setSending(false)
+  }
+
+  function searchSimilar() {
+    return searchSimilarWithAnalysis(result, selectionVersion.current)
+  }
+
+  async function searchSimilarWithAnalysis(analysis, submittedVersion) {
+    if (submittedVersion !== selectionVersion.current || searchInFlight.current === submittedVersion ||
+        analysis?.status !== 'success' || !analysis.search_image_crop?.file) return
     searchInFlight.current = submittedVersion
     resetTryOn()
     setSearchAttempt((attempt) => attempt + 1)
@@ -239,9 +315,16 @@ export default function App() {
     setSearchError('')
     setSearchDiagnostics(null)
     try {
-      const next = await sendRecommendations(result.search_image_crop.file, result)
+      const next = await sendRecommendations(analysis.search_image_crop.file, analysis)
       if (submittedVersion === selectionVersion.current) {
         if (next && typeof next === 'object' && !Array.isArray(next)) setRecommendations(next)
+        if (next && typeof next === 'object' && !Array.isArray(next)) {
+          setPcStep(3)
+          if (!isMobile && Array.isArray(next.recommendations) && next.recommendations.some(
+            (product) => product && typeof product === 'object' && !Array.isArray(product))) {
+            setViewerTab('original')
+          }
+        }
         else setSearchError('추천 응답을 읽을 수 없습니다. 다시 시도해 주세요.')
       }
     } catch (caught) {
@@ -265,6 +348,10 @@ export default function App() {
       setTryOnPhotoError('')
     }
     setTryOnProduct(product)
+    if (!isMobile) {
+      setPcStep(3)
+      if (viewerTab === 'tryon') setViewerTab('original')
+    }
   }
 
   async function uploadTryOnPerson(event) {
@@ -298,8 +385,9 @@ export default function App() {
         'image/jpeg', 0.88))
       if (currentSelectionVersion !== selectionVersion.current || currentTryOnVersion !== tryOnVersion.current) return
       const normalized = new File([blob], 'try-on-person.jpg', { type: 'image/jpeg' })
-      clearTryOnOutcome()
+      if (isMobile) clearTryOnOutcome()
       setTryOnPerson({ file: normalized, url: URL.createObjectURL(normalized) })
+      if (!isMobile) setViewerTab('uploaded')
     } catch {
       setTryOnPhotoError('사진을 읽지 못했습니다. JPG, PNG, WebP 파일을 다시 선택하세요.')
     } finally {
@@ -316,31 +404,46 @@ export default function App() {
   }
 
   async function createTryOn() {
-    const person = tryOnPerson || image
-    if (!tryOnProduct || !person?.file || !result || tryOnInFlight.current) return
+    const selectedResult = pcTryOnHistory.find((entry) => entry.id === activePcTryOnId) || pcTryOnHistory.at(-1)
+    const person = isMobile ? tryOnPerson || image
+      : viewerTab === 'uploaded' ? tryOnPerson || image
+        : viewerTab === 'tryon' ? selectedResult?.person || image : image
+    const product = tryOnProduct
+    const usesAlternatePerson = person && person !== image && person.alternate !== false
+    if (!product || !person?.file || !result || tryOnInFlight.current || tryOnPhotoLoading) return
     const currentVersion = tryOnVersion.current
     const controller = new AbortController()
     tryOnInFlight.current = true
     tryOnAbortRef.current = controller
+    if (!isMobile) setPcStep(4)
     setTryOnLoading(true)
     setTryOnError('')
     if (isMobile) setTryOnResult(null)
     try {
-      const box = tryOnPerson ? null : result.geometry?.bounding_box || selection?.box
-      const analysis = tryOnPerson
+      const box = usesAlternatePerson ? null : result.geometry?.bounding_box || selection?.box
+      const analysis = usesAlternatePerson
         ? { ...result, selected_object: { ...result.selected_object, description: '' } }
         : result
-      const next = await sendTryOn(person.file, tryOnProduct, analysis, box, controller.signal)
+      const next = await sendTryOn(person.file, product, analysis, box, controller.signal)
       if (currentVersion === tryOnVersion.current) {
         if (!isMobile && !next?.image_data_url) {
           setTryOnError('가상 착용 결과를 받지 못했어요. 다시 시도해 주세요.')
         } else {
           setTryOnResult(next)
-          if (!isMobile) setCompletedTryOnProduct(tryOnProduct)
+          if (!isMobile) {
+            const completedPerson = usesAlternatePerson
+              ? { file: person.file, url: URL.createObjectURL(person.file), alternate: true }
+              : { file: image.file, url: image.url, alternate: false }
+            const id = ++pcTryOnSequence.current
+            setPcTryOnHistory((history) => [...history, { id, result: next, person: completedPerson, product }].slice(-5))
+            setActivePcTryOnId(id)
+            setPcStep(4)
+            setViewerTab('tryon')
+          }
         }
         if (isMobile && typeof next?.image_data_url === 'string' && next.image_data_url) {
           setLastMobileTryOn({
-            product: tryOnProduct,
+            product,
             personImage: tryOnPerson
               ? { file: person.file, url: URL.createObjectURL(person.file) }
               : null,
@@ -360,11 +463,12 @@ export default function App() {
   }
 
   async function saveTryOnResult() {
-    if (downloading || !tryOnResult?.image_data_url) return
+    const activeResult = pcTryOnHistory.find((entry) => entry.id === activePcTryOnId) || pcTryOnHistory.at(-1)
+    if (downloading || !activeResult?.result.image_data_url) return
     setDownloadError('')
     setDownloading(true)
     try {
-      await downloadTryOnImage(tryOnResult.image_data_url)
+      await downloadTryOnImage(activeResult.result.image_data_url)
     } catch {
       setDownloadError('이미지 다운로드를 시작하지 못했습니다. 다시 시도해 주세요.')
     } finally {
@@ -412,9 +516,10 @@ export default function App() {
   }
 
   async function submit() {
-    if (!image || !selection || result?.status === 'success' || inFlight.current) return
-    inFlight.current = true
+    if (!image || !selection || (result?.status === 'success' && result.search_image_crop?.file) ||
+        inFlight.current === selectionVersion.current) return
     const submittedVersion = selectionVersion.current
+    inFlight.current = submittedVersion
     setSending(true)
     setError('')
     setResult(null)
@@ -422,22 +527,29 @@ export default function App() {
       const next = await sendSelection(image, selection)
       let searchImageCrop = null
       let cropError = ''
-      if (next.status === 'success' && next.geometry?.bounding_box) {
+      if (next.status === 'success') {
         try {
-          searchImageCrop = await createSearchImageCrop(image, next.geometry.bounding_box)
+          searchImageCrop = await createSearchImageCrop(image, next.geometry?.bounding_box || selection.box)
+          if (!searchImageCrop?.file) throw new Error('검색용 이미지 crop이 비어 있습니다.')
         } catch {
           cropError = '검색용 이미지 crop을 만들지 못했습니다. 사진을 다시 선택해 주세요.'
         }
       }
       if (submittedVersion === selectionVersion.current) {
-        setResult({ ...next, search_image_crop: searchImageCrop })
+        const analysis = { ...next, search_image_crop: searchImageCrop }
+        setResult(analysis)
         if (cropError) setError(cropError)
+        if (!isMobile && analysis.status === 'success' && searchImageCrop?.file) {
+          await searchSimilarWithAnalysis(analysis, submittedVersion)
+        }
       }
     } catch (caught) {
       if (submittedVersion === selectionVersion.current) setError(caught.message)
     } finally {
-      inFlight.current = false
-      setSending(false)
+      if (inFlight.current === submittedVersion) {
+        inFlight.current = false
+        setSending(false)
+      }
     }
   }
 
@@ -461,15 +573,29 @@ export default function App() {
   const hasRecommendationList = Array.isArray(recommendations?.recommendations)
   const showDebug = import.meta.env.DEV && new URLSearchParams(window.location.search).get('debug') === '1'
   const analysisFailed = !!result && result.status !== 'success'
-  const progressMessage = sending ? 'AI가 선택한 패션 아이템을 분석하고 있어요.'
-    : searching ? '비슷한 패션 상품을 찾고 있어요.'
+  const progressMessage = searching ? '비슷한 패션 상품을 찾고 있어요.'
+    : sending ? 'AI가 선택한 패션 아이템을 분석하고 있어요.'
       : hasRecommendationList ? '비슷한 상품을 찾았어요.'
         : analysisFailed ? '상품을 분석하지 못했어요. 다시 시도해 주세요.'
           : '선택한 아이템과 비슷한 상품을 찾아보세요.'
   const recommendedProducts = hasRecommendationList
     ? recommendations.recommendations.filter((product) => product && typeof product === 'object' && !Array.isArray(product))
     : []
-  const activeTryOnPerson = tryOnPerson || image
+  const analyzedProduct = result?.selected_object
+  const analysisFeatures = [analyzedProduct?.dominant_color,
+    ...(Array.isArray(analyzedProduct?.secondary_colors) ? analyzedProduct.secondary_colors : []),
+    analyzedProduct?.pattern, analyzedProduct?.visible_text_or_logo, analyzedProduct?.material_appearance,
+    analyzedProduct?.fit_or_shape].filter(Boolean).join(' · ')
+  const activePcTryOn = pcTryOnHistory.find((entry) => entry.id === activePcTryOnId) || pcTryOnHistory.at(-1)
+  const hasTryOnResult = !!activePcTryOn?.result.image_data_url
+  const stepLabels = ['사진 촬영/업로드', '패션 용품 영역 그리기', '상품 선택', '가상 착용']
+  const completedSteps = [!!image, !!selection, !!tryOnProduct, hasTryOnResult]
+  const availableSteps = [true, !!image, hasRecommendationList, !!tryOnProduct || hasTryOnResult]
+  const hideSelectionTab = hasRecommendationList && recommendedProducts.length > 0 && pcStep !== 2
+  const visibleTab = viewerTab === 'selection' && hideSelectionTab ? 'original'
+    : viewerTab === 'uploaded' && !tryOnPerson ? 'original'
+    : viewerTab === 'tryon' && !hasTryOnResult ? (hideSelectionTab ? 'original' : 'selection')
+    : viewerTab === 'selection' && !selection && pcStep !== 2 ? 'original' : viewerTab
 
   return (
     <main className="studio-shell">
@@ -479,53 +605,161 @@ export default function App() {
           <h1>{image ? '나만의 가상 피팅 스튜디오' : 'AI 패션 검색 스튜디오'}</h1></div>
         <span className="studio-header-note">사진에서 찾고, 나에게 입혀보세요</span>
       </header>
-      <div className="studio-grid">
+      <nav className="studio-stepper" aria-label="진행 단계">
+        {stepLabels.map((label, index) => <button key={label} type="button"
+          className={pcStep === index + 1 ? 'is-current' : completedSteps[index] ? 'is-complete' : ''}
+          aria-current={pcStep === index + 1 ? 'step' : undefined}
+          disabled={index === 0 ? !image : !availableSteps[index] || pcStep === index + 1}
+          onClick={() => {
+            if (index === 0) {
+              resetImage()
+              return
+            }
+            if (index === 1) {
+              restartDrawing()
+              return
+            }
+            setPcStep(index + 1)
+            if (index === 3 && hasTryOnResult) setViewerTab('tryon')
+            else setViewerTab('original')
+          }}>
+          <span className="studio-step-number">{completedSteps[index] ? '✓' : index + 1}</span>{label}
+        </button>)}
+      </nav>
+      <div className={'studio-grid' + (!image ? ' is-start' : pcStep === 2 && result?.status !== 'success' ? ' is-drawing-start' : '')}>
         <section className="studio-viewer" aria-label="사진 및 가상 착용 결과">
-          <div className="studio-viewer-head">
-            <strong>{tryOnResult?.image_data_url ? '가상 착용 결과' : image ? '선택한 사진' : '사진 준비'}</strong>
-            {tryOnResult?.image_data_url && completedTryOnProduct &&
-              <span>{completedTryOnProduct.brand} · {completedTryOnProduct.product_name}</span>}
-          </div>
-          <div ref={viewerFrameRef} className="studio-viewer-frame">
-            {!image ? <CameraView onImage={acceptImage} /> : tryOnResult?.image_data_url
-              ? <BeforeAfterSlider beforeSrc={activeTryOnPerson.url} afterSrc={tryOnResult.image_data_url} actual />
+          {image && <div className="studio-viewer-head studio-viewer-tabs" role="tablist" aria-label="사진 보기">
+            {[['original', '원본 사진'], ...(!hideSelectionTab ? [['selection', '선택 영역']] : []),
+              ...(tryOnPerson ? [['uploaded', '업로드한 사진']] : []), ['tryon', '가상 착용 결과']].map(([tab, label]) =>
+              <button key={tab} type="button" role="tab" aria-selected={visibleTab === tab}
+                className={visibleTab === tab ? 'is-active' : ''}
+                disabled={tab === 'selection' ? !selection : tab === 'tryon' ? !hasTryOnResult : false}
+                onClick={() => {
+                  setViewerTab(tab)
+                  if (tab === 'tryon') setPcStep(4)
+                  else if (pcStep >= 3 && !tryOnLoading) setPcStep(3)
+                }}>{label}</button>)}
+          </div>}
+          <div ref={viewerFrameRef} className="studio-viewer-frame"
+            onPointerDownCapture={(event) => {
+              if (pcStep === 2 && event.button === 0 && event.target?.classList?.contains('drawing-canvas')) {
+                setShowDrawingGuide(false)
+              }
+            }}>
+            {!image ? <CameraView onImage={acceptImage} onCaptureConfirm={(data) => {
+              acceptImage(data)
+              setPcStep(2)
+            }} studioStart /> : visibleTab === 'tryon' && hasTryOnResult
+              ? <BeforeAfterSlider key={activePcTryOn.id} beforeSrc={activePcTryOn.person.url}
+                  afterSrc={activePcTryOn.result.image_data_url} actual />
+              : visibleTab === 'uploaded' && tryOnPerson
+                ? <img className="studio-original-photo" src={tryOnPerson.url} alt="추가 업로드한 사진" />
+              : visibleTab === 'original' && (pcStep !== 2 || selection)
+                ? <img className="studio-original-photo" src={image.url} alt="선택한 원본 사진" />
               : <CircleSelector key={image.url + '-' + selectorReset} image={image} selection={selection}
                   onSelectionChange={changeSelection} visionGeometry={result?.geometry} embedded
+                  locked={pcStep !== 2 || sending || searching}
                   stageStyle={viewerSize?.imageUrl === image.url ? { width: viewerSize.width, height: viewerSize.height } : undefined} />}
+            {image && pcStep === 2 && !selection && showDrawingGuide && !sending && !searching &&
+              <div className="studio-drawing-guide" aria-live="polite">
+                <strong>원하는 아이템에 동그라미를 그려 주세요.</strong>
+              </div>}
+            {image && pcStep === 2 && selection && !result && !sending && !searching &&
+              <div className="studio-drawing-guide" aria-live="polite">
+                <strong>선택 영역을 확인하세요.</strong>
+              </div>}
+            {image && pcStep === 2 && (sending || searching) &&
+              <div className="studio-drawing-guide is-searching" role="status">
+                <span className="studio-search-spinner" aria-hidden="true" />
+                <strong>{searching ? '유사 상품 검색중...' : '선택 아이템 분석중...'}</strong>
+              </div>}
+            {image && pcStep >= 3 && tryOnProduct && <div className="studio-viewer-product" aria-live="polite">
+              {typeof tryOnProduct.image_url === 'string' &&
+                <img src={tryOnProduct.image_url} alt="" />}
+              <span><small>이 사진에 착용할 상품</small><strong>{tryOnProduct.product_name}</strong></span>
+            </div>}
             {tryOnLoading && <div className="studio-viewer-loading" role="status">
+              <span className="studio-search-spinner" aria-hidden="true" />
               <strong>AI가 가상 착용 이미지를 만들고 있어요.</strong>
-              <span>기존 결과는 새 이미지가 완성될 때까지 유지됩니다.</span>
             </div>}
           </div>
-          {image && <div className="studio-viewer-actions">
-            <button type="button" className="secondary" onClick={resetImage}>새 사진 시작</button>
-            {tryOnResult?.image_data_url && <>
-              <button type="button" onClick={saveTryOnResult} disabled={downloading}>
-                {downloading ? '저장 준비 중…' : '결과 저장'}</button>
-              <button type="button" className="secondary" onClick={createTryOn}
-                disabled={!tryOnProduct || tryOnLoading}>다시 생성</button>
+          {visibleTab === 'tryon' && pcTryOnHistory.length > 1 &&
+            <div className="studio-result-history" role="group" aria-label="가상 착용 결과 기록">
+              {pcTryOnHistory.map((entry) => <button key={entry.id} type="button"
+                className={entry.id === activePcTryOn.id ? 'is-active' : ''}
+                aria-pressed={entry.id === activePcTryOn.id}
+                aria-label={`결과 ${entry.id}: ${entry.product.product_name}`}
+                title={`${entry.person.alternate ? '업로드한 사진' : '원본 사진'} · ${entry.product.product_name}`}
+                onClick={() => { setActivePcTryOnId(entry.id); setPcStep(4) }}>
+                <img src={entry.result.image_data_url} alt="" />
+                <span>결과 {entry.id}</span>
+              </button>)}
+            </div>}
+          {image && <div className={'studio-viewer-actions' + (pcStep === 2 ? ' is-drawing' : '')}>
+            {pcStep === 1 && <button type="button" className="studio-primary-action"
+              onClick={() => { setPcStep(2); setViewerTab('original') }}>이 사진 사용하기</button>}
+            {pcStep === 2 && <>
+              <button type="button" className="secondary" onClick={() => {
+                setSelectorReset((value) => value + 1)
+                changeSelection(null)
+                setViewerTab('original')
+                setShowDrawingGuide(true)
+              }} disabled={!selection || sending || searching}>다시 그리기</button>
+              <button type="button" className="studio-primary-action"
+                onClick={hasRecommendationList ? () => { setPcStep(3); setViewerTab('original') }
+                  : result?.status === 'success' && result.search_image_crop?.file ? searchSimilar : submit}
+                disabled={!selection || sending || searching}>
+                {searching ? '상품 검색 중…' : sending ? '분석 중…' : searchError ? '다시 검색' :
+                  analysisFailed ? '다시 분석하기' : '유사 상품 검색'}
+              </button>
             </>}
+            {pcStep === 1 && <button type="button" className="secondary" onClick={() => photoPickerRef.current?.click()}
+              disabled={photoChanging}>{photoChanging ? '사진 준비 중…' : '사진 변경'}</button>}
+            {visibleTab === 'tryon' && hasTryOnResult ?
+              <button type="button" className="studio-primary-action studio-result-save"
+                onClick={saveTryOnResult} disabled={downloading}>
+                {downloading ? '저장 준비 중…' : '결과 저장'}
+              </button> : pcStep >= 3 && tryOnProduct && <div className="studio-tryon-action-row">
+              <button type="button" className="secondary" onClick={() => tryOnPickerRef.current?.click()}
+                disabled={tryOnLoading || tryOnPhotoLoading}>
+                {tryOnPhotoLoading ? '사진 준비 중…' : '다른 사진 업로드'}
+              </button>
+              <button type="button" className="studio-primary-action" onClick={createTryOn}
+                disabled={tryOnLoading || tryOnPhotoLoading}>
+                {tryOnLoading ? '가상 착용 생성 중…' : '가상 착용하기'}
+              </button>
+            </div>}
+            {photoChangeError && <p className="error" role="alert">{photoChangeError}</p>}
+            {pcStep === 2 && error && <p className="error" role="alert">{error}</p>}
+            {pcStep === 2 && analysisFailed && !error && <p className="error" role="alert">{progressMessage}</p>}
+            {pcStep >= 3 && tryOnPhotoError && <p className="error" role="alert">{tryOnPhotoError}</p>}
+            {pcStep >= 3 && tryOnError && <p className="error" role="alert">{tryOnError} 다시 시도할 수 있어요.</p>}
+            {pcStep >= 3 && visibleTab !== 'tryon' && tryOnProduct &&
+              selectedTryOnRegion(result?.selected_object) === 'watch' &&
+              <p className="studio-inline-status">손목이 보이는 사진이 시계 착용에 적합합니다.</p>}
             {downloadError && <p className="error" role="alert">{downloadError}</p>}
           </div>}
         </section>
-        <aside className="studio-side" aria-label="아이템 분석과 추천 상품">
+        {image && (pcStep !== 2 || result?.status === 'success') && <aside className="studio-side" aria-label="아이템 분석과 추천 상품">
           <div className="studio-side-scroll">
-            {!image ? <div className="studio-intro">
-              <span className="eyebrow">START YOUR EDIT</span>
-              <h2>사진 한 장으로<br />스타일을 찾아보세요.</h2>
-              <p>왼쪽에서 사진을 업로드하거나 웹캠으로 촬영하세요. 원하는 옷이나 소품을 둘러 그리면 비슷한 상품을 찾아드립니다.</p>
-              <ol><li>사진 준비</li><li>아이템 선택</li><li>상품 탐색</li><li>가상 착용</li></ol>
+            {pcStep === 1 ? <div className="studio-intro">
+              <span className="eyebrow">PHOTO READY</span>
+              <h2>사진을 확인해 주세요.</h2>
+              <p>다른 사진을 원한다면 왼쪽의 사진 변경을 누르세요.</p>
             </div> : <>
               <div className="studio-analysis">
                 <span className="eyebrow">{hasRecommendationList ? 'YOUR STYLE MATCH' : 'SELECT YOUR ITEM'}</span>
-                <h2>{result?.selected_object?.product_type || result?.selected_object?.category ||
-                  (selection ? '선택한 아이템을 확인하세요' : '찾고 싶은 아이템을 선택하세요')}</h2>
-                <p>{result?.selected_object?.description ||
-                  (selection ? '선택한 영역을 확인하고 비슷한 상품을 찾아보세요.' : '사진 위에서 원하는 옷이나 소품을 둘러 그려주세요.')}</p>
-                {result?.selected_object?.dominant_color && <span className="studio-color-note">색상 · {result.selected_object.dominant_color}</span>}
-                <span className="studio-progress" role="status">{progressMessage}</span>
+                <h2>{result?.status === 'success' ? '상품 분석 정보' : '선택한 영역을 확인하세요'}</h2>
+                {result?.status === 'success' ? <div className="studio-analysis-details">
+                  <p><strong>상품 종류</strong><span>{[analyzedProduct?.category, analyzedProduct?.product_type].filter(Boolean).join(' / ') || '확인 불가'}</span></p>
+                  {analyzedProduct?.description && <p><strong>상품 설명</strong><span>{analyzedProduct.description}</span></p>}
+                  {analysisFeatures && <p><strong>색상·디자인</strong><span>{analysisFeatures}</span></p>}
+                  {result?.search_keywords?.primary && <p><strong>핵심 검색어</strong><span>{result.search_keywords.primary}</span></p>}
+                  <small>무신사에서만 상품을 검색합니다.</small>
+                </div> : <p>선택한 영역을 확인하고 유사 상품을 검색해 주세요.</p>}
+                {(selection || sending || searching) && <span className="studio-progress" role="status">{progressMessage}</span>}
               </div>
-              {recommendations && <section className="studio-products" aria-label="추천 상품">
+              {pcStep >= 3 && recommendations && <section className="studio-products" aria-label="추천 상품">
                 <div className="studio-products-head">
                   <div><span className="eyebrow">CURATED FOR YOU</span><h3>비슷한 상품</h3></div>
                   <div className="studio-carousel-controls">
@@ -550,6 +784,8 @@ export default function App() {
                     }}>
                     {recommendedProducts.map((product, index) => <article className={'studio-product-card' +
                       (tryOnProduct?.product_id === product.product_id ? ' is-selected' : '')} key={product.product_id ?? index}>
+                      {tryOnProduct?.product_id === product.product_id &&
+                        <span className="studio-product-check" aria-hidden="true">✓ 선택됨</span>}
                       <button type="button" className="studio-product-select" onClick={() => selectTryOn(product)}
                         aria-pressed={tryOnProduct?.product_id === product.product_id}
                         disabled={tryOnLoading || !canTryOnProduct(product, image)}
@@ -574,33 +810,29 @@ export default function App() {
                 <SearchDiagnostics data={recommendations?.search_diagnostics || searchDiagnostics} />}
             </>}
           </div>
-          {image && <div className="studio-side-actions">
+          {pcStep >= 3 && (!hasRecommendationList || recommendedProducts.length === 0) && <div className="studio-side-actions">
             {!hasRecommendationList ? <>
               <button type="button" className="secondary" onClick={() => {
                 setSelectorReset((value) => value + 1)
                 changeSelection(null)
-              }} disabled={!selection || sending || searching}>다시 선택</button>
+              }} disabled={!selection || sending || searching}>다시 그리기</button>
               <button type="button" onClick={result?.status === 'success' ? searchSimilar : submit}
                 disabled={!selection || sending || searching || (result?.status === 'success' && !result.search_image_crop?.file)}>
                 {sending ? '분석 중…' : searching ? '상품 검색 중…' : searchError ? '다시 검색' :
-                  analysisFailed ? '다시 분석하기' : '비슷한 상품 찾기'}
+                  analysisFailed ? '다시 분석하기' : '유사 상품 검색'}
               </button>
-              {error && <p className="error" role="alert">{error}</p>}
-            </> : recommendedProducts.length === 0 ? <div className="studio-empty-actions">
+            </> : <div className="studio-empty-actions">
               <button type="button" onClick={searchSimilar} disabled={searching}>다시 검색</button>
               <button type="button" className="secondary" onClick={() => {
                 setSelectorReset((value) => value + 1)
                 changeSelection(null)
               }}>다른 아이템 선택</button>
-            </div> : <PcTryOnPanel product={tryOnProduct} hasAlternatePerson={!!tryOnPerson}
-              loading={tryOnLoading} error={tryOnError} photoError={tryOnPhotoError}
-              photoLoading={tryOnPhotoLoading} watchWarning={selectedTryOnRegion(result?.selected_object) === 'watch'}
-              showDebug={showDebug} result={tryOnResult}
-              onUploadPerson={() => tryOnPickerRef.current?.click()} onRestorePerson={restoreTryOnPerson}
-              onGenerate={createTryOn} />}
+            </div>}
           </div>}
-        </aside>
+        </aside>}
       </div>
+      {image && <input ref={photoPickerRef} type="file" className="visually-hidden"
+        accept="image/*" aria-label="새 사진 선택" onChange={changePhoto} />}
       {image && hasRecommendationList && <input ref={tryOnPickerRef} type="file" className="visually-hidden"
         accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
         aria-label="가상 착용용 인물 사진 선택" onChange={uploadTryOnPerson} />}

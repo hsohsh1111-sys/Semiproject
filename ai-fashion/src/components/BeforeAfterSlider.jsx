@@ -7,13 +7,13 @@ export default function BeforeAfterSlider({ beforeSrc = beforeImage, afterSrc = 
   const [position, setPosition] = useState(50)
   const dragging = useRef(null)
   const [comparison, setComparison] = useState(null)
-  const [sideBySide, setSideBySide] = useState(false)
+  const [sideBySide, setSideBySide] = useState(null)
 
   useEffect(() => {
     if (!actual) return undefined
     let cancelled = false
     setComparison(null)
-    setSideBySide(false)
+    setSideBySide(null)
     const dimensions = (src) => new Promise((resolve) => {
       const image = new Image()
       image.onload = () => resolve([image.naturalWidth, image.naturalHeight])
@@ -24,8 +24,9 @@ export default function BeforeAfterSlider({ beforeSrc = beforeImage, afterSrc = 
       if (cancelled) return
       const beforeRatio = before && before[0] / before[1]
       const afterRatio = after && after[0] / after[1]
-      setComparison(beforeRatio && afterRatio && Math.abs(beforeRatio - afterRatio) / beforeRatio <= 0.03
-        ? { aligned: true, ratio: beforeRatio } : { aligned: false })
+      const ratioDifference = beforeRatio && afterRatio ? Math.abs(beforeRatio - afterRatio) / beforeRatio : Infinity
+      setComparison({ aligned: ratioDifference <= 0.03, canSlide: ratioDifference <= 0.12,
+        ratio: beforeRatio || afterRatio || 1 })
     })
     return () => { cancelled = true }
   }, [actual, beforeSrc, afterSrc])
@@ -73,10 +74,8 @@ export default function BeforeAfterSlider({ beforeSrc = beforeImage, afterSrc = 
     <figure><img src={afterSrc} alt="AI 가상 착용 결과" /><figcaption>가상 착용 결과</figcaption></figure>
   </div>
 
-  if (actual && !comparison?.aligned) return fallback
-
   const slider = <div className={`landing-compare${actual ? ' tryon-compare-slider' : ''}`}
-    style={{ '--split': `${position}%`, ...(actual ? { aspectRatio: comparison.ratio } : {}) }}
+    style={{ '--split': `${position}%`, ...(actual ? { aspectRatio: comparison?.ratio || 1 } : {}) }}
     role="slider" tabIndex={0} aria-label={actual ? '원본 사진과 가상 착용 결과 비교' : '기존 스타일과 추천 스타일 비교'}
     aria-valuemin={0} aria-valuemax={100} aria-valuenow={position}
     aria-valuetext={`${beforeLabel} ${position}%, ${afterLabel} ${100 - position}%`}
@@ -94,10 +93,16 @@ export default function BeforeAfterSlider({ beforeSrc = beforeImage, afterSrc = 
     </span>
   </div>
 
+  const showSideBySide = sideBySide ?? !comparison?.aligned
   return actual ? <div className="tryon-compare-wrap">
-    <button type="button" className="secondary" onClick={() => setSideBySide((value) => !value)}>
-      {sideBySide ? '슬라이더로 비교' : '나란히 비교'}
-    </button>
-    {sideBySide ? fallback : slider}
+    <div className="tryon-compare-options" role="group" aria-label="사진 비교 방식">
+      <button type="button" className={showSideBySide ? 'secondary' : ''}
+        aria-pressed={!showSideBySide} disabled={!comparison?.canSlide}
+        onClick={() => setSideBySide(false)}>슬라이더 비교</button>
+      <button type="button" className={showSideBySide ? '' : 'secondary'}
+        aria-pressed={showSideBySide} onClick={() => setSideBySide(true)}>나란히 비교</button>
+    </div>
+    {comparison && !comparison.canSlide && <span className="tryon-compare-note">사진 비율 차이가 커서 나란히 비교합니다.</span>}
+    {showSideBySide ? fallback : slider}
   </div> : slider
 }

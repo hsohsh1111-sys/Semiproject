@@ -69,7 +69,7 @@ export async function captureCameraFrame(video, zoomOptions) {
     sourceWidth: video.videoWidth, sourceHeight: video.videoHeight }
 }
 
-export default function CameraView({ onImage, landing = false }) {
+export default function CameraView({ onImage, onCaptureConfirm = onImage, landing = false, studioStart = false }) {
   const videoRef = useRef(null)
   const streamRef = useRef(null)
   const pickerRef = useRef(null)
@@ -77,6 +77,7 @@ export default function CameraView({ onImage, landing = false }) {
   const [active, setActive] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [cameraFailed, setCameraFailed] = useState(false)
   const [showCameraView, setShowCameraView] = useState(false)
   const [devices, setDevices] = useState([])
   const [deviceId, setDeviceId] = useState('')
@@ -113,12 +114,15 @@ export default function CameraView({ onImage, landing = false }) {
     setActive(false)
     setPreview(null)
     setError('')
+    setCameraFailed(false)
     setDeviceId(selectedDeviceId)
     if (window.isSecureContext === false) {
+      setCameraFailed(true)
       setError('카메라를 사용하려면 localhost 또는 HTTPS 접속이 필요합니다.')
       return
     }
     if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraFailed(true)
       setError('카메라를 실행할 수 없습니다. 연결 상태를 확인해 주세요.')
       return
     }
@@ -150,6 +154,7 @@ export default function CameraView({ onImage, landing = false }) {
       if (request !== requestRef.current) return
       releaseStream()
       setActive(false)
+      setCameraFailed(true)
       setError(caught.name === 'NotFoundError' || caught.name === 'DevicesNotFoundError' || caught.name === 'OverconstrainedError'
         ? '사용 가능한 카메라를 찾지 못했어요. 웹캠을 연결하거나 사진을 업로드해 주세요.'
         : caught.name === 'NotAllowedError' || caught.name === 'PermissionDeniedError' || caught.name === 'SecurityError'
@@ -163,6 +168,7 @@ export default function CameraView({ onImage, landing = false }) {
   async function capture() {
     const video = videoRef.current
     if (!active || busy || !video?.videoWidth || !video?.videoHeight) {
+      setCameraFailed(true)
       setError('카메라 영상이 준비되지 않았습니다. 잠시 후 다시 시도하세요.')
       return
     }
@@ -175,7 +181,10 @@ export default function CameraView({ onImage, landing = false }) {
       setPreview({ ...data, url: URL.createObjectURL(data.file) })
       setError('')
     } catch (caught) {
-      if (request === requestRef.current) setError(caught.message)
+      if (request === requestRef.current) {
+        setCameraFailed(true)
+        setError(caught.message)
+      }
     } finally {
       if (request === requestRef.current) setBusy(false)
     }
@@ -188,6 +197,7 @@ export default function CameraView({ onImage, landing = false }) {
     stopCamera()
     setPreview(null)
     setError('')
+    setCameraFailed(false)
     if (!file.type.startsWith('image/')) {
       setError('이미지 파일을 선택하세요.')
       return
@@ -210,6 +220,7 @@ export default function CameraView({ onImage, landing = false }) {
     stopCamera()
     setPreview(null)
     setError('')
+    setCameraFailed(false)
     setShowCameraView(false)
   }
 
@@ -220,8 +231,21 @@ export default function CameraView({ onImage, landing = false }) {
       className="visually-hidden" aria-label="이미지 파일 선택" />
   </>
 
+  if (studioStart && !showCameraView) return <div className="studio-photo-start">
+    <span className="eyebrow">START WITH A PHOTO</span>
+    <h2>찾고 싶은 아이템이 담긴 사진을 준비해 주세요.</h2>
+    <p>사진을 촬영하거나 업로드한 뒤, 원하는 옷을 선택할 수 있어요.</p>
+    <div className="studio-start-buttons">
+      <button type="button" onClick={() => setShowCameraView(true)}>사진 촬영</button>
+      <button type="button" className="secondary" onClick={() => pickerRef.current?.click()} disabled={busy}>사진 업로드</button>
+    </div>
+    <input ref={pickerRef} type="file" accept="image/*" onChange={upload}
+      className="visually-hidden" aria-label="이미지 파일 선택" />
+    {error && <p className="error" role="alert">{error}</p>}
+  </div>
+
   return (
-    <section className="card camera-card pc-camera" aria-label="사진 촬영">
+    <section className={'card camera-card pc-camera' + (preview ? ' is-preview' : '')} aria-label="사진 촬영">
       <div className="section-heading"><span className="step">01</span><h2>{preview ? '촬영한 사진 확인' : '카메라로 촬영'}</h2></div>
       <p className="hint">{preview ? '사진을 확인한 뒤 사용할지 선택하세요.' : '사진에서 찾고 싶은 패션 아이템이 보이도록 촬영하세요.'}</p>
       <video ref={videoRef} className={`camera-video ${active && !preview ? '' : 'hidden'}`} playsInline muted autoPlay aria-label="실시간 웹캠 미리보기" />
@@ -235,16 +259,14 @@ export default function CameraView({ onImage, landing = false }) {
       </label>}
       <div className="button-row pc-camera-actions">
         {preview ? <>
-          <button type="button" className="secondary" onClick={() => startCamera(deviceId)} disabled={busy}>다시 촬영</button>
-          <button type="button" onClick={() => onImage(preview)} disabled={busy}>이 사진 사용하기</button>
+          <button type="button" onClick={() => onCaptureConfirm(preview)} disabled={busy}>확인</button>
+          <button type="button" className="secondary" onClick={() => startCamera(deviceId)} disabled={busy}>취소</button>
         </> : <>
-          {active && <button type="button" onClick={capture} disabled={busy}>사진 촬영</button>}
-          {(!active || error) && <button type="button" onClick={() => startCamera(deviceId)} disabled={busy}>다시 시도</button>}
-          <button type="button" className="secondary" onClick={() => pickerRef.current?.click()} disabled={busy}>사진 업로드</button>
+          {active && !cameraFailed && <button type="button" onClick={capture} disabled={busy}>사진 촬영</button>}
+          {cameraFailed && <button type="button" onClick={() => startCamera(deviceId)} disabled={busy}>다시 시도</button>}
+          <button type="button" className="secondary" onClick={cancel}>취소</button>
         </>}
-        <button type="button" className="secondary" onClick={cancel}>취소 · 이전 화면</button>
       </div>
-      <input ref={pickerRef} type="file" accept="image/*" onChange={upload} className="visually-hidden" aria-label="이미지 파일 선택" />
       {error && <p className="error" role="alert">{error}</p>}
     </section>
   )

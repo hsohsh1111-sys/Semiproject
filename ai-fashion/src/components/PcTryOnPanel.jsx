@@ -37,24 +37,17 @@ export async function downloadTryOnImage(source) {
       }
 }
 
-export default function PcTryOnPanel({ product, hasAlternatePerson, loading, error, photoError, photoLoading,
-  watchWarning, showDebug, result, onUploadPerson, onRestorePerson, onGenerate }) {
+export default function PcTryOnPanel({ product, loading, error, photoError,
+  watchWarning, showDebug, result, completedProduct, onBrowseProducts }) {
+  const hasResult = !!result?.image_data_url
+  const selectedHasResult = hasResult && completedProduct?.product_id === product?.product_id
   return <section className="studio-tryon-controls" aria-label="가상 착용 작업">
-    <h3>선택한 상품</h3>
-    {product ? <div className="studio-selected-product">
-      {typeof product.image_url === 'string' && <img src={product.image_url} alt="선택한 상품" />}
-      <div><small>{product.brand || '브랜드 정보 없음'}</small><strong>{product.product_name}</strong></div>
-    </div> : <p className="studio-action-hint">추천 상품을 선택하면 가상 착용을 시작할 수 있어요.</p>}
-    {product && <>
-      <div className="studio-photo-options">
-        <button type="button" className="secondary" onClick={onUploadPerson} disabled={loading || photoLoading}>다른 사진 사용</button>
-        {hasAlternatePerson && <button type="button" className="secondary" onClick={onRestorePerson}
-          disabled={loading || photoLoading}>원본 사진으로</button>}
-      </div>
-      <button type="button" className="studio-generate" onClick={onGenerate} disabled={loading || photoLoading}>
-        {loading ? '가상 착용 생성 중…' : '가상 착용하기'}
-      </button>
-    </>}
+    {!product && <p className="studio-action-hint">추천 상품을 선택하면 가상 착용을 시작할 수 있어요.</p>}
+    {hasResult && completedProduct && !selectedHasResult && <p className="studio-inline-status">
+      현재 결과는 {completedProduct.brand || '이전 상품'} · {completedProduct.product_name} 착용 이미지입니다.
+    </p>}
+    {product && hasResult && <button type="button" className="secondary studio-browse-products" onClick={onBrowseProducts}
+      disabled={loading}>다른 상품 선택</button>}
     {loading && <p className="studio-inline-status" role="status">AI가 가상 착용 이미지를 만들고 있어요.</p>}
     {product && watchWarning && <p className="studio-inline-status">손목이 보이는 사진이 시계 착용에 적합합니다.</p>}
     {photoError && <p className="error" role="alert">{photoError}</p>}
