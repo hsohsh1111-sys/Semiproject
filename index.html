@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f1eb">
   <meta name="description" content="황상옥의 ONFIT 포트폴리오. 개인 맞춤형 패션 탐색과 가상 피팅을 위한 팀 프로젝트를 소개합니다.">
+  <link rel="icon" type="image/svg+xml" href="./frontend/public/onfit-favicon.svg">
   <title>황상옥 | ONFIT 포트폴리오</title>
   <style>
     :root {
@@ -31,7 +32,7 @@
     ::selection { background: #d5a28f; color: #211c18; }
     .shell { width: min(var(--page-width), calc(100% - 64px)); margin-inline: auto; }
 
-    .site-header { height: 84px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .site-header { position: sticky; top: 0; z-index: 50; height: 84px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(244, 241, 235, .96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
     .brand { display: inline-flex; align-items: center; gap: 13px; text-decoration: none; }
     .brand-mark { width: 34px; height: 34px; object-fit: contain; }
     .brand-name { font: 700 16px/1 var(--serif); letter-spacing: .14em; }
