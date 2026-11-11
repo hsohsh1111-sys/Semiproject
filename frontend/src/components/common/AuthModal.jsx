@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import Icon from './Icon.jsx'
-import { API_BASE } from '../../services/api.js'
+import { authenticateAccount } from '../../services/auth.js'
 
-export default function AuthModal({ mode, onClose }) {
+export default function AuthModal({ mode, onClose, onAuthenticated }) {
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
   if (!mode) return null
@@ -18,15 +18,8 @@ export default function AuthModal({ mode, onClose }) {
       ...(signup ? { name: form.get('name') } : {}),
     }
     try {
-      const response = await fetch(`${API_BASE}/auth/${signup ? 'signup' : 'login'}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-      const result = await response.json()
-      if (!response.ok) throw new Error(result.detail || '요청을 처리하지 못했습니다.')
-      localStorage.setItem('onfit_access_token', result.access_token)
-      localStorage.setItem('onfit_user', JSON.stringify(result.user))
+      const result = await authenticateAccount(payload, signup)
+      onAuthenticated?.(result)
       setNotice(`${result.user.name}님, ${signup ? '회원가입이 완료되었습니다.' : '로그인되었습니다.'}`)
       window.setTimeout(() => onClose(), 900)
     } catch (error) {

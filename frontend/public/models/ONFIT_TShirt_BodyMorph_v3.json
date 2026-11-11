@@ -1,0 +1,613 @@
+{
+  "source_hashes": {
+    "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_TShirt_BodyMorph_v2.glb": "6474a327be7c27440fb0a83dabed23e49ed5628463528d545ac78f7dcac971b8",
+    "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Human_BodyMorph_v2.glb": "a6118070c47128d3fa9c96756d55ccf39c13352e7a33c6589917ac7a522def6b"
+  },
+  "output_sha256": "4e9fe0d89ce9b8a0b8bcef6b3c6f3c6480b233921d687696301d5bae2ebe3bf8",
+  "vertices": 16014,
+  "checks": [
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": -1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.003113952981948387,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003113952981948387,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003113952981948387,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": 1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.003113952981948387,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003113952981948387,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003113952981948387,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": -1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.003592512250179425,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003492637217277661,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003492637217277661,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": 1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.003592512250179425,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003492776391794905,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003492776391794905,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": -1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.0035143999483580046,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003504772568703629,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003504772568703629,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": 1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.0035143999483580046,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.0035048467834712937,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.0035048467834712937,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": -1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.003629007114795968,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003489381691906601,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003489381691906601,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": 1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.0037127273972146213,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003489497321425006,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003489497321425006,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.003592512250179425,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003537635231623426,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003537635231623426,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.0035319233866175637,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003521341539453715,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003521341539453715,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "chest_volume": -1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.003530718069669092,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "chest_volume": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.0035520088858902454,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "chest_volume": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.0035520088858902454,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "chest_volume": 1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.003796650968524773,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "chest_volume": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.003529644280206412,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "chest_volume": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.003529644280206412,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "waist_width": -1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.0038364346546586603,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.0035501970996847376,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "waist_width": -1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.0035501970996847376,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "waist_width": 1,
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.003571908426238224,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.0035502735117916018,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "waist_width": 1,
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.0035502735117916018,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "abdomen_front": 0,
+        "pelvis_width": 0
+      },
+      "min_gap_m": 0.0038486350713355932,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "abdomen_front": 0.8,
+        "pelvis_width": -1
+      },
+      "min_gap_m": 0.0035302584001328796,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    },
+    {
+      "weights": {
+        "abdomen_front": 0.8,
+        "pelvis_width": 1
+      },
+      "min_gap_m": 0.0035302584001328796,
+      "inside_over_2mm": 0,
+      "body_overlap_pairs": 0,
+      "self_overlap_pairs": 0,
+      "flipped_triangles": 0
+    }
+  ],
+  "targets": [
+    "garment_abdomen_front",
+    "garment_pelvis_width",
+    "garment_shoulder_width",
+    "garment_chest_volume",
+    "garment_waist_width"
+  ],
+  "new_default_weights": [
+    0,
+    0,
+    0
+  ],
+  "signed_range": [
+    -1,
+    1
+  ],
+  "visual_verification": false,
+  "method": "Barycentric transfer of three body morphs; v2 geometry and original two morphs retained byte-for-byte"
+}

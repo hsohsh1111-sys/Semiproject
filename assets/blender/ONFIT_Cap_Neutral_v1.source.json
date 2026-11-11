@@ -1,0 +1,22 @@
+{
+  "source": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Cap_v1.glb",
+  "source_sha256": "226fad78d29abf1821696d7fa2da2ac97ed28464c82bf306de928e876bc9ddcc",
+  "output_sha256": "3f4149d93842abfd1d298478921342d03f10c1d15a396144a8f5f8ce3d4bb59f",
+  "license": "CC0",
+  "source_asset": "toigo_maga_hat",
+  "author": "MargaretToigo / MRT",
+  "print_location": "Single base-color texture; no separate text mesh",
+  "new_albedo": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\textures\\ONFIT_Cap_Neutral_Albedo.png",
+  "new_albedo_sha256": "490d32a15a092e7b85d8e93c788baf730f641ecb03493db0412fcec862d7a990",
+  "texture_kind": "New 4x4 opaque white constant albedo; black material factor supplies default color",
+  "preserved_geometry_buffer_hashes": {
+    "0": "4c8ccb555e47692fcb01000c809ffcb9f9a752af2b7bf73e6264a8520454a3a7",
+    "1": "a477c722b5312d59e0336bcf71db39ce2bdb0920db185f6c90c661e3680a1c8b",
+    "2": "36b425403cc49076f670c7a919a1507a0449c50fd7e8fbc67ebca4130a30ecb8",
+    "3": "75c2560d8ec4df350e5027cc42e3074eda829f62f916564c4897170637d522fb"
+  },
+  "default_color": "#16181D",
+  "vertices": 3167,
+  "uv_layers": 1,
+  "browser_verified": false
+}

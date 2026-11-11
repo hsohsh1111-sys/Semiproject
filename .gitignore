@@ -22,3 +22,13 @@ venv/
 .idea/
 .vscode/
 Thumbs.db
+
+# Integrated fitting: local authoring/build artifacts and credentials
+.env.*
+!.env.example
+**/.codex-*/
+*.blend
+*.blend1
+assets/downloads/
+assets/blender/previews/
+assets/blender/*_drafts/

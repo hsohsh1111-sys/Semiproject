@@ -1,0 +1,11 @@
+ONFIT_Cap_Neutral_v1.glb provenance
+
+Based on toigo_maga_hat, by MargaretToigo (MRT in the MHCLO header).
+Original asset license: CC0.
+Official source: https://static.makehumancommunity.org/assets/assetpacks/hats01.html
+The original ONFIT_Cap_v1 asset and its provenance are preserved separately.
+
+ONFIT modifications on 2026-11-03: replaced the printed base-color image with
+a new plain opaque white constant albedo, removed the old image from this GLB,
+and set a black matte PBR default. Positions, normals, UVs, indices and node
+transforms unchanged. Runtime colors are applied to cloned cap materials only.

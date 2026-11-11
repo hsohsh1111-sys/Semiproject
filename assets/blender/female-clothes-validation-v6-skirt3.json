@@ -1,0 +1,641 @@
+{
+  "limitations": "Triangle pair counts and signed nearest surface samples are not penetration depths or physical cloth validation. No browser verification.",
+  "checks": [
+    {
+      "state": "default",
+      "garment": "TShirt",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3461,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.005380596092436463,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "default",
+      "garment": "LongSleeve",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 2,
+      "samples": 3351,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0047362708355649374,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "default",
+      "garment": "Pants",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3366,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.005872061673073858,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "default",
+      "garment": "Outer",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 38,
+      "samples": 3085,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.009238318118150346,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "default",
+      "garment": "HoodedJacket",
+      "body_triangle_intersection_pairs": 186,
+      "self_intersection_pairs": 1803,
+      "samples": 3265,
+      "inside_over_5mm": 1,
+      "min_signed_sample_m": -0.005519340164028108,
+      "worst_sample_coordinates": [
+        [
+          -0.005519340164028108,
+          0.05371741205453873,
+          -0.02409617230296135,
+          1.3335134983062744
+        ]
+      ]
+    },
+    {
+      "state": "default",
+      "garment": "Skirt",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 1693,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0018535339445406862,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "default",
+      "layering": "TShirt/Pants",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "default",
+      "layering": "LongSleeve/Pants",
+      "triangle_intersection_pairs": 84
+    },
+    {
+      "state": "default",
+      "layering": "HoodedJacket/Pants",
+      "triangle_intersection_pairs": 242
+    },
+    {
+      "state": "default",
+      "layering": "TShirt/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "default",
+      "layering": "LongSleeve/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "default",
+      "layering": "TShirt/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "default",
+      "layering": "LongSleeve/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "lean",
+      "garment": "TShirt",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 1,
+      "samples": 3461,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.005115127540193498,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "lean",
+      "garment": "LongSleeve",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 4,
+      "samples": 3351,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0016005913912522374,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "lean",
+      "garment": "Pants",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3366,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.00575670825492125,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "lean",
+      "garment": "Outer",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 12,
+      "samples": 3082,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.012940643820911646,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "lean",
+      "garment": "HoodedJacket",
+      "body_triangle_intersection_pairs": 165,
+      "self_intersection_pairs": 1743,
+      "samples": 3270,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": -0.0010701691298891092,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "lean",
+      "garment": "Skirt",
+      "body_triangle_intersection_pairs": 54,
+      "self_intersection_pairs": 0,
+      "samples": 1685,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.000496300224767765,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "lean",
+      "layering": "TShirt/Pants",
+      "triangle_intersection_pairs": 24
+    },
+    {
+      "state": "lean",
+      "layering": "LongSleeve/Pants",
+      "triangle_intersection_pairs": 119
+    },
+    {
+      "state": "lean",
+      "layering": "HoodedJacket/Pants",
+      "triangle_intersection_pairs": 235
+    },
+    {
+      "state": "lean",
+      "layering": "TShirt/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "lean",
+      "layering": "LongSleeve/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "lean",
+      "layering": "TShirt/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "lean",
+      "layering": "LongSleeve/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "muscular",
+      "garment": "TShirt",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3461,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.005000247314455919,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "muscular",
+      "garment": "LongSleeve",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 2,
+      "samples": 3351,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0047362708355649374,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "muscular",
+      "garment": "Pants",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3366,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.005939730763202533,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "muscular",
+      "garment": "Outer",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 143,
+      "samples": 3088,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.009238318118150346,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "muscular",
+      "garment": "HoodedJacket",
+      "body_triangle_intersection_pairs": 164,
+      "self_intersection_pairs": 1782,
+      "samples": 3268,
+      "inside_over_5mm": 1,
+      "min_signed_sample_m": -0.00876596081070602,
+      "worst_sample_coordinates": [
+        [
+          -0.00876596081070602,
+          0.05479709804058075,
+          -0.02388111874461174,
+          1.3341346979141235
+        ]
+      ]
+    },
+    {
+      "state": "muscular",
+      "garment": "Skirt",
+      "body_triangle_intersection_pairs": 12,
+      "self_intersection_pairs": 0,
+      "samples": 1695,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0011707934068567738,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "muscular",
+      "layering": "TShirt/Pants",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "muscular",
+      "layering": "LongSleeve/Pants",
+      "triangle_intersection_pairs": 107
+    },
+    {
+      "state": "muscular",
+      "layering": "HoodedJacket/Pants",
+      "triangle_intersection_pairs": 210
+    },
+    {
+      "state": "muscular",
+      "layering": "TShirt/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "muscular",
+      "layering": "LongSleeve/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "muscular",
+      "layering": "TShirt/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "muscular",
+      "layering": "LongSleeve/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "garment": "TShirt",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 3,
+      "samples": 3271,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.002226958331448259,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "garment": "LongSleeve",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 2,
+      "samples": 3254,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0047362708355649374,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "garment": "Pants",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3366,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.005872061673073858,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "garment": "Outer",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 28,
+      "samples": 2685,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.009238318118150346,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "garment": "HoodedJacket",
+      "body_triangle_intersection_pairs": 186,
+      "self_intersection_pairs": 1804,
+      "samples": 3038,
+      "inside_over_5mm": 1,
+      "min_signed_sample_m": -0.005519340164028108,
+      "worst_sample_coordinates": [
+        [
+          -0.005519340164028108,
+          0.05371741205453873,
+          -0.02409617230296135,
+          1.3335134983062744
+        ]
+      ]
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "garment": "Skirt",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 1693,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0018535339445406862,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "layering": "TShirt/Pants",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "layering": "LongSleeve/Pants",
+      "triangle_intersection_pairs": 61
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "layering": "HoodedJacket/Pants",
+      "triangle_intersection_pairs": 304
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "layering": "TShirt/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "layering": "LongSleeve/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "layering": "TShirt/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "abdomen_max_pelvis_min",
+      "layering": "LongSleeve/Skirt",
+      "triangle_intersection_pairs": 8
+    },
+    {
+      "state": "shoulder_chest_max",
+      "garment": "TShirt",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3461,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.004861504130531102,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "shoulder_chest_max",
+      "garment": "LongSleeve",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 2,
+      "samples": 3351,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0047362708355649374,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "shoulder_chest_max",
+      "garment": "Pants",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3366,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0028053975274815457,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "shoulder_chest_max",
+      "garment": "Outer",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 13,
+      "samples": 3085,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.009238318118150346,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "shoulder_chest_max",
+      "garment": "HoodedJacket",
+      "body_triangle_intersection_pairs": 184,
+      "self_intersection_pairs": 1810,
+      "samples": 3271,
+      "inside_over_5mm": 1,
+      "min_signed_sample_m": -0.005555983225349337,
+      "worst_sample_coordinates": [
+        [
+          -0.005555983225349337,
+          0.05371766909956932,
+          -0.02409617230296135,
+          1.3335134983062744
+        ]
+      ]
+    },
+    {
+      "state": "shoulder_chest_max",
+      "garment": "Skirt",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 1693,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.0018535339445406862,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "shoulder_chest_max",
+      "layering": "TShirt/Pants",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "shoulder_chest_max",
+      "layering": "LongSleeve/Pants",
+      "triangle_intersection_pairs": 84
+    },
+    {
+      "state": "shoulder_chest_max",
+      "layering": "HoodedJacket/Pants",
+      "triangle_intersection_pairs": 242
+    },
+    {
+      "state": "shoulder_chest_max",
+      "layering": "TShirt/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "shoulder_chest_max",
+      "layering": "LongSleeve/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "shoulder_chest_max",
+      "layering": "TShirt/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "shoulder_chest_max",
+      "layering": "LongSleeve/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "waist_min_hip_max",
+      "garment": "TShirt",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3461,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.005380596092436463,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "waist_min_hip_max",
+      "garment": "LongSleeve",
+      "body_triangle_intersection_pairs": 181,
+      "self_intersection_pairs": 2,
+      "samples": 3351,
+      "inside_over_5mm": 15,
+      "min_signed_sample_m": -0.006467908296826863,
+      "worst_sample_coordinates": [
+        [
+          -0.006467908296826863,
+          0.0733346939086914,
+          0.09968928247690201,
+          0.8194615840911865
+        ],
+        [
+          -0.006436460273107514,
+          0.07189683616161346,
+          0.09730417281389236,
+          0.8361601829528809
+        ],
+        [
+          -0.006219157527084462,
+          0.08148233592510223,
+          0.09446965903043747,
+          0.8357043862342834
+        ]
+      ]
+    },
+    {
+      "state": "waist_min_hip_max",
+      "garment": "Pants",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 0,
+      "samples": 3366,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.005872061673073858,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "waist_min_hip_max",
+      "garment": "Outer",
+      "body_triangle_intersection_pairs": 0,
+      "self_intersection_pairs": 38,
+      "samples": 3085,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.009238318118150346,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "waist_min_hip_max",
+      "garment": "HoodedJacket",
+      "body_triangle_intersection_pairs": 304,
+      "self_intersection_pairs": 1803,
+      "samples": 3265,
+      "inside_over_5mm": 4,
+      "min_signed_sample_m": -0.006306706101668169,
+      "worst_sample_coordinates": [
+        [
+          -0.006306706101668169,
+          -0.08317878842353821,
+          0.09668887406587601,
+          0.8079354166984558
+        ],
+        [
+          -0.006286119215246799,
+          0.08032143861055374,
+          0.09775158017873764,
+          0.8078712821006775
+        ],
+        [
+          -0.005519340164028108,
+          0.05371741205453873,
+          -0.02409617230296135,
+          1.3335134983062744
+        ]
+      ]
+    },
+    {
+      "state": "waist_min_hip_max",
+      "garment": "Skirt",
+      "body_triangle_intersection_pairs": 28,
+      "self_intersection_pairs": 0,
+      "samples": 1693,
+      "inside_over_5mm": 0,
+      "min_signed_sample_m": 0.001386407297104597,
+      "worst_sample_coordinates": []
+    },
+    {
+      "state": "waist_min_hip_max",
+      "layering": "TShirt/Pants",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "waist_min_hip_max",
+      "layering": "LongSleeve/Pants",
+      "triangle_intersection_pairs": 184
+    },
+    {
+      "state": "waist_min_hip_max",
+      "layering": "HoodedJacket/Pants",
+      "triangle_intersection_pairs": 300
+    },
+    {
+      "state": "waist_min_hip_max",
+      "layering": "TShirt/Outer",
+      "triangle_intersection_pairs": 315
+    },
+    {
+      "state": "waist_min_hip_max",
+      "layering": "LongSleeve/Outer",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "waist_min_hip_max",
+      "layering": "TShirt/Skirt",
+      "triangle_intersection_pairs": 0
+    },
+    {
+      "state": "waist_min_hip_max",
+      "layering": "LongSleeve/Skirt",
+      "triangle_intersection_pairs": 162
+    }
+  ]
+}

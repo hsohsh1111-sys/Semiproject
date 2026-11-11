@@ -1,0 +1,9 @@
+{
+  "source": "ONFIT_Human_BodyBuild_v7.glb",
+  "output": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Muscle_Detail_v1.png",
+  "resolution": 2048,
+  "sculpt_vertices": 325610,
+  "max_extra_sculpt_m": 0.017999999999994645,
+  "method": "Tangent-space normals baked from subdivided and sculpted geometry; not an image overlay",
+  "browser_verified": false
+}

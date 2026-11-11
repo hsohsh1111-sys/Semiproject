@@ -5,14 +5,12 @@ import { FAVORITES_CHANGE_EVENT, getSeasonalFavorites } from '../../services/sea
 
 const nav = [
   ['관리자 데모', '#/admin'],
-  ['스타일 추천', '#/outfits'],
-  ['시즌 코디', '#/seasonal'],
+  ['3D 피팅', '#/fitting'],
   ['AI 패션 검색', '/ai-fashion/'],
-  ['나의 옷장', '#/wardrobe'],
-  ['가격 인사이트', '#/price'],
+  ['스타일 추천', '#/outfits'], ['시즌 코디', '#/seasonal'], ['나의 옷장', '#/wardrobe'], ['가격 인사이트', '#/price'],
 ]
 
-export default function Header({ onAuth }) {
+export default function Header({ onAuth, session, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [favoriteCount, setFavoriteCount] = useState(0)
   useEffect(() => {
@@ -45,8 +43,10 @@ export default function Header({ onAuth }) {
           <a className="icon-button search-action" aria-label="스타일 둘러보기" href="#/outfits"><Icon name="Search" /></a>
           <a className="icon-button bag-action" aria-label={`나의 옷장, 찜한 아이템 ${favoriteCount}개`} href="#/wardrobe"><Icon name="ShoppingBag" /><b>{favoriteCount}</b></a>
           <span className="header-divider" />
-          <button className="text-action" onClick={() => onAuth('login')}>로그인</button>
-          <button className="signup-button" onClick={() => onAuth('signup')}>회원가입 <Icon name="ArrowUpRight" size={14} /></button>
+          {session ? <button className="text-action" onClick={onLogout}>로그아웃</button> : <>
+            <button className="text-action" onClick={() => onAuth('login')}>로그인</button>
+            <button className="signup-button" onClick={() => onAuth('signup')}>회원가입 <Icon name="ArrowUpRight" size={14} /></button>
+          </>}
         </div>
       </header>
     </>

@@ -1,0 +1,498 @@
+{
+  "source": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyMorph_v1.blend",
+  "source_sha256": "ba902bb9ab74fb5033fed92dbbfe959f68a62eb20f923d897882edd03fed6d0c",
+  "glb_sha256": "a6118070c47128d3fa9c96756d55ccf39c13352e7a33c6589917ac7a522def6b",
+  "blend": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyMorph_v2.blend",
+  "authoring_vertices": 19158,
+  "export_vertices": 13380,
+  "original_weights": {
+    "Basis": 1.0,
+    "$md-$as-$fe-$yn": 0.16500000655651093,
+    "$md-$as-$ma-$yn": 0.16500000655651093,
+    "$md-$ca-$fe-$yn": 0.16500000655651093,
+    "$md-$ca-$ma-$yn": 0.16500000655651093,
+    "$md-$af-$fe-$yn": 0.16500000655651093,
+    "$md-$af-$ma-$yn": 0.16500000655651093,
+    "$md-universal-$fe-$yn-$av$mu-$av$wg": 0.5,
+    "$md-universal-$ma-$yn-$av$mu-$av$wg": 0.5,
+    "$md-$fe-$yn-$av$mu-$av$wg-$avcup-max$fi": 0.08856657892465591,
+    "$md-$fe-$yn-$av$mu-$av$wg-maxcup-$av$fi": 0.088466577231884,
+    "stomach-pregnant-incr": 0.5,
+    "abdomen_front": 0.0,
+    "pelvis_width": 0.0
+  },
+  "new_weights": {
+    "shoulder_width": 0,
+    "chest_volume": 0,
+    "waist_width": 0
+  },
+  "changed_vertices": {
+    "shoulder_width": 6136,
+    "chest_volume": 961,
+    "waist_width": 466
+  },
+  "overlapping_support_vertices": 0,
+  "restored_exactly": true,
+  "checks": [
+    {
+      "abdomen": 1,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.07999999821186066
+    },
+    {
+      "abdomen": 0,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.025000005960464478
+    },
+    {
+      "abdomen": 0,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.025000005960464478
+    },
+    {
+      "abdomen": 1,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.07999999821186066
+    },
+    {
+      "abdomen": 1,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.07999999821186066
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": -1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": 1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": -1,
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": -1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": 1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1,
+        "chest_volume": 1,
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": -1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": 1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": -1,
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": -1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": 1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1,
+        "chest_volume": 1,
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "shoulder_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "chest_volume": -1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "chest_volume": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "chest_volume": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "chest_volume": 1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "chest_volume": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "chest_volume": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "waist_width": -1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "waist_width": -1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "waist_width": 1
+      },
+      "abdomen": 0,
+      "pelvis": 0,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": -1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    },
+    {
+      "weights": {
+        "waist_width": 1
+      },
+      "abdomen": 0.8,
+      "pelvis": 1,
+      "flipped_triangles": 0,
+      "introduced_self_intersections": 0
+    }
+  ],
+  "abdomen_max_m": 0.08,
+  "pelvis_half_width_max_m": 0.025,
+  "limitations": "Artistic local morphs, not measured body reconstruction; normal checks do not prove no self-intersection; clothing static.",
+  "visual_verification": false
+}

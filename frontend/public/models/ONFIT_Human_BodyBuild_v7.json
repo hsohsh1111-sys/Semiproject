@@ -1,0 +1,77 @@
+{
+  "source": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyMorph_v3.blend",
+  "source_sha256": "9733c0593bb6197cc4f1fe0d8df6db8a84af5d3b1b75cdecf075d9847cb9a852",
+  "output": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Human_BodyBuild_v7.glb",
+  "glb_sha256": "f03949f4c2e548f32bc4aa3e81458422d30fde7e994d8a322838f6bede1b990b",
+  "blend": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyBuild_v7.blend",
+  "scale": 0.10000000146302812,
+  "targets": {
+    "universal-male-young-averagemuscle-averageweight.target.gz": "e814651195c53971503d9823d6841216718a561951ef064f81d132297f4fa494",
+    "universal-female-young-averagemuscle-averageweight.target.gz": "30046c85a461249824548d5319d74c16392842a1ee00ca9a4485ea3eeb06e2e8",
+    "asian-male-young.target.gz": "0928ed8b9f08f60afb9884cf9e9f33a939ed3a85d7f136de9ccc88a76981d6d7",
+    "universal-male-young-minmuscle-minweight.target.gz": "166a31465a2790a321e55e274a7f43c56bfe58ad1cf443afacd45a7a23abf407",
+    "universal-female-young-minmuscle-minweight.target.gz": "18ecff47c3606608472afab0f79a88afaf0c3d5c139bf81c1ef7867a9a9b78a5",
+    "universal-male-young-maxmuscle-minweight.target.gz": "0323cb5c604d13207d1a10ade8ce165df1cbf14d91de48ad959a082297669905",
+    "universal-female-young-maxmuscle-minweight.target.gz": "f67344b6aa1808737d78b619c062effe04aad0bfe67e9f80fa6294e2eb5342a5",
+    "torso-muscle-pectoral-incr.target.gz": "83831fd65509c729bc0b5b3311b5f63bf35a37728e7c22d4425a3c620f2e4069",
+    "torso-muscle-dorsi-incr.target.gz": "db0e47dd5138a0b397cc4304c529e1ad6ed704f13f9ee5c24aa91c0798c4382f",
+    "stomach-tone-incr.target.gz": "a40bfc3398ef6907600b439e18dae77469db15482353c8fffe0c85b0fdb276d1",
+    "l-upperarm-shoulder-muscle-incr.target.gz": "1e72cedbf6d72bcc70dcf360444f2c1f8aa214d49839e4fefcfa9a9320febd9d",
+    "l-upperarm-muscle-incr.target.gz": "2b1ae2af00eabddadc298fd22b8af17966f13e65931636b36c2d77d2b9540dcd",
+    "l-lowerarm-muscle-incr.target.gz": "29077b022632174656b8404ae12f68f62059f2fbc774b24885ec5b7460b72992",
+    "l-upperleg-muscle-incr.target.gz": "c8af86a15d35ac926f2526c3fc532d70e43a3390de7f65468642ac5558bbf27b",
+    "l-lowerleg-muscle-incr.target.gz": "3b88ac764ddc456ce242ece72f7d24a0037c0eef448359b06d0327fa79a4b29c",
+    "r-upperarm-shoulder-muscle-incr.target.gz": "eefa8f598b81959bc8ee4b4a9ef7678c5e3a56fcf5333d13e26500047e9796b0",
+    "r-upperarm-muscle-incr.target.gz": "24f3486b3fe48bb8127f48c2eae53e48930c32b7ae2a221ec2c9afafc60b453d",
+    "r-lowerarm-muscle-incr.target.gz": "84777a42af2cefbabcea15820c61dfd23a800d9a2583b23d063a1566052da226",
+    "r-upperleg-muscle-incr.target.gz": "a96b25430155374568d72b1efd12443aeb2fa0c78a11c1a4d198a03a986c088f",
+    "r-lowerleg-muscle-incr.target.gz": "f8b7d141649b12b4cd8c37c7606d14daac692e7abfa72cea66b79f1672d4ab2a"
+  },
+  "checks": [
+    {
+      "target": "shared_relief",
+      "weight": 1,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.0392135698628063
+    },
+    {
+      "target": "body_build_lean",
+      "weight": 0.5,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.02112322523446145
+    },
+    {
+      "target": "body_build_lean",
+      "weight": 1.0,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.0422464504689229
+    },
+    {
+      "target": "body_build_muscular",
+      "weight": 0.5,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.015332798811013062
+    },
+    {
+      "target": "body_build_muscular",
+      "weight": 1.0,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.030665597622026124
+    }
+  ],
+  "original_keys_preserved": true,
+  "default_restores_exactly": true,
+  "chest_relief_default": 1,
+  "abdomen_relief_default": 1,
+  "source_pregnancy_weight": 0.5,
+  "pregnancy_anterior_cancel_fraction": 0.8,
+  "abdomen_relief_max_m": 0.0392135698628063,
+  "abs_changed_vertices": 300,
+  "abs_depth_range_m": [
+    -0.009820666634968013,
+    0.003981385359107379
+  ],
+  "license": "CC0 core MPFB targets",
+  "license_url": "https://static.makehumancommunity.org/mpfb/faq/can_i_sell_models.html",
+  "limitations": "Artistic macro targets, not InBody reconstruction. Detailed muscles and clothing clearance require visual validation."
+}

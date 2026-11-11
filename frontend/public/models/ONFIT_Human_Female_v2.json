@@ -1,0 +1,25 @@
+{
+  "source": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyBuild_v11.blend",
+  "source_sha256": "6f8d62641f56ba0faf1fec9d9340425f8dc83bc0f55dec31d5e47810c651b637",
+  "output": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Human_Female_v2.glb",
+  "glb_sha256": "cefeb4c2870f8fe09cd52eaffac2322bd536d68eedfe103213adc9e3497e73ee",
+  "targets": 23,
+  "gender": "MPFB female race targets",
+  "default_gender_weights": {
+    "$md-$as-$fe-$yn": 0.33000001311302185,
+    "$md-$as-$ma-$yn": 0.0,
+    "$md-$ca-$fe-$yn": 0.33000001311302185,
+    "$md-$ca-$ma-$yn": 0.0,
+    "$md-$af-$fe-$yn": 0.33000001311302185,
+    "$md-$af-$ma-$yn": 0.0,
+    "$md-universal-$fe-$yn-$av$mu-$av$wg": 0.5,
+    "$md-universal-$ma-$yn-$av$mu-$av$wg": 0.5,
+    "$md-$fe-$yn-$av$mu-$av$wg-$avcup-max$fi": 0.08856657892465591,
+    "$md-$fe-$yn-$av$mu-$av$wg-maxcup-$av$fi": 0.3499999940395355
+  },
+  "cup_volume_weight": 0.3499999940395355,
+  "chest_relief_weight": 0.5,
+  "max_gender_change_m": 0.0807944410786306,
+  "license": "CC0 MPFB core targets",
+  "limitations": "Female anatomy is an artistic MPFB preset, not measured reconstruction. Existing clothes need separate fit and browser validation."
+}
