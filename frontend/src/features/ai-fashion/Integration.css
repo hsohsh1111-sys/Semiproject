@@ -1,0 +1,16 @@
+:host { display: block; min-height: calc(100dvh - 120px); }
+.landing-header { display: none; }
+.landing-page { min-height: calc(100dvh - 120px); }
+.studio-shell { height: auto; min-height: calc(100dvh - 120px); overflow: visible; }
+.studio-grid { min-height: 620px; }
+
+@media (max-width: 768px) {
+  .mobile-app { position: relative; inset: auto; height: calc(100dvh - 120px); }
+  .mobile-app.mobile-landing { height: auto; min-height: calc(100dvh - 120px); }
+}
+
+@media (max-width: 760px) {
+  :host { min-height: calc(100dvh - 101px); }
+  .mobile-app { height: calc(100dvh - 101px); }
+  .mobile-app.mobile-landing { min-height: calc(100dvh - 101px); }
+}

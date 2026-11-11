@@ -14,14 +14,17 @@ import PriceComparePage from './pages/PriceComparePage.jsx'
 import SeasonalOutfitPage from './pages/SeasonalOutfitPage.jsx'
 import AdminPage from './pages/AdminPage.jsx'
 const FittingPage = lazy(() => import('./pages/FittingPage.jsx'))
+const AiFashionPage = lazy(() => import('./features/ai-fashion/Page.jsx'))
 
 function readRoute() {
   const value = window.location.hash.replace(/^#/, '')
-  return value.startsWith('/') ? value : '/home'
+  if (value.startsWith('/')) return value
+  return window.location.pathname.replace(/\/+$/, '') === '/ai-fashion' ? '/ai-fashion' : '/home'
 }
 
 const pages = {
   '/fitting': FittingPage,
+  '/ai-fashion': AiFashionPage,
   '/home': HomePage,
   '/style': StyleProfilePage,
   '/outfits': OutfitPage,
@@ -72,6 +75,9 @@ export default function App() {
   }, [session])
   useEffect(() => {
     const handleRoute = () => {
+      if (window.location.pathname.replace(/\/+$/, '') === '/ai-fashion' && window.location.hash) {
+        window.history.replaceState(window.history.state, '', `/${window.location.hash}`)
+      }
       setRoute(readRoute())
       if (window.location.hash === '#projects') requestAnimationFrame(() => document.getElementById('projects')?.scrollIntoView())
       else window.scrollTo({ top: 0, behavior: 'smooth' })
