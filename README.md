@@ -91,7 +91,7 @@ npm run build:site --prefix frontend
 | 플랫폼 | 주소 |
 | --- | --- |
 | GitHub Pages | [ONFIT 페이지 열기](https://hsohsh1111-sys.github.io/Semiproject/) |
-| Netlify | [ONFIT 페이지 열기](https://onfit3.netlify.app/) |
+| Netlify | [ONFIT 페이지 열기](https://hsohsh1111.netlify.app/) |
 
 - **정적 웹 서비스** — 프론트엔드와 AI 패션 화면을 빌드해 배포합니다.
 - **웹 서비스** — FastAPI를 실행하고 `/health` 경로로 상태를 확인합니다.
