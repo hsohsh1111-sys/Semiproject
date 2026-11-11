@@ -18,6 +18,7 @@ from openai import APIConnectionError, APIStatusError, APITimeoutError, OpenAI
 from PIL import Image, ImageDraw
 from pydantic import BaseModel
 
+from services.memory_diagnostics import log_image
 from services.vision_prompt import build_vision_instructions
 
 load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
@@ -239,6 +240,7 @@ def normalize_output(output: VisionOutput, width: int, height: int, shown_size: 
 
 def _marked_image(image_bytes: bytes, polygon: list[list[int]], point: list[int]) -> tuple[str, tuple[int, int]]:
     with Image.open(io.BytesIO(image_bytes)) as source:
+        source_size = source.size
         original = source.convert("RGB")
     scale = min(1, MAX_VISION_SIDE / max(original.size))
     size = (max(1, round(original.width * scale)), max(1, round(original.height * scale)))
@@ -253,7 +255,9 @@ def _marked_image(image_bytes: bytes, polygon: list[list[int]], point: list[int]
     draw.ellipse((cx-radius, cy-radius, cx+radius, cy+radius), fill="#8aff00", outline="#111111", width=2)
     output = io.BytesIO()
     original.save(output, format="JPEG", quality=85, optimize=True)
-    return "data:image/jpeg;base64," + base64.b64encode(output.getvalue()).decode("ascii"), size
+    prepared = output.getvalue()
+    log_image('segment_prepared', len(image_bytes), source_size, len(prepared), size)
+    return "data:image/jpeg;base64," + base64.b64encode(prepared).decode("ascii"), size
 
 
 def _call_vision(image_bytes: bytes, width: int, height: int,

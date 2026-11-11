@@ -9,6 +9,8 @@ from urllib.parse import urlencode, urljoin, urlparse
 from bs4 import BeautifulSoup
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
 
+from services.memory_diagnostics import log_memory
+
 SELECTOR = 'a.gtm-view-item-list[data-item-id][data-item-list-id="goods_list"]'
 MAX_PRODUCTS = 30
 MAX_POOL = 120  # Four result pages, at most 30 cards each; only 30 reach Vision.
@@ -16,7 +18,6 @@ ENOUGH_PRODUCTS = 20
 MAX_PER_QUERY = 18
 NAVIGATION_TIMEOUT_MS = int(os.getenv('MUSINSA_NAVIGATION_TIMEOUT_MS', '20000'))
 SELECTOR_TIMEOUT_MS = max(1, min(int(os.getenv('MUSINSA_SELECTOR_TIMEOUT_MS', '4500')), 10000))
-BODY_TIMEOUT_MS = max(1, min(int(os.getenv('MUSINSA_BODY_TIMEOUT_MS', '3000')), 8000))
 ACCESS_DENIED_TEXT = ('접속이 일시적으로 제한', '비정상적인 접근', 'Access Denied', 'captcha')
 logger = logging.getLogger('uvicorn.error')
 
@@ -220,7 +221,10 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
     try:
         with sync_playwright() as playwright:
             stage, stage_started = 'browser_launch', time.monotonic()
+            log_memory('chromium_before_launch')
             browser = playwright.chromium.launch(headless=True)
+            log_memory('chromium_after_launch')
+            context = None
             try:
                 stage, stage_started = 'context_create', time.monotonic()
                 context = browser.new_context(viewport={'width': 1440, 'height': 900}, locale='ko-KR')
@@ -241,7 +245,11 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                     try:
                         keyword_index, http_status = index + 1, None
                         stage, stage_started = 'navigation', time.monotonic()
-                        response = page.goto(url, wait_until='domcontentloaded', timeout=NAVIGATION_TIMEOUT_MS)
+                        log_memory('navigation_before', keyword_index)
+                        try:
+                            response = page.goto(url, wait_until='domcontentloaded', timeout=NAVIGATION_TIMEOUT_MS)
+                        finally:
+                            log_memory('navigation_after', keyword_index)
                         status = response.status if response else None
                         stage, stage_started, http_status = 'http_status', time.monotonic(), status
                         if status in (403, 429):
@@ -261,13 +269,11 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                                             keyword_index, round((time.monotonic() - stage_started) * 1000),
                                             SELECTOR_TIMEOUT_MS, type(exc).__name__)
                                 pass  # Empty results are possible; inspect the page before continuing.
-                        stage, stage_started = 'body_read', time.monotonic()
-                        try:
-                            body = page.locator('body').inner_text(timeout=BODY_TIMEOUT_MS)
-                        except PlaywrightTimeoutError:
-                            logger.info('Musinsa body_read_fallback keyword_index=%s method=text_content', keyword_index)
-                            body = page.locator('body').text_content(timeout=BODY_TIMEOUT_MS) or ''
+                        stage, stage_started = 'page_content', time.monotonic()
+                        markup = page.content()
                         stage, stage_started = 'access_check', time.monotonic()
+                        document = BeautifulSoup(markup, 'html.parser')
+                        body = (document.body or document).get_text(' ', strip=True)
                         if selector_wait_failed:
                             logger.info('Musinsa selector_missing_dom keyword_index=%s body_chars=%s '
                                         'dom_state=%s http_status=%s', keyword_index, len(body),
@@ -275,7 +281,7 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                         if any(text.lower() in body.lower() for text in ACCESS_DENIED_TEXT):
                             raise SearchError('무신사 접근 제한 또는 CAPTCHA가 감지됐습니다.', 'access_blocked')
                         stage, stage_started = 'extraction', time.monotonic()
-                        extracted = extract_products(page.content(), keyword, MAX_PRODUCTS)
+                        extracted = extract_products(markup, keyword, MAX_PRODUCTS)
                         collected = len(extracted)
                         if not collected:
                             logger.warning('Musinsa extraction_empty keyword_index=%s elapsed_ms=%s '
@@ -297,6 +303,13 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                                 products.append(product)
                             else:
                                 capacity_skipped += 1
+                    except PlaywrightTimeoutError as exc:
+                        query_status = 'failed'
+                        log_failure(exc)
+                        failure_logged = True
+                        if products:
+                            break  # Keep earlier candidates when a later keyword times out.
+                        raise
                     except Exception as exc:
                         query_status = 'failed'
                         log_failure(exc)
@@ -313,21 +326,26 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                                     index + 1, elapsed_ms,
                                     collected, type_filtered,
                                     len(products) - before, len(products))
-                stage, stage_started = 'context_close', time.monotonic()
-                try:
-                    context.close()
-                except Exception as exc:
-                    log_failure(exc)
-                    failure_logged = True
-                    raise
             finally:
-                stage, stage_started = 'browser_close', time.monotonic()
                 try:
-                    browser.close()
-                except Exception as exc:
-                    log_failure(exc)
-                    failure_logged = True
-                    raise
+                    if context is not None:
+                        stage, stage_started = 'context_close', time.monotonic()
+                        try:
+                            context.close()
+                        except Exception as exc:
+                            log_failure(exc)
+                            failure_logged = True
+                            raise
+                finally:
+                    stage, stage_started = 'browser_close', time.monotonic()
+                    try:
+                        browser.close()
+                    except Exception as exc:
+                        log_failure(exc)
+                        failure_logged = True
+                        raise
+                    finally:
+                        log_memory('chromium_after_close')
             stage, stage_started = 'playwright_stop', time.monotonic()
     except SearchError as exc:
         if not failure_logged:
