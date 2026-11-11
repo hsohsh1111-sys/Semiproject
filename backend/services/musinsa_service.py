@@ -1,18 +1,22 @@
 """Public Musinsa search page parser, adapted from musinsa_final_30_gallery.py."""
 
 import logging
+import os
 import re
 import time
 from urllib.parse import urlencode, urljoin, urlparse
 
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
 
 SELECTOR = 'a.gtm-view-item-list[data-item-id][data-item-list-id="goods_list"]'
 MAX_PRODUCTS = 30
 MAX_POOL = 120  # Four result pages, at most 30 cards each; only 30 reach Vision.
 ENOUGH_PRODUCTS = 20
 MAX_PER_QUERY = 18
+NAVIGATION_TIMEOUT_MS = int(os.getenv('MUSINSA_NAVIGATION_TIMEOUT_MS', '20000'))
+SELECTOR_TIMEOUT_MS = max(1, min(int(os.getenv('MUSINSA_SELECTOR_TIMEOUT_MS', '4500')), 10000))
+BODY_TIMEOUT_MS = max(1, min(int(os.getenv('MUSINSA_BODY_TIMEOUT_MS', '3000')), 8000))
 ACCESS_DENIED_TEXT = ('접속이 일시적으로 제한', '비정상적인 접근', 'Access Denied', 'captcha')
 logger = logging.getLogger('uvicorn.error')
 
@@ -196,13 +200,34 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
     products, seen, searched, stats = [], set(), [], []
     selected = product_type if isinstance(product_type, dict) else {'product_type': product_type}
     selected_family = product_family(selected.get('product_type') or selected.get('category'))
+    stage, stage_started, keyword_index, http_status = 'playwright_start', started, 0, None
+    failure_logged = False
+    logger.info('Musinsa search_start navigation_timeout_ms=%s', NAVIGATION_TIMEOUT_MS)
+
+    def log_failure(exc):
+        detail = re.sub(r'https?://\S+', '[redacted_url]', str(exc).splitlines()[0])[:160] if str(exc) else ''
+        closed = 'browser has been closed' in detail.lower() or 'browser closed' in detail.lower()
+        category = ('navigation_timeout' if stage == 'navigation' and isinstance(exc, PlaywrightTimeoutError)
+                    else 'browser_closed' if closed or stage == 'browser_close'
+                    else 'http_status' if stage == 'http_status'
+                    else 'extraction_error' if stage == 'extraction'
+                    else 'other_exception')
+        logger.warning('Musinsa search_failure stage=%s category=%s keyword_index=%s '
+                       'stage_elapsed_ms=%s http_status=%s error_type=%s detail=%s',
+                       stage, category, keyword_index, round((time.monotonic() - stage_started) * 1000),
+                       http_status, type(exc).__name__, detail)
+
     try:
         with sync_playwright() as playwright:
+            stage, stage_started = 'browser_launch', time.monotonic()
             browser = playwright.chromium.launch(headless=True)
             try:
+                stage, stage_started = 'context_create', time.monotonic()
                 context = browser.new_context(viewport={'width': 1440, 'height': 900}, locale='ko-KR')
+                stage, stage_started = 'route_setup', time.monotonic()
                 context.route('**/*', lambda route: route.abort() if route.request.resource_type in
                               ('image', 'font', 'media') else route.continue_())
+                stage, stage_started = 'page_create', time.monotonic()
                 page = context.new_page()
                 for index, keyword in enumerate(keywords[:4]):
                     if index and (len(products) >= MAX_POOL or
@@ -214,21 +239,50 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                     collected = type_filtered = duplicate = capacity_skipped = 0
                     query_status = 'executed'
                     try:
-                        response = page.goto(url, wait_until='domcontentloaded', timeout=20000)
+                        keyword_index, http_status = index + 1, None
+                        stage, stage_started = 'navigation', time.monotonic()
+                        response = page.goto(url, wait_until='domcontentloaded', timeout=NAVIGATION_TIMEOUT_MS)
                         status = response.status if response else None
+                        stage, stage_started, http_status = 'http_status', time.monotonic(), status
                         if status in (403, 429):
                             raise SearchError('무신사 접근이 제한됐습니다. 검색을 중단합니다.', 'access_blocked')
                         if status != 200:
                             raise SearchError(f'무신사 검색 페이지 응답 오류: HTTP {status}')
+                        stage, stage_started = 'selector_wait', time.monotonic()
+                        selector_wait_failed = False
+                        selector = page.locator(SELECTOR)
+                        if selector.count() == 0:
+                            try:
+                                selector.first.wait_for(state='attached', timeout=SELECTOR_TIMEOUT_MS)
+                            except Exception as exc:
+                                selector_wait_failed = True
+                                logger.info('Musinsa selector_wait_failed keyword_index=%s elapsed_ms=%s '
+                                            'timeout_ms=%s error_type=%s',
+                                            keyword_index, round((time.monotonic() - stage_started) * 1000),
+                                            SELECTOR_TIMEOUT_MS, type(exc).__name__)
+                                pass  # Empty results are possible; inspect the page before continuing.
+                        stage, stage_started = 'body_read', time.monotonic()
                         try:
-                            page.locator(SELECTOR).first.wait_for(state='attached', timeout=4500)
-                        except Exception:
-                            pass  # Empty results are possible; inspect the page before continuing.
-                        body = page.locator('body').inner_text(timeout=3000)
+                            body = page.locator('body').inner_text(timeout=BODY_TIMEOUT_MS)
+                        except PlaywrightTimeoutError:
+                            logger.info('Musinsa body_read_fallback keyword_index=%s method=text_content', keyword_index)
+                            body = page.locator('body').text_content(timeout=BODY_TIMEOUT_MS) or ''
+                        stage, stage_started = 'access_check', time.monotonic()
+                        if selector_wait_failed:
+                            logger.info('Musinsa selector_missing_dom keyword_index=%s body_chars=%s '
+                                        'dom_state=%s http_status=%s', keyword_index, len(body),
+                                        'empty_body' if not body.strip() else 'body_without_product_selector', http_status)
                         if any(text.lower() in body.lower() for text in ACCESS_DENIED_TEXT):
                             raise SearchError('무신사 접근 제한 또는 CAPTCHA가 감지됐습니다.', 'access_blocked')
+                        stage, stage_started = 'extraction', time.monotonic()
                         extracted = extract_products(page.content(), keyword, MAX_PRODUCTS)
                         collected = len(extracted)
+                        if not collected:
+                            logger.warning('Musinsa extraction_empty keyword_index=%s elapsed_ms=%s '
+                                           'http_status=%s body_chars=%s',
+                                           keyword_index, round((time.monotonic() - stage_started) * 1000),
+                                           http_status, len(body))
+                        stage, stage_started = 'filter', time.monotonic()
                         for product in extracted:
                             family = product_family(product['product_name'])
                             if selected_family and family and family != selected_family:
@@ -243,8 +297,10 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                                 products.append(product)
                             else:
                                 capacity_skipped += 1
-                    except Exception:
+                    except Exception as exc:
                         query_status = 'failed'
+                        log_failure(exc)
+                        failure_logged = True
                         raise
                     finally:
                         elapsed_ms = round((time.monotonic() - keyword_started) * 1000)
@@ -252,17 +308,36 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                                       'collected_count': collected, 'added_count': len(products) - before,
                                       'elapsed_ms': elapsed_ms, 'type_filtered_count': type_filtered,
                                       'duplicate_count': duplicate, 'capacity_skipped_count': capacity_skipped})
-                        logger.info('Musinsa keyword_index=%s elapsed_ms=%s new_candidates=%s total_candidates=%s',
+                        logger.info('Musinsa keyword_index=%s elapsed_ms=%s collected=%s type_filtered=%s '
+                                    'new_candidates=%s total_candidates=%s',
                                     index + 1, elapsed_ms,
+                                    collected, type_filtered,
                                     len(products) - before, len(products))
-                context.close()
+                stage, stage_started = 'context_close', time.monotonic()
+                try:
+                    context.close()
+                except Exception as exc:
+                    log_failure(exc)
+                    failure_logged = True
+                    raise
             finally:
-                browser.close()
+                stage, stage_started = 'browser_close', time.monotonic()
+                try:
+                    browser.close()
+                except Exception as exc:
+                    log_failure(exc)
+                    failure_logged = True
+                    raise
+            stage, stage_started = 'playwright_stop', time.monotonic()
     except SearchError as exc:
+        if not failure_logged:
+            log_failure(exc)
         exc.diagnostics = _search_diagnostics(keywords[:4], stats, len(_ranked_candidates(products, selected)),
                                               round((time.monotonic() - started) * 1000))
         raise
     except Exception as exc:
+        if not failure_logged:
+            log_failure(exc)
         diagnostics = _search_diagnostics(keywords[:4], stats, len(_ranked_candidates(products, selected)),
                                           round((time.monotonic() - started) * 1000))
         raise SearchError('무신사 Playwright 검색을 완료하지 못했습니다. 브라우저 설치 또는 사이트 상태를 확인하세요.',

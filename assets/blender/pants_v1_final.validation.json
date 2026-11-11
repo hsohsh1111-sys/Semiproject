@@ -1,0 +1,101 @@
+{
+  "input_hashes": {
+    "ONFIT_Human_BodyMorph_v3.glb": "328fba3993e353d7b20b44d2116c571f034071feb2c004a1a0d5bc3ac783c4eb",
+    "ONFIT_TShirt_BodyMorph_v3.glb": "4e9fe0d89ce9b8a0b8bcef6b3c6f3c6480b233921d687696301d5bae2ebe3bf8",
+    "ONFIT_Pants_v1.glb": "80246a483da606f584d185eda0deb4f63fbd8869998a78b9e45d0181da106082"
+  },
+  "default_body_weights": {
+    "Basis": 1.0,
+    "$md-$as-$fe-$yn": 0.16500000655651093,
+    "$md-$as-$ma-$yn": 0.16500000655651093,
+    "$md-$ca-$fe-$yn": 0.16500000655651093,
+    "$md-$ca-$ma-$yn": 0.16500000655651093,
+    "$md-$af-$fe-$yn": 0.16500000655651093,
+    "$md-$af-$ma-$yn": 0.16500000655651093,
+    "$md-universal-$fe-$yn-$av$mu-$av$wg": 0.5,
+    "$md-universal-$ma-$yn-$av$mu-$av$wg": 0.5,
+    "$md-$fe-$yn-$av$mu-$av$wg-$avcup-max$fi": 0.08856657892465591,
+    "$md-$fe-$yn-$av$mu-$av$wg-maxcup-$av$fi": 0.088466577231884,
+    "stomach-pregnant-incr": 0.5,
+    "abdomen_front": 0.0,
+    "pelvis_width": 0.0,
+    "shoulder_width": 0.0,
+    "chest_volume": 0.0,
+    "waist_width": 0.0,
+    "hip_volume": 0.0,
+    "thigh_girth": 0.0
+  },
+  "pants_morphs": 0,
+  "pants_vertices": 5641,
+  "pants_triangles": 6848,
+  "min_signed_skin_gap_m": 0.0037121412369742757,
+  "inside_over_2mm": 0,
+  "self_nonadjacent_overlap_pairs": 0,
+  "body_overlap_pairs": 0,
+  "shirt_overlap_pairs": 21,
+  "degenerate_triangles": 0,
+  "body_overlap_locations": [],
+  "shirt_overlap_locations": [
+    [
+      0.020076982056101162,
+      0.10020300497611363,
+      0.8502378662427267
+    ],
+    [
+      0.020076982056101162,
+      0.10020300497611363,
+      0.8502378662427267
+    ],
+    [
+      -0.024504770214358967,
+      0.10076187054316203,
+      0.8471944332122803
+    ],
+    [
+      -0.024504770214358967,
+      0.10076187054316203,
+      0.8471944332122803
+    ],
+    [
+      0.015395400735239187,
+      0.09970575322707494,
+      0.8467028737068176
+    ],
+    [
+      0.020076982056101162,
+      0.10020300497611363,
+      0.8502378662427267
+    ],
+    [
+      0.015395400735239187,
+      0.09970575322707494,
+      0.8467028737068176
+    ],
+    [
+      0.015395400735239187,
+      0.09970575322707494,
+      0.8467028737068176
+    ],
+    [
+      0.004684168690194686,
+      0.09990902493397395,
+      0.8504859606424967
+    ],
+    [
+      0.004684168690194686,
+      0.09990902493397395,
+      0.8504859606424967
+    ],
+    [
+      0.004684168690194686,
+      0.09990902493397395,
+      0.8504859606424967
+    ],
+    [
+      0.004684168690194686,
+      0.09990902493397395,
+      0.8504859606424967
+    ]
+  ],
+  "note": "Signed nearest-surface samples and triangle overlap checks; visual review required. Static basic fit only."
+}

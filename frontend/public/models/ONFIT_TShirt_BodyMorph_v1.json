@@ -1,0 +1,76 @@
+{
+  "original_hashes": {
+    "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_TShirt.glb": "5a2f4efba8f106ea0d83ea4587712baf5344eea668a47d1714383f741c1ff0c5",
+    "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Human_BodyMorph_v1.glb": "7916bcf994351302cd59f217d2acb3ede26edb144a1fc333035b98343558986a"
+  },
+  "output_sha256": "5678aff20f04fc25c2c2b7dec1061135806cef72a2ba2419e4857d6ccc77287b",
+  "blend": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_TShirt_BodyMorph_v1.blend",
+  "vertices": 16014,
+  "triangles": 21824,
+  "uv_preserved": true,
+  "topology_preserved": true,
+  "baseline_max_correction_m": 0.014172880888461378,
+  "morph_targets": [
+    "garment_abdomen_front",
+    "garment_pelvis_width"
+  ],
+  "checks": [
+    {
+      "abdomen": 0,
+      "pelvis": 0,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0
+    },
+    {
+      "abdomen": 1,
+      "pelvis": 0,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0
+    },
+    {
+      "abdomen": 0,
+      "pelvis": -1,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0
+    },
+    {
+      "abdomen": 1,
+      "pelvis": -1,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0
+    },
+    {
+      "abdomen": 1,
+      "pelvis": 1,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0
+    },
+    {
+      "abdomen": 0,
+      "pelvis": 0,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0
+    }
+  ],
+  "visual_verification": false,
+  "method": "Nearest body triangle barycentric displacement transfer; local baseline clearance correction; no cloth physics",
+  "limitations": "Nearest-surface vertex gaps do not prove triangle collision absence; visual fit and seam/neck/hem need inspection"
+}

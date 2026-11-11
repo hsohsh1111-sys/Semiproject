@@ -1,0 +1,10 @@
+ONFIT_Skirt_Female_v1/v2/v3.glb (current: v3)
+Source: MakeHuman system assets, female_elegantsuit01 (skirt component only).
+License: CC0, explicitly declared in the installed MHCLO header, September 2020.
+Original copyright holders listed in that header:
+Data Collection AB; Joel Palmius; Jonas Hauquier (2020).
+Source: https://www.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html
+ONFIT modifications: separated skirt from blouse, fitted to MPFB female reference,
+subdivision, local clearance correction, transferred body/build morph targets,
+GLB export. Original UV/material textures retained. Rules-based approximation,
+not physical cloth simulation or measured garment sizing.

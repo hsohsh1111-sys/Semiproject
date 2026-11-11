@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { captureCameraFrame, centerZoomCrop, prepareUploadedImage } from './CameraView.jsx'
 import CircleSelector from './CircleSelector.jsx'
 import MobileTryOn from './MobileTryOn.jsx'
+import LandingPage from './LandingPage.jsx'
 import './MobileCamera.css'
 
 function cameraError(error) {
@@ -539,7 +540,7 @@ export default function MobileCamera({ image, selection, result, analyzing, anal
     onUploadPerson={onUploadTryOnPerson} onRestorePerson={onRestoreTryOnPerson}
     onGenerate={onCreateTryOn} onBack={returnToRecommendations} />
 
-  return <main className="mobile-app" onPointerDownCapture={(event) => {
+  return <main className={`mobile-app${mode === 'start' ? ' mobile-landing' : ''}`} onPointerDownCapture={(event) => {
     if (mode === 'photo' && !selectionLocked && !analyzing && !result &&
         event.target?.classList?.contains('drawing-canvas') &&
         (event.pointerType !== 'mouse' || event.button === 0)) setHasStartedDrawing(true)
@@ -558,17 +559,8 @@ export default function MobileCamera({ image, selection, result, analyzing, anal
       <strong>{centerGuide.title}</strong>
     </div>}
 
-    {mode === 'start' ? <div className="mobile-start">
-      <h1>Onfit Virtual Try-On</h1>
-      <div className="mobile-start-actions">
-        <a className="mobile-onfit-return" href="/#/home">← ONFIT 쇼핑몰</a>
-        <button type="button" className="mobile-primary" onClick={() => pickerRef.current?.click()}
-          disabled={busy}>사진 업로드</button>
-        <button type="button" className="mobile-secondary" onClick={startCamera}
-          disabled={busy}>카메라 실행</button>
-      </div>
-      {error && <p className="mobile-error" role="alert">{error}</p>}
-    </div> : <>
+    {mode === 'start' ? <LandingPage onCamera={startCamera}
+      onUpload={() => pickerRef.current?.click()} busy={busy} error={error} /> : <>
       <header className={`mobile-top-overlay${mode === 'camera' ? ' mobile-camera-header' : ''}${mode === 'photo' && lastTryOn?.result?.image_data_url ? ' has-tryon-return' : ''}`}>
         <a className="mobile-onfit-return" href="/#/home" aria-label="ONFIT 쇼핑몰로 돌아가기">← ONFIT</a>
         <h1><strong>Onfit</strong><span> Virtual Try-On</span></h1>

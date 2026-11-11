@@ -1,0 +1,48 @@
+{
+  "source": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyMorph_v3.blend",
+  "source_sha256": "9733c0593bb6197cc4f1fe0d8df6db8a84af5d3b1b75cdecf075d9847cb9a852",
+  "output": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Human_BodyBuild_v1.glb",
+  "glb_sha256": "49b6f46183db62e1ec53fbe7c618d31167a8cd873650f72c0a3048d51ef42af1",
+  "blend": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyBuild_v1.blend",
+  "scale": 0.10000000146302812,
+  "targets": {
+    "universal-male-young-averagemuscle-averageweight.target.gz": "e814651195c53971503d9823d6841216718a561951ef064f81d132297f4fa494",
+    "universal-female-young-averagemuscle-averageweight.target.gz": "30046c85a461249824548d5319d74c16392842a1ee00ca9a4485ea3eeb06e2e8",
+    "asian-male-young.target.gz": "0928ed8b9f08f60afb9884cf9e9f33a939ed3a85d7f136de9ccc88a76981d6d7",
+    "universal-male-young-minmuscle-minweight.target.gz": "166a31465a2790a321e55e274a7f43c56bfe58ad1cf443afacd45a7a23abf407",
+    "universal-female-young-minmuscle-minweight.target.gz": "18ecff47c3606608472afab0f79a88afaf0c3d5c139bf81c1ef7867a9a9b78a5",
+    "universal-male-young-maxmuscle-minweight.target.gz": "0323cb5c604d13207d1a10ade8ce165df1cbf14d91de48ad959a082297669905",
+    "universal-female-young-maxmuscle-minweight.target.gz": "f67344b6aa1808737d78b619c062effe04aad0bfe67e9f80fa6294e2eb5342a5"
+  },
+  "checks": [
+    {
+      "target": "body_build_lean",
+      "weight": 0.5,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.02112322523446145
+    },
+    {
+      "target": "body_build_lean",
+      "weight": 1.0,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.0422464504689229
+    },
+    {
+      "target": "body_build_muscular",
+      "weight": 0.5,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.011883451377107227
+    },
+    {
+      "target": "body_build_muscular",
+      "weight": 1.0,
+      "flipped_triangles": 0,
+      "max_displacement_m": 0.023766902754214454
+    }
+  ],
+  "original_keys_preserved": true,
+  "default_restores_exactly": true,
+  "license": "CC0 core MPFB targets",
+  "license_url": "https://static.makehumancommunity.org/mpfb/faq/can_i_sell_models.html",
+  "limitations": "Artistic macro targets, not InBody reconstruction. Detailed muscles and clothing clearance require visual validation."
+}

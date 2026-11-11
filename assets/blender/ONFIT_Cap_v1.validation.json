@@ -1,0 +1,149 @@
+{
+  "input_hashes": {
+    "ONFIT_Human_BodyMorph_v3.glb": "328fba3993e353d7b20b44d2116c571f034071feb2c004a1a0d5bc3ac783c4eb",
+    "ONFIT_Cap_v1.glb": "226fad78d29abf1821696d7fa2da2ac97ed28464c82bf306de928e876bc9ddcc",
+    "ONFIT_TShirt_BodyMorph_v5.glb": "1ee6c4b0f1ca159ced2be0434b40fdc225fda529d764724832a96bbd1efcd8e7",
+    "ONFIT_Pants_BodyMorph_v2.glb": "e5776e6ec38a5e5da5f70442f0c18839129810279d590d7fa57a14558c349855",
+    "ONFIT_Outer_BodyMorph_v1.glb": "1b249fa0f8783674837b28f5f11ef6e19050d2a56fc812b07364a9b79a17bde6",
+    "ONFIT_HoodedJacket_BodyMorph_v1.glb": "9357b0afb6b2e00ed18f5268d81e2fc8d572ce0e897c744b1ac4af9ff0f4a28c"
+  },
+  "vertices": 3167,
+  "triangles": 6004,
+  "morph_targets": 0,
+  "bounds_blender": {
+    "min": [
+      -0.07543332874774933,
+      -0.21805046498775482,
+      1.5564814805984497
+    ],
+    "max": [
+      0.07708904892206192,
+      0.05855788663029671,
+      1.6769496202468872
+    ]
+  },
+  "head_bounds_blender": {
+    "min": [
+      -0.08352452516555786,
+      -0.15973000228405,
+      1.4501538276672363
+    ],
+    "max": [
+      0.08352452516555786,
+      0.04845556616783142,
+      1.6594313383102417
+    ]
+  },
+  "checks": {
+    "body": {
+      "overlap_pairs": 0,
+      "near_samples": 3043,
+      "min_near_signed_gap_m": 0.002340810253372183,
+      "inside_over_2mm": 0,
+      "overlap_locations": []
+    },
+    "top": {
+      "overlap_pairs": 0,
+      "near_samples": 0,
+      "min_near_signed_gap_m": null,
+      "inside_over_2mm": 0,
+      "overlap_locations": []
+    },
+    "bottom": {
+      "overlap_pairs": 0,
+      "near_samples": 0,
+      "min_near_signed_gap_m": null,
+      "inside_over_2mm": 0,
+      "overlap_locations": []
+    },
+    "outer": {
+      "overlap_pairs": 0,
+      "near_samples": 0,
+      "min_near_signed_gap_m": null,
+      "inside_over_2mm": 0,
+      "overlap_locations": []
+    },
+    "hood": {
+      "overlap_pairs": 0,
+      "near_samples": 0,
+      "min_near_signed_gap_m": null,
+      "inside_over_2mm": 0,
+      "overlap_locations": []
+    }
+  },
+  "hood_corner_checks": [
+    {
+      "corner": 0,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 1,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 2,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 3,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 4,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 5,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 6,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 7,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 8,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 9,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 10,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 11,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 12,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 13,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 14,
+      "cap_overlap_pairs": 0
+    },
+    {
+      "corner": 15,
+      "cap_overlap_pairs": 0
+    }
+  ],
+  "supports_down_hood": true,
+  "self_nonadjacent_overlap_pairs": 346,
+  "degenerate_triangles": 0,
+  "uv_layers": 1,
+  "materials": [
+    "Human.toigo_maga_hat"
+  ],
+  "browser_verified": false,
+  "note": "Triangle overlaps and nearest signed gaps are diagnostics, not visual quality proof; only the existing down hood is tested."
+}

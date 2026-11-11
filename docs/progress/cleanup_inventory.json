@@ -1,0 +1,296 @@
+﻿[
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-build-check",
+        "Files":  0,
+        "Bytes":  null,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-build-check-onfit",
+        "Files":  0,
+        "Bytes":  null,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-build-check-onfit2",
+        "Files":  7,
+        "Bytes":  6694304,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-glb-camera-build",
+        "Files":  11,
+        "Bytes":  11597452,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-shirt-build",
+        "Files":  10,
+        "Bytes":  10385772,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-shirt-lighting-build",
+        "Files":  10,
+        "Bytes":  10389368,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-glb-build",
+        "Files":  10,
+        "Bytes":  10392552,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-build",
+        "Files":  12,
+        "Bytes":  20014651,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-v1-build",
+        "Files":  14,
+        "Bytes":  24028483,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-v1-final-build",
+        "Files":  14,
+        "Bytes":  23986734,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-morph-v1-build",
+        "Files":  16,
+        "Bytes":  29563940,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-morph-v2-build",
+        "Files":  18,
+        "Bytes":  35141474,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-abdomen-mapping-build",
+        "Files":  18,
+        "Bytes":  35141504,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-camera-persistence-build",
+        "Files":  18,
+        "Bytes":  35142030,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-v2-build",
+        "Files":  20,
+        "Bytes":  39763570,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-morph-v3-build",
+        "Files":  22,
+        "Bytes":  46507691,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-v3-build",
+        "Files":  24,
+        "Bytes":  51487039,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-pants-v1-build",
+        "Files":  1,
+        "Bytes":  438,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-pants-final-check",
+        "Files":  26,
+        "Bytes":  60252975,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-pants-morph-final-check",
+        "Files":  38,
+        "Bytes":  110154256,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-pants-morph-final-verified",
+        "Files":  29,
+        "Bytes":  72824637,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-quality-v5-v2",
+        "Files":  31,
+        "Bytes":  88496958,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-outer-v1-final",
+        "Files":  32,
+        "Bytes":  101719571,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-outer-morph-v1-final",
+        "Files":  34,
+        "Bytes":  116258739,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-long-sleeve-v1-final",
+        "Files":  35,
+        "Bytes":  125938072,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-long-sleeve-morph-v1-final",
+        "Files":  37,
+        "Bytes":  136899779,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-hooded-jacket-v1",
+        "Files":  39,
+        "Bytes":  138265019,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-hooded-jacket-morph-v1",
+        "Files":  41,
+        "Bytes":  141651926,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-cap-v1",
+        "Files":  42,
+        "Bytes":  145583034,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-cap-neutral-v1",
+        "Files":  44,
+        "Bytes":  145724032,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-fitting-v1",
+        "Files":  45,
+        "Bytes":  145736216,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-fitting-v1-final",
+        "Files":  45,
+        "Bytes":  145736264,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-design-v1",
+        "Files":  45,
+        "Bytes":  145747746,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-design-v1-final",
+        "Files":  45,
+        "Bytes":  145747913,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-sizes-v1",
+        "Files":  45,
+        "Bytes":  145758900,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-sizes-v1-final",
+        "Files":  45,
+        "Bytes":  145759613,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-quality-v2",
+        "Files":  45,
+        "Bytes":  145763831,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-cm-v3",
+        "Files":  45,
+        "Bytes":  145766134,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-cm-complete",
+        "Files":  45,
+        "Bytes":  145766205,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-cm-complete-final",
+        "Files":  39,
+        "Bytes":  144320102,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-cm-releasecheck",
+        "Files":  45,
+        "Bytes":  145766259,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-catalog-contract-20261105",
+        "Files":  45,
+        "Bytes":  145770076,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-photo-workflow-20261105",
+        "Files":  48,
+        "Bytes":  149102661,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-logo-drag-20261105",
+        "Files":  48,
+        "Bytes":  149105515,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-build-20261105",
+        "Files":  6,
+        "Bytes":  1357308,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-build-v3-20261105",
+        "Files":  6,
+        "Bytes":  1357345,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-abs-v6-20261105",
+        "Files":  6,
+        "Bytes":  1357467,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-muscular-v7-20261105",
+        "Files":  0,
+        "Bytes":  null,
+        "Reparse":  false
+    },
+    {
+        "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-reference-v10-codecheck",
+        "Files":  5,
+        "Bytes":  1358285,
+        "Reparse":  false
+    }
+]

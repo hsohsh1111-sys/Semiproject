@@ -1,0 +1,132 @@
+[
+  {
+    "source": "ONFIT_TShirt_BodyMorph_v5.glb",
+    "source_sha256": "1ee6c4b0f1ca159ced2be0434b40fdc225fda529d764724832a96bbd1efcd8e7",
+    "glb": "ONFIT_TShirt_BodyBuild_v7.glb",
+    "checks": [
+      {
+        "target": "garment_build_relief",
+        "strength": 1.0,
+        "changed_vertices": 10302,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_lean",
+        "strength": 0.5,
+        "changed_vertices": 16014,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_muscular",
+        "strength": 0.9,
+        "changed_vertices": 16014,
+        "flipped_triangles": 0
+      }
+    ],
+    "UV_and_original_keys_preserved": true
+  },
+  {
+    "source": "ONFIT_LongSleeve_BodyMorph_v1.glb",
+    "source_sha256": "4034d9fa516d19e42b8a21a375ed05d998b64ab540323997791f9ca1174444ac",
+    "glb": "ONFIT_LongSleeve_BodyBuild_v7.glb",
+    "checks": [
+      {
+        "target": "garment_build_relief",
+        "strength": 1.0,
+        "changed_vertices": 4276,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_lean",
+        "strength": 1.0,
+        "changed_vertices": 8705,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_muscular",
+        "strength": 1.0,
+        "changed_vertices": 8705,
+        "flipped_triangles": 0
+      }
+    ],
+    "UV_and_original_keys_preserved": true
+  },
+  {
+    "source": "ONFIT_Pants_BodyMorph_v2.glb",
+    "source_sha256": "e5776e6ec38a5e5da5f70442f0c18839129810279d590d7fa57a14558c349855",
+    "glb": "ONFIT_Pants_BodyBuild_v7.glb",
+    "checks": [
+      {
+        "target": "garment_build_relief",
+        "strength": 1.0,
+        "changed_vertices": 733,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_lean",
+        "strength": 1.0,
+        "changed_vertices": 5641,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_muscular",
+        "strength": 1.0,
+        "changed_vertices": 5641,
+        "flipped_triangles": 0
+      }
+    ],
+    "UV_and_original_keys_preserved": true
+  },
+  {
+    "source": "ONFIT_Outer_BodyMorph_v1.glb",
+    "source_sha256": "1b249fa0f8783674837b28f5f11ef6e19050d2a56fc812b07364a9b79a17bde6",
+    "glb": "ONFIT_Outer_BodyBuild_v7.glb",
+    "checks": [
+      {
+        "target": "garment_build_relief",
+        "strength": 0.1,
+        "changed_vertices": 4611,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_lean",
+        "strength": 0.4,
+        "changed_vertices": 8948,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_muscular",
+        "strength": 0.5,
+        "changed_vertices": 8948,
+        "flipped_triangles": 0
+      }
+    ],
+    "UV_and_original_keys_preserved": true
+  },
+  {
+    "source": "ONFIT_HoodedJacket_BodyMorph_v1.glb",
+    "source_sha256": "9357b0afb6b2e00ed18f5268d81e2fc8d572ce0e897c744b1ac4af9ff0f4a28c",
+    "glb": "ONFIT_HoodedJacket_BodyBuild_v7.glb",
+    "checks": [
+      {
+        "target": "garment_build_relief",
+        "strength": 1.0,
+        "changed_vertices": 7493,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_lean",
+        "strength": 0.2,
+        "changed_vertices": 13280,
+        "flipped_triangles": 0
+      },
+      {
+        "target": "garment_build_muscular",
+        "strength": 0.2,
+        "changed_vertices": 13280,
+        "flipped_triangles": 0
+      }
+    ],
+    "UV_and_original_keys_preserved": true
+  }
+]

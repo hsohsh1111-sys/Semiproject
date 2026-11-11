@@ -1,0 +1,120 @@
+{
+  "original_hashes": {
+    "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_TShirt.glb": "5a2f4efba8f106ea0d83ea4587712baf5344eea668a47d1714383f741c1ff0c5",
+    "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Human_BodyMorph_v1.glb": "7916bcf994351302cd59f217d2acb3ede26edb144a1fc333035b98343558986a"
+  },
+  "output_sha256": "6474a327be7c27440fb0a83dabed23e49ed5628463528d545ac78f7dcac971b8",
+  "blend": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_TShirt_BodyMorph_v2.blend",
+  "vertices": 16014,
+  "triangles": 21824,
+  "uv_preserved": true,
+  "topology_preserved": true,
+  "baseline_max_correction_m": 0.022004607855701457,
+  "morph_targets": [
+    "garment_abdomen_front",
+    "garment_pelvis_width"
+  ],
+  "checks": [
+    {
+      "abdomen": 0,
+      "pelvis": 0,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0,
+      "body_triangle_overlap_pairs": 0,
+      "self_nonadjacent_overlap_candidates": 0
+    },
+    {
+      "abdomen": 0.5,
+      "pelvis": 0,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0037063774943817407,
+      "flipped_triangles": 0,
+      "body_triangle_overlap_pairs": 0,
+      "self_nonadjacent_overlap_candidates": 0
+    },
+    {
+      "abdomen": 1,
+      "pelvis": 0,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.003475593010080047,
+      "flipped_triangles": 0,
+      "body_triangle_overlap_pairs": 0,
+      "self_nonadjacent_overlap_candidates": 0
+    },
+    {
+      "abdomen": 0,
+      "pelvis": -1,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0,
+      "body_triangle_overlap_pairs": 0,
+      "self_nonadjacent_overlap_candidates": 0
+    },
+    {
+      "abdomen": 1,
+      "pelvis": -1,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.003475593010080047,
+      "flipped_triangles": 0,
+      "body_triangle_overlap_pairs": 0,
+      "self_nonadjacent_overlap_candidates": 0
+    },
+    {
+      "abdomen": 0,
+      "pelvis": 1,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0,
+      "body_triangle_overlap_pairs": 0,
+      "self_nonadjacent_overlap_candidates": 0
+    },
+    {
+      "abdomen": 1,
+      "pelvis": 1,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.003475593010080047,
+      "flipped_triangles": 0,
+      "body_triangle_overlap_pairs": 0,
+      "self_nonadjacent_overlap_candidates": 0
+    },
+    {
+      "abdomen": 0,
+      "pelvis": 0,
+      "samples": 16014,
+      "inside_over_2mm": 0,
+      "inside_over_10mm": 0,
+      "min_signed_gap_m": 0.0038486350713355932,
+      "flipped_triangles": 0,
+      "body_triangle_overlap_pairs": 0,
+      "self_nonadjacent_overlap_candidates": 0
+    }
+  ],
+  "visual_verification": false,
+  "method": "Smooth front-to-hem drape envelope",
+  "limitations": "Nearest-surface vertex gaps do not prove triangle collision absence; visual fit and seam/neck/hem need inspection",
+  "abdomen_displacement_slope": {
+    "v1": {
+      "max": 1.957463929545265,
+      "p95": 0.33787495963618913
+    },
+    "current": {
+      "max": 0.8381892719806678,
+      "p95": 0.4815623317435654
+    }
+  }
+}
