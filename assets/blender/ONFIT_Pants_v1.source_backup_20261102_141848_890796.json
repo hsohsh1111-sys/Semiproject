@@ -1,0 +1,40 @@
+{
+  "blender": "5.2.3 LTS",
+  "mpfb": "2.0.18",
+  "source_blend": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyMorph_v3.blend",
+  "source_blend_sha256": "9733c0593bb6197cc4f1fe0d8df6db8a84af5d3b1b75cdecf075d9847cb9a852",
+  "asset": "C:\\Users\\pc06-00\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.user\\blender_org\\mpfb\\data\\clothes\\male_casualsuit06\\male_casualsuit06.mhclo",
+  "asset_sha256": "9cebda22a0fa57fc556a1a77723f59b176724dc7e987c01214283677444ddcc5",
+  "asset_name": "male_casualsuit06",
+  "extracted_component": "full-length pants",
+  "license": "CC0",
+  "license_url": "https://www.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html",
+  "blend_output": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Pants_v1.blend",
+  "glb_output": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Pants_v1.glb",
+  "glb_sha256": "4e868b275d7ad9c0d29138f4c51407612d52f6a6ef8c7c3125722aff3ca828e7",
+  "vertices": 3485,
+  "triangles": 6848,
+  "texture_nodes": 3,
+  "bounds": {
+    "min": [
+      -0.23258352279663086,
+      0.05943388119339943,
+      -0.10292305797338486
+    ],
+    "max": [
+      0.23688970506191254,
+      0.9483725428581238,
+      0.16139623522758484
+    ]
+  },
+  "penetration_check": {
+    "samples": 3485,
+    "inside_over_2mm": 0,
+    "inside_over_10mm": 0,
+    "max_inside_m": 0.0017076587828341872,
+    "method": "Nearest-surface normal estimate; not full cloth collision simulation"
+  },
+  "morph_targets": 0,
+  "backups": [],
+  "visual_verification": false
+}

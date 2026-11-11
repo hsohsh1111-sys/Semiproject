@@ -1,0 +1,95 @@
+-- SUPERSEDED 2026-11-06: keep team DB names and user_profiles.user_id primary key.
+-- DO NOT APPLY the rename/rekey proposal below; historical review only.
+-- REVIEW ONLY: every line is commented; this file executes no SQL as supplied.
+-- Target observed: TiDB 8.5.3 serverless. NOT executed or staging-tested.
+-- Scope: users / user_profiles / inbody_records only, not the entire 11-table ERD.
+-- Requires DB-owner approval, verified backup, stopped writers and staging rehearsal.
+-- Do not run the old database/schema.sql to perform this migration.
+-- Do not uncomment/source the whole file: preflight and manual verification gates
+-- separate each phase. No application runner references this review file.
+--
+-- PHASE 0: Read-only preflight; return zero violations before continuing.
+-- SELECT VERSION();
+-- SELECT COUNT(*) AS orphan_profiles
+-- FROM user_profiles p LEFT JOIN users u ON u.id=p.user_id WHERE u.id IS NULL;
+-- SELECT COUNT(*) AS invalid_height
+-- FROM user_profiles WHERE height_cm IS NOT NULL
+-- AND (height_cm < 0 OR height_cm > 999.99);
+-- SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
+-- WHERE REFERENCED_TABLE_SCHEMA=DATABASE() AND REFERENCED_TABLE_NAME='user_profiles';
+-- SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE()
+-- AND TABLE_NAME IN ('user_profiles__migration_20261106',
+-- 'user_profiles__before_20261106','user_profiles__after_20261106','inbody_records');
+-- Existing staging/backup/inbody table names require inspection, not replacement.
+-- Record row counts and a complete verified backup separately. Keep writers stopped.
+--
+-- PHASE 1: Canonical profile shadow table. Names with __ are migration-only.
+-- Types follow current ORM; charset/collation must match verified source/users.
+-- CREATE TABLE user_profiles__migration_20261106 (
+--   id BIGINT NOT NULL AUTO_INCREMENT,
+--   user_id BIGINT NOT NULL,
+--   height_cm DECIMAL(5,2) NULL,
+--   weight_kg DECIMAL(5,2) NULL,
+--   body_shape VARCHAR(80) NULL,
+--   preferred_fit VARCHAR(80) NULL,
+--   preferred_style VARCHAR(80) NULL,
+--   personal_color VARCHAR(80) NULL,
+--   preferred_colors JSON NULL,
+--   PRIMARY KEY (id),
+--   UNIQUE KEY uq_onfit_profile_user (user_id),
+--   CONSTRAINT fk_onfit_profile_user FOREIGN KEY (user_id) REFERENCES users(id)
+-- );
+--
+-- PHASE 2: Copy known values. Do not infer weight/personal color from old fields.
+-- Existing favorite_color is preserved verbatim as one array element.
+-- INSERT INTO user_profiles__migration_20261106
+-- (user_id,height_cm,weight_kg,body_shape,preferred_fit,preferred_style,personal_color,preferred_colors)
+-- SELECT user_id,CAST(height_cm AS DECIMAL(5,2)),NULL,body_shape,
+-- fit_preference,style_preference,NULL,
+-- CASE WHEN favorite_color IS NULL OR TRIM(favorite_color)=''
+-- THEN NULL ELSE JSON_ARRAY(favorite_color) END FROM user_profiles;
+--
+-- PHASE 3: Verify copy while writers remain stopped. All mismatch counts must be zero.
+-- SELECT (SELECT COUNT(*) FROM user_profiles) AS source_count,
+--        (SELECT COUNT(*) FROM user_profiles__migration_20261106) AS target_count;
+-- SELECT COUNT(*) AS mismatches FROM user_profiles p
+-- LEFT JOIN user_profiles__migration_20261106 n ON n.user_id=p.user_id
+-- WHERE n.user_id IS NULL OR NOT(n.height_cm <=> p.height_cm)
+-- OR NOT(n.body_shape <=> p.body_shape)
+-- OR NOT(n.preferred_fit <=> p.fit_preference)
+-- OR NOT(n.preferred_style <=> p.style_preference)
+-- OR NOT(n.preferred_colors <=> CASE
+-- WHEN p.favorite_color IS NULL OR TRIM(p.favorite_color)='' THEN NULL
+-- ELSE JSON_ARRAY(p.favorite_color) END);
+-- Review source values against application validation before permitting updates.
+--
+-- PHASE 4: Coordinated cutover. Old display_name callers must be stopped/upgraded.
+-- ALTER TABLE users RENAME COLUMN display_name TO name;
+-- RENAME TABLE user_profiles TO user_profiles__before_20261106,
+-- user_profiles__migration_20261106 TO user_profiles;
+-- Keep the old profile table intact, including updated_at and all old columns.
+--
+-- PHASE 5: Missing InBody record table, following current ORM (no sample inserts).
+-- CREATE TABLE inbody_records (
+--   id BIGINT NOT NULL AUTO_INCREMENT,
+--   user_id BIGINT NOT NULL,
+--   height_cm DECIMAL(5,2) NOT NULL,
+--   weight_kg DECIMAL(5,2) NOT NULL,
+--   skeletal_muscle_kg DECIMAL(5,2) NOT NULL,
+--   body_fat_pct DECIMAL(5,2) NOT NULL,
+--   measured_at DATETIME NOT NULL,
+--   created_at DATETIME NOT NULL,
+--   PRIMARY KEY (id),
+--   CONSTRAINT fk_onfit_inbody_user FOREIGN KEY (user_id) REFERENCES users(id)
+-- );
+-- Application supplies created_at in UTC. Confirm timestamp policy with the team.
+-- Recheck metadata and API contracts in staging before restarting production writers.
+--
+-- ROLLBACK PLAN: only before business writes resume and after checking exact phase.
+-- Reverse only operations that actually completed. This is NOT a one-shot rollback.
+-- RENAME TABLE user_profiles TO user_profiles__after_20261106,
+-- user_profiles__before_20261106 TO user_profiles;
+-- ALTER TABLE users RENAME COLUMN name TO display_name;
+-- Do not drop any table, including inbody_records or archived profiles.
+-- If new writes have occurred, first preserve/reconcile them in a separate reviewed
+-- recovery plan; restoring the old profile table alone would lose those updates.

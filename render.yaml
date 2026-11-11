@@ -12,7 +12,7 @@ services:
       - key: APP_ENV
         value: production
       - key: FRONTEND_ORIGINS
-        value: https://onfit3.netlify.app,https://onfit3.onrender.com
+        sync: false
       - key: DATABASE_URL
         sync: false
       - key: SECRET_KEY
@@ -35,8 +35,9 @@ services:
     name: onfit-frontend
     runtime: static
     rootDir: frontend
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci && npm --prefix ../ai-fashion ci && npm run build:site
     staticPublishPath: dist
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://onfit-api.onrender.com/api
+        # Enter the actual deployed API origin followed by /api.
+        sync: false

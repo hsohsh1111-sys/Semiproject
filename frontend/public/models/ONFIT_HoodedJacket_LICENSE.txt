@@ -1,0 +1,20 @@
+ONFIT_HoodedJacket_v1.glb attribution
+Also applies to ONFIT_HoodedJacket_BodyMorph_v1.glb.
+
+Asset: elvs_hooded_sweat_jacket1 (internal name: ladieshoodiedown1)
+Author: Elvaerwyn
+Source: https://www.makehumancommunity.org/node/1450
+Official pack: https://www.makehumancommunity.org/assets/assetpacks/shirts02.html
+License: Creative Commons Attribution (CC BY).
+The original MHCLO header says "license CC_by". No version is specified in
+that header or the official pack listing; no version is asserted here.
+
+Modified for ONFIT on 2026-11-03: fitted to the MPFB Human base, local
+skin/jeans clearance corrections (maximum 22mm), roughness/normal-strength
+adjustments, and GLB conversion. Original UVs and image textures retained.
+BodyMorph derivative: added five garment shape keys using spatially sampled
+body displacement fields, protected hood/neckline and conservative 0.6 field
+strength. No remeshing, zipper closure or cloth simulation. Baseline vertex
+positions, UVs, original materials and embedded texture buffers retained.
+Credit Elvaerwyn and retain the source, license notice and modification notice
+when redistributing this derived asset. This asset is not CC0.

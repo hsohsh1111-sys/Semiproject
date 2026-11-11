@@ -1,0 +1,400 @@
+﻿{
+    "Builds":  [
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-build-check",
+                       "Removed":  true,
+                       "Errors":  [
+
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-build-check-onfit",
+                       "Removed":  true,
+                       "Errors":  [
+
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-build-check-onfit2",
+                       "Removed":  true,
+                       "Errors":  [
+
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-glb-camera-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-shirt-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-shirt-lighting-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-glb-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-v1-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-v1-final-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-morph-v1-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-morph-v2-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-abdomen-mapping-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-camera-persistence-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-v2-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-morph-v3-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-morph-v3-build",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-pants-v1-build",
+                       "Removed":  true,
+                       "Errors":  [
+
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-pants-final-check",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-pants-morph-final-check",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-pants-morph-final-verified",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-garment-quality-v5-v2",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-outer-v1-final",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-outer-morph-v1-final",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-long-sleeve-v1-final",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-long-sleeve-morph-v1-final",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-hooded-jacket-v1",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-hooded-jacket-morph-v1",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-cap-v1",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-cap-neutral-v1",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-fitting-v1",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-fitting-v1-final",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-design-v1",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-design-v1-final",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-sizes-v1",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-sizes-v1-final",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-quality-v2",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-cm-v3",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-cm-complete",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-cm-complete-final",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-product-size-cm-releasecheck",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-catalog-contract-20261105",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-photo-workflow-20261105",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-logo-drag-20261105",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-build-20261105",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-build-v3-20261105",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-abs-v6-20261105",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-muscular-v7-20261105",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "\u0027E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-muscular-v7-20261105\\models\u0027 경로에 대한 액세스가 거부되었습니다."
+                                  ]
+                   },
+                   {
+                       "Path":  "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-reference-v10-codecheck",
+                       "Removed":  false,
+                       "Errors":  [
+                                      "The directory is not empty.\r\n"
+                                  ]
+                   }
+               ],
+    "DeletedLogs":  [
+                        ".codex-pants-verification.log",
+                        ".codex-pants-morph-tests.log",
+                        ".codex-pants-mapping-tests.log",
+                        ".codex-garment-quality-tests.log",
+                        ".codex-outer-tests.log",
+                        ".codex-outer-morph-tests.log",
+                        ".codex-long-sleeve-tests.log",
+                        ".codex-long-sleeve-morph-tests.log",
+                        ".codex-hood-tests.log",
+                        ".codex-hood-tests-final.log",
+                        ".codex-hood-build.log",
+                        ".codex-hood-morph-tests.log",
+                        ".codex-hood-morph-tests-final.log",
+                        ".codex-hood-morph-build.log",
+                        ".codex-cap-tests.log",
+                        ".codex-cap-tests-final.log",
+                        ".codex-cap-build.log",
+                        ".codex-neutral-cap-tests.log",
+                        ".codex-neutral-cap-build.log",
+                        ".codex-product-fitting-tests.log",
+                        ".codex-product-fitting-tests-final.log",
+                        ".codex-product-fitting-build.log",
+                        ".codex-product-fitting-final-validation.log",
+                        ".codex-product-fitting-build-final.log",
+                        ".codex-product-design-build.log",
+                        ".codex-product-design-tests.log",
+                        ".codex-product-design-tests-final.log",
+                        ".codex-product-design-build-final.log",
+                        ".codex-product-sizing-tests.log",
+                        ".codex-product-sizes-build.log",
+                        ".codex-product-sizing-tests-final.log",
+                        ".codex-product-sizes-build-final.log",
+                        ".codex-product-size-quality-tests.log",
+                        ".codex-product-size-quality-tests-final.log",
+                        ".codex-product-size-quality-build.log",
+                        ".codex-product-size-cm-tests.log",
+                        ".codex-product-size-cm-tests-final.log",
+                        ".codex-product-size-cm-build.log",
+                        ".codex-product-size-cm-tests-verified.log",
+                        ".codex-product-size-cm-complete.log",
+                        ".codex-product-size-cm-complete-final.log",
+                        ".codex-product-size-cm-build-confirmed.log",
+                        ".codex-product-size-cm-releasecheck.log",
+                        ".codex-catalog-contract-build.log",
+                        ".codex-photo-workflow-build.log",
+                        ".codex-logo-drag-build.log",
+                        ".codex-body-build-build.log",
+                        ".codex-body-build-v3-build.log",
+                        ".codex-body-abs-v6-build.log",
+                        ".codex-muscular-v7-build.log",
+                        ".codex-reference-v10-codecheck.log"
+                    ]
+}

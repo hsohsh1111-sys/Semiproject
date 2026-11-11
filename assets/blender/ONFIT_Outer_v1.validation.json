@@ -1,0 +1,94 @@
+{
+  "input_hashes": {
+    "ONFIT_Human_BodyMorph_v3.glb": "328fba3993e353d7b20b44d2116c571f034071feb2c004a1a0d5bc3ac783c4eb",
+    "ONFIT_TShirt_BodyMorph_v5.glb": "1ee6c4b0f1ca159ced2be0434b40fdc225fda529d764724832a96bbd1efcd8e7",
+    "ONFIT_Pants_BodyMorph_v2.glb": "e5776e6ec38a5e5da5f70442f0c18839129810279d590d7fa57a14558c349855",
+    "ONFIT_Outer_v1.glb": "158ebc2af62e38df94bc7b9323e822e29c0e9c3fc8a643beeec971b22dd76e9b"
+  },
+  "vertices": 8948,
+  "triangles": 12800,
+  "morph_targets": 0,
+  "bounds_blender": {
+    "min": [
+      -0.5020133852958679,
+      -0.22727446258068085,
+      0.7990800738334656
+    ],
+    "max": [
+      0.5020133256912231,
+      0.12738236784934998,
+      1.4177285432815552
+    ]
+  },
+  "checks": {
+    "body": {
+      "overlap_pairs": 0,
+      "min_near_signed_gap_m": 0.003999935928732157,
+      "near_samples": 8137,
+      "inside_over_2mm": 0,
+      "near_coplanar_samples_under_half_mm": 0,
+      "overlap_locations": []
+    },
+    "top": {
+      "overlap_pairs": 0,
+      "min_near_signed_gap_m": -0.043633740409859456,
+      "near_samples": 6658,
+      "inside_over_2mm": 36,
+      "near_coplanar_samples_under_half_mm": 4,
+      "overlap_locations": []
+    },
+    "bottom": {
+      "overlap_pairs": 0,
+      "min_near_signed_gap_m": 0.0049417453847127035,
+      "near_samples": 1507,
+      "inside_over_2mm": 0,
+      "near_coplanar_samples_under_half_mm": 0,
+      "overlap_locations": []
+    }
+  },
+  "self_nonadjacent_overlap_pairs": 7,
+  "self_overlap_locations": [
+    [
+      -0.4423855741818746,
+      -0.2149930347998937,
+      1.0253094832102458
+    ],
+    [
+      -0.4451008439064026,
+      -0.21696726977825165,
+      1.0265546242396038
+    ],
+    [
+      0.04795182993014654,
+      -0.21167010565598807,
+      0.9273559252421061
+    ],
+    [
+      0.4423856933911641,
+      -0.21499295035998026,
+      1.0253094832102458
+    ],
+    [
+      0.4423856933911641,
+      -0.21499295035998026,
+      1.0253094832102458
+    ],
+    [
+      0.4451010425885518,
+      -0.216967244942983,
+      1.0265546242396038
+    ],
+    [
+      0.4451010425885518,
+      -0.216967244942983,
+      1.0265546242396038
+    ]
+  ],
+  "degenerate_triangles": 0,
+  "uv_layers": 1,
+  "materials": [
+    "Human.male_casualsuit05"
+  ],
+  "note": "Static baseline only. Triangle checks and nearest gaps do not replace visual review or prove absence of z-fighting.",
+  "browser_verified": false
+}

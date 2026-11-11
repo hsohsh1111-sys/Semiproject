@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { saveLoginSession, restoreLoginSession } from './services/authSession.js'
+import { clearFittingMeasurements } from './services/fitting.js'
 import Header from './components/common/Header.jsx'
 import Footer from './components/common/Footer.jsx'
 import AuthModal from './components/common/AuthModal.jsx'
@@ -9,7 +11,9 @@ import OutfitPage from './pages/OutfitPage.jsx'
 import WardrobePage from './pages/WardrobePage.jsx'
 import PriceTimingPage from './pages/PriceTimingPage.jsx'
 import PriceComparePage from './pages/PriceComparePage.jsx'
+import SeasonalOutfitPage from './pages/SeasonalOutfitPage.jsx'
 import AdminPage from './pages/AdminPage.jsx'
+const FittingPage = lazy(() => import('./pages/FittingPage.jsx'))
 
 function readRoute() {
   const value = window.location.hash.replace(/^#/, '')
@@ -17,18 +21,55 @@ function readRoute() {
 }
 
 const pages = {
+  '/fitting': FittingPage,
   '/home': HomePage,
   '/style': StyleProfilePage,
   '/outfits': OutfitPage,
   '/wardrobe': WardrobePage,
   '/price': PriceTimingPage,
   '/compare': PriceComparePage,
+  '/seasonal': SeasonalOutfitPage,
   '/admin': AdminPage,
 }
 
 export default function App() {
   const [route, setRoute] = useState(readRoute)
   const [authMode, setAuthMode] = useState(null)
+  const [session, setSession] = useState(null)
+  const [restoring, setRestoring] = useState(true)
+  const [restoreError, setRestoreError] = useState('')
+  const [restoreAttempt, setRestoreAttempt] = useState(0)
+  const restoreController = useRef(null)
+  const authRevision = useRef(0)
+  function updateSession(next) {
+    const saved = saveLoginSession(next)
+    if (session?.user?.id && session.user.id !== next?.user?.id) clearFittingMeasurements(session.user.id)
+    authRevision.current += 1
+    restoreController.current?.abort()
+    setSession(saved); setRestoring(false); setRestoreError('')
+  }
+  useEffect(() => {
+    const controller = new AbortController()
+    restoreController.current = controller
+    const revision = authRevision.current
+    const timeout = setTimeout(() => controller.abort(), 15000)
+    let active = true
+    setRestoring(true); setRestoreError('')
+    restoreLoginSession(fetch, undefined, controller.signal).then(restored => {
+      if (active && revision === authRevision.current) setSession(restored)
+    }).catch(() => {
+      if (active && revision === authRevision.current) setRestoreError('로그인 확인이 지연되고 있습니다.')
+    }).finally(() => {
+      clearTimeout(timeout)
+      if (active && revision === authRevision.current) setRestoring(false)
+    })
+    return () => { active = false; clearTimeout(timeout); controller.abort() }
+  }, [restoreAttempt])
+  useEffect(() => {
+    if (!session?.expires_at) return
+    const timeout = setTimeout(() => updateSession(null), Math.max(0, session.expires_at - Date.now()))
+    return () => clearTimeout(timeout)
+  }, [session])
   useEffect(() => {
     const handleRoute = () => {
       setRoute(readRoute())
@@ -39,11 +80,15 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleRoute)
   }, [])
   const Page = pages[route] || HomePage
+  if (restoring) return <main className="inner-page"><p role="status">로그인 상태 확인 중…</p></main>
   return <div className="app-shell min-h-screen bg-canvas text-ink">
-    <Header onAuth={setAuthMode} />
-    <Page />
+    <Header onAuth={setAuthMode} session={session} onLogout={() => updateSession(null)} />
+    {restoreError && <div role="status">{restoreError} <button type="button" onClick={() => setRestoreAttempt(value => value + 1)}>다시 확인</button></div>}
+    <Suspense fallback={<p role="status">화면을 불러오는 중입니다.</p>}>
+      <Page session={session} onSessionChange={updateSession} onRequestLogin={() => setAuthMode('login')} />
+    </Suspense>
     <Footer />
     <ScrollToTopButton />
-    <AuthModal mode={authMode} onClose={(nextMode) => setAuthMode(nextMode || null)} />
+    <AuthModal mode={authMode} onClose={(nextMode) => setAuthMode(nextMode || null)} onAuthenticated={updateSession} />
   </div>
 }

@@ -235,6 +235,9 @@ img {
   gap:28px;
   margin-top:35px
 }
+.ai-fashion-cta {
+  margin-top:12px
+}
 .button {
   display:inline-flex;
   align-items:center;
@@ -2561,4 +2564,739 @@ img {
     padding:12px 10px;
     font-size:10px
   }
+}
+
+.seasonal-guide {
+  display:grid;
+  grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+  align-items:center;
+  gap:clamp(38px,6vw,82px);
+  padding-top:62px;
+  padding-bottom:72px
+}
+.seasonal-guide-visual {
+  position:relative;
+  min-height:420px;
+  height:min(64vh,560px);
+  overflow:hidden;
+  background:#e6d6c8
+}
+.seasonal-guide-visual::after {
+  position:absolute;
+  inset:45% 0 0;
+  background:linear-gradient(transparent,#1a1717ad);
+  content:"";
+  pointer-events:none
+}
+.seasonal-guide-visual img {
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+.seasonal-guide-image-note {
+  position:absolute;
+  z-index:1;
+  right:24px;
+  bottom:26px;
+  left:26px;
+  display:grid;
+  gap:8px;
+  color:#fff;
+  text-shadow:0 1px 8px #0006
+}
+.seasonal-guide-image-note small {
+  font-size:8px;
+  font-weight:600;
+  letter-spacing:.18em
+}
+.seasonal-guide-image-note strong {
+  font:500 27px/1.12 "Playfair Display",serif
+}
+.seasonal-guide-content h1 {
+  margin:17px 0 13px;
+  font:500 clamp(38px,4vw,53px)/1.16 "Playfair Display","Pretendard",serif;
+  letter-spacing:-.05em
+}
+.seasonal-guide-content h1 em {
+  color:#a4755b;
+  font-weight:500
+}
+.seasonal-guide-intro {
+  max-width:460px;
+  margin:0;
+  color:#766d6b;
+  font-size:12px;
+  line-height:1.85
+}
+.seasonal-guide-steps {
+  display:grid;
+  margin:24px 0 22px;
+  padding:0;
+  border-top:1px solid #e4d9d0;
+  list-style:none
+}
+.seasonal-guide-steps li {
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid #e4d9d0
+}
+.seasonal-guide-steps li>span {
+  padding-top:2px;
+  color:#a4755b;
+  font:500 11px "DM Sans",sans-serif
+}
+.seasonal-guide-steps strong {
+  font-size:11px;
+  font-weight:600
+}
+.seasonal-guide-steps p {
+  margin:5px 0 0;
+  color:#827770;
+  font-size:10px;
+  line-height:1.6
+}
+.seasonal-guide-button {
+  min-height:48px
+}
+.seasonal-guide-note {
+  display:block;
+  margin-top:11px;
+  color:#96877e;
+  font-size:9px
+}
+.seasonal-content {
+  max-width:1180px
+}
+.seasonal-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:24px;
+  margin-bottom:28px
+}
+.seasonal-heading h2 {
+  margin:9px 0 7px;
+  font-size:30px;
+  font-weight:500
+}
+.seasonal-heading p {
+  margin:0;
+  color:#827770;
+  font-size:12px
+}
+.season-badge {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:none;
+  padding:10px 14px;
+  border:1px solid #dfe5d9;
+  border-radius:24px;
+  background:#f3f5ef;
+  color:#617055;
+  font-size:10px
+}
+.season-badge i {
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#82906e
+}
+.seasonal-filters {
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  margin-bottom:26px;
+  padding:17px;
+  background:#f8f4ef
+}
+.seasonal-filters label {
+  display:grid;
+  gap:6px;
+  color:#827770;
+  font-size:9px
+}
+.seasonal-filters select {
+  min-width:132px;
+  padding:10px 34px 10px 12px;
+  border:1px solid #d9cec5;
+  border-radius:2px;
+  background:#fffdfa;
+  color:#29212a;
+  font:500 11px "Pretendard",sans-serif
+}
+.seasonal-filters p {
+  margin:0 0 10px auto;
+  color:#827770;
+  font-size:10px
+}
+.seasonal-look-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:22px
+}
+.seasonal-age-section+.seasonal-age-section {
+  margin-top:42px
+}
+.seasonal-age-heading {
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+  margin-bottom:16px;
+  padding-bottom:12px;
+  border-bottom:1px solid #d8c8bc
+}
+.seasonal-age-heading>span {
+  color:#a4755b;
+  font:500 10px "DM Sans",sans-serif;
+  letter-spacing:.12em
+}
+.seasonal-age-heading h3 {
+  margin:0;
+  color:#392e2d;
+  font-size:23px;
+  font-weight:500;
+  letter-spacing:-.04em
+}
+.seasonal-age-heading p {
+  margin:0 0 0 auto;
+  color:#827770;
+  font-size:10px
+}
+.seasonal-look-card {
+  min-width:0;
+  border:1px solid #e6ddd5;
+  background:#fffdfa
+}
+.seasonal-look-image {
+  position:relative;
+  height:310px;
+  overflow:hidden;
+  background:#eee7df
+}
+.seasonal-look-image-button {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  padding:0;
+  border:0;
+  background:transparent;
+  cursor:zoom-in
+}
+.seasonal-look-board {
+  display:grid;
+  grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);
+  grid-template-rows:repeat(2,minmax(0,1fr));
+  gap:6px;
+  width:100%;
+  height:100%;
+  padding:10px;
+  background:linear-gradient(145deg,#eee7df,#f8f4ef)
+}
+.seasonal-look-board-item {
+  display:flex;
+  min-width:0;
+  min-height:0;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background:#fffdfa
+}
+.seasonal-look-board-item:first-child {
+  grid-row:span 2
+}
+.seasonal-look-board-item img {
+  flex:1;
+  width:100%;
+  height:auto;
+  min-height:0;
+  padding:8px;
+  object-fit:contain
+}
+.seasonal-look-board-placeholder {
+  padding:10px;
+  color:#827770;
+  font-size:9px;
+  text-align:center
+}
+.seasonal-look-board-large {
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:minmax(0,1fr);
+  gap:12px;
+  width:min(90vw,840px);
+  height:min(68vh,660px);
+  min-height:260px;
+  padding:12px;
+  background:#eee7df
+}
+.seasonal-look-board-large .seasonal-look-board-item:first-child {
+  grid-row:auto
+}
+.seasonal-look-board-caption {
+  display:grid;
+  gap:4px;
+  width:100%;
+  padding:10px;
+  background:#fffdfa;
+  color:#4e4540
+}
+.seasonal-look-board-caption small {
+  color:#8b6752;
+  font-size:9px
+}
+.seasonal-look-board-caption strong {
+  display:-webkit-box;
+  overflow:hidden;
+  font-size:11px;
+  font-weight:500;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2
+}
+.seasonal-look-board-caption b {
+  font:600 10px "DM Sans","Pretendard",sans-serif
+}
+.seasonal-look-view {
+  position:absolute;
+  right:12px;
+  bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 10px;
+  background:#fffdfae8;
+  color:#4e4540;
+  font-size:9px
+}
+.seasonal-look-number,.seasonal-look-style {
+  position:absolute;
+  top:13px;
+  padding:7px 10px;
+  background:#fffdfaE8;
+  color:#6b594b;
+  font-size:9px
+}
+.seasonal-look-number {
+  left:13px
+}
+.seasonal-look-style {
+  right:13px
+}
+.seasonal-look-body {
+  padding:18px
+}
+.seasonal-look-meta {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#827770;
+  font-size:9px
+}
+.seasonal-look-meta i {
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:#b7a89c
+}
+.seasonal-look-body h3 {
+  margin:9px 0 7px;
+  font-size:19px;
+  font-weight:500
+}
+.seasonal-look-description {
+  min-height:36px;
+  margin:0 0 17px;
+  color:#827770;
+  font-size:10px;
+  line-height:1.7
+}
+.seasonal-products {
+  border-top:1px solid #e6ddd5
+}
+.seasonal-products-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0 7px;
+  color:#8b6752
+}
+.seasonal-products-heading span {
+  font:600 8px "DM Sans",sans-serif;
+  letter-spacing:.08em
+}
+.seasonal-product-row {
+  padding:7px 0;
+  border-top:1px solid #f0eae5
+}
+.seasonal-catalog-product {
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  padding:7px;
+  background:#f8f4ef;
+  color:#4e4540
+}
+.seasonal-catalog-product img {
+  width:42px;
+  height:48px;
+  object-fit:cover;
+  background:#eee7df
+}
+.seasonal-catalog-copy {
+  display:grid;
+  min-width:0;
+  gap:3px
+}
+.seasonal-catalog-copy strong {
+  overflow:hidden;
+  font-size:9px;
+  font-weight:500;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+.seasonal-catalog-copy small {
+  color:#827770;
+  font-size:8px
+}
+.seasonal-catalog-copy b {
+  font:600 9px "DM Sans","Pretendard",sans-serif;
+  white-space:nowrap
+}
+.seasonal-catalog-copy em {
+  margin-left:4px;
+  color:#8b6752;
+  font-size:8px;
+  font-style:normal;
+  white-space:nowrap
+}
+.seasonal-catalog-link {
+  display:flex;
+  align-items:center;
+  gap:3px;
+  padding:5px 7px;
+  border:1px solid #e8dbd1;
+  border-radius:999px;
+  color:#8b6752;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.02em;
+  line-height:1;
+  white-space:nowrap;
+  transition:background-color .2s ease,border-color .2s ease
+}
+.seasonal-catalog-product:hover .seasonal-catalog-link {
+  border-color:#8b6752;
+  background:#fff
+}
+.seasonal-catalog-loading {
+  margin:0;
+  padding:10px;
+  color:#827770;
+  font-size:9px
+}
+.seasonal-search-error {
+  margin:2px 0 8px;
+  padding:9px;
+  background:#f8f0ed;
+  color:#96563f;
+  font-size:9px;
+  line-height:1.6
+}
+.seasonal-empty {
+  padding:48px 20px;
+  background:#f8f4ef;
+  color:#827770;
+  text-align:center;
+  font-size:12px
+}
+.seasonal-image-viewer {
+  position:fixed;
+  z-index:110;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:30px;
+  background:#17121ce8;
+  backdrop-filter:blur(4px)
+}
+.seasonal-image-dialog {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  max-width:min(100%,1000px);
+  max-height:100%;
+  color:#fff
+}
+.seasonal-image-dialog>p {
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  width:100%;
+  margin:12px 0 0;
+  font-size:13px
+}
+.seasonal-image-dialog>p span {
+  color:#d5c9bf;
+  font-size:11px
+}
+.seasonal-image-close {
+  position:absolute;
+  z-index:1;
+  top:12px;
+  right:12px;
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  border:1px solid #ffffff80;
+  border-radius:50%;
+  background:#17121c99;
+  color:#fff;
+  cursor:pointer
+}
+@media(max-width:760px) {
+  .seasonal-heading {
+    align-items:flex-start;
+    flex-direction:column;
+    gap:14px
+  }
+  .seasonal-guide {
+    grid-template-columns:1fr;
+    gap:27px;
+    padding-top:32px;
+    padding-bottom:56px
+  }
+  .seasonal-guide-visual {
+    min-height:280px;
+    height:min(58vh,380px)
+  }
+  .seasonal-guide-content h1 {
+    font-size:36px
+  }
+  .seasonal-guide-intro {
+    font-size:11px
+  }
+  .seasonal-guide-steps {
+    margin:20px 0
+  }
+  .seasonal-heading h2 {
+    font-size:25px
+  }
+  .seasonal-heading p {
+    font-size:10px;
+    line-height:1.6
+  }
+  .seasonal-filters {
+    align-items:stretch;
+    flex-wrap:wrap;
+    padding:13px
+  }
+  .seasonal-filters label {
+    flex:1;
+    min-width:calc(50% - 8px)
+  }
+  .seasonal-filters select {
+    width:100%;
+    min-width:0
+  }
+  .seasonal-filters p {
+    width:100%;
+    margin:3px 0 0
+  }
+  .seasonal-look-grid {
+    grid-template-columns:1fr;
+    gap:20px
+  }
+  .seasonal-look-image {
+    height:350px
+  }
+  .seasonal-look-body {
+    padding:16px
+  }
+  .seasonal-look-description {
+    min-height:0
+  }
+  .seasonal-catalog-product {
+    grid-template-columns:36px minmax(0,1fr) auto;
+    gap:6px
+  }
+  .seasonal-catalog-product img {
+    width:36px;
+    height:42px
+  }
+  .seasonal-catalog-copy strong {
+    font-size:8px
+  }
+  .seasonal-catalog-copy b {
+    font-size:8px
+  }
+  .seasonal-image-viewer {
+    padding:14px
+  }
+  .seasonal-look-board-large {
+    width:min(92vw,840px);
+    height:min(58vh,520px);
+    min-height:230px;
+    gap:6px;
+    padding:7px
+  }
+  .seasonal-look-board-caption {
+    gap:3px;
+    padding:6px
+  }
+  .seasonal-look-board-caption strong {
+    font-size:9px
+  }
+  .seasonal-look-board-caption b,.seasonal-look-board-caption small {
+    font-size:8px
+  }
+  .seasonal-image-dialog>p {
+    flex-direction:column;
+    gap:4px;
+    font-size:11px
+  }
+  .seasonal-image-dialog>p span {
+    font-size:9px
+  }
+}
+
+.seasonal-favorite-button {
+  position:absolute;
+  top:52px;
+  right:13px;
+  z-index:2;
+  display:grid;
+  width:36px;
+  height:36px;
+  place-items:center;
+  border:0;
+  border-radius:50%;
+  background:#fffdfaE8;
+  color:#6b594b;
+  cursor:pointer
+}
+.seasonal-favorite-button.is-saved {
+  color:#ad655c
+}
+.seasonal-favorite-button.is-saved svg {
+  fill:#ad655c
+}
+.seasonal-product-row {
+  display:flex;
+  align-items:center;
+  gap:6px
+}
+.seasonal-product-row .seasonal-catalog-product {
+  flex:1;
+  min-width:0
+}
+.seasonal-product-row>.seasonal-favorite-button {
+  position:static;
+  flex:0 0 34px;
+  width:34px;
+  height:34px;
+  background:#f8f4ef
+}
+.seasonal-favorite-error {
+  margin:16px 0;
+  color:#a13d34;
+  font-size:12px
+}
+.wardrobe-seasonal-favorites {
+  margin-bottom:70px
+}
+.wardrobe-seasonal-favorites>.wardrobe-toolbar {
+  margin-bottom:20px
+}
+.wardrobe-seasonal-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));
+  gap:20px
+}
+.wardrobe-seasonal-card {
+  min-width:0;
+  border:1px solid #e6ddd5;
+  background:#fffdfa
+}
+.wardrobe-seasonal-image {
+  position:relative;
+  display:grid;
+  height:250px;
+  place-items:center;
+  overflow:hidden;
+  background:linear-gradient(145deg,#eee7df,#f8f4ef);
+  color:#a99888
+}
+.wardrobe-seasonal-image img {
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+.wardrobe-seasonal-image .seasonal-favorite-button {
+  position:absolute;
+  top:12px;
+  right:12px
+}
+.wardrobe-seasonal-image>span {
+  position:absolute;
+  bottom:12px;
+  left:12px;
+  padding:7px 9px;
+  background:#fffdfae8;
+  color:#6b594b;
+  font-size:10px
+}
+.wardrobe-seasonal-copy {
+  padding:17px
+}
+.wardrobe-seasonal-copy p:first-child {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin:0;
+  color:#827770;
+  font-size:10px
+}
+.wardrobe-seasonal-copy p:first-child i {
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:#b7a89c
+}
+.wardrobe-seasonal-copy h3 {
+  margin:9px 0 6px;
+  font-size:17px;
+  font-weight:500
+}
+.wardrobe-seasonal-copy p:nth-of-type(2) {
+  margin:0 0 8px;
+  color:#827770;
+  font-size:11px;
+  line-height:1.6
+}
+.wardrobe-seasonal-copy>strong {
+  display:block;
+  margin-bottom:10px;
+  font-size:12px;
+  font-weight:600
+}
+.wardrobe-seasonal-copy>a {
+  display:inline-flex;
+  font-size:10px
+}
+.wardrobe-seasonal-copy small {
+  color:#8b6752;
+  font-size:10px
+}
+.wardrobe-seasonal-empty {
+  padding:30px 20px;
+  background:#f6f2ed;
+  color:#827770;
+  font-size:12px;
+  text-align:center
 }

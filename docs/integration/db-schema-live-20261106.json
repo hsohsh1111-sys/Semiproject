@@ -1,0 +1,199 @@
+{
+  "date": "2026-11-06",
+  "status": "connected_with_schema_differences",
+  "actual_table_count": 9,
+  "differences": {
+    "missing_tables": [
+      "favorites",
+      "inbody_records",
+      "sellers"
+    ],
+    "extra_tables": [
+      "wardrobe_items"
+    ],
+    "tables": {
+      "users": {
+        "missing_columns": [
+          "name"
+        ],
+        "extra_columns": [
+          "display_name"
+        ]
+      },
+      "user_profiles": {
+        "missing_columns": [
+          "id",
+          "personal_color",
+          "preferred_colors",
+          "preferred_fit",
+          "preferred_style",
+          "weight_kg"
+        ],
+        "extra_columns": [
+          "favorite_color",
+          "fit_preference",
+          "style_preference",
+          "updated_at"
+        ]
+      },
+      "outfits": {
+        "missing_columns": [
+          "estimated_total",
+          "explanation",
+          "recommendation_type"
+        ],
+        "extra_columns": [
+          "match_score",
+          "title"
+        ]
+      },
+      "outfit_items": {
+        "missing_columns": [
+          "id",
+          "price_snapshot",
+          "slot"
+        ],
+        "extra_columns": []
+      },
+      "products": {
+        "missing_columns": [
+          "image_url",
+          "model_code",
+          "name",
+          "size",
+          "style_tags"
+        ],
+        "extra_columns": [
+          "created_at",
+          "model_number",
+          "product_name"
+        ]
+      },
+      "crawl_logs": {
+        "missing_columns": [
+          "collected_count",
+          "failed_count",
+          "job_type"
+        ],
+        "extra_columns": [
+          "error_summary",
+          "items_seen",
+          "source_name"
+        ]
+      },
+      "product_offers": {
+        "missing_columns": [
+          "availability",
+          "current_price",
+          "seller_id",
+          "source_item_key"
+        ],
+        "extra_columns": [
+          "current_price_krw",
+          "option_label",
+          "seller_name"
+        ]
+      },
+      "price_histories": {
+        "missing_columns": [
+          "collected_at",
+          "price"
+        ],
+        "extra_columns": [
+          "observed_at",
+          "price_krw",
+          "source_status"
+        ]
+      }
+    }
+  },
+  "owned_table_metadata": {
+    "users": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(255)",
+          "nullable": false
+        },
+        {
+          "name": "display_name",
+          "type": "VARCHAR(80)",
+          "nullable": false
+        },
+        {
+          "name": "password_hash",
+          "type": "VARCHAR(255)",
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        }
+      ],
+      "primary_key": [
+        "id"
+      ],
+      "foreign_keys": []
+    },
+    "user_profiles": {
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "nullable": false
+        },
+        {
+          "name": "style_preference",
+          "type": "VARCHAR(80)",
+          "nullable": true
+        },
+        {
+          "name": "favorite_color",
+          "type": "VARCHAR(32)",
+          "nullable": true
+        },
+        {
+          "name": "fit_preference",
+          "type": "VARCHAR(80)",
+          "nullable": true
+        },
+        {
+          "name": "height_cm",
+          "type": "SMALLINT",
+          "nullable": true
+        },
+        {
+          "name": "body_shape",
+          "type": "VARCHAR(80)",
+          "nullable": true
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        }
+      ],
+      "primary_key": [
+        "user_id"
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "target_table": "users",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    }
+  },
+  "scope": "Metadata only. No member rows, writes or DDL."
+}
