@@ -900,6 +900,27 @@ img {
   position:relative;
   padding:8px 0 18px 48px
 }
+.trend-chart-empty {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:20px;
+  text-align:center;
+  background:#f7f3ef;
+  color:#756d69
+}
+.trend-chart-empty span {
+  color:#9b7259;
+  font-size:12px;
+  font-weight:600
+}
+.trend-chart-empty p {
+  max-width:330px;
+  margin:8px 0 0;
+  font-size:10px;
+  line-height:1.7
+}
 .trend-chart svg {
   position:absolute;
   left:50px;
@@ -1421,6 +1442,86 @@ img {
 .dashboard-heading .button {
   height:40px;
   font-size:9px
+}
+.price-message {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  margin:0 0 22px;
+  padding:20px 24px;
+  background:#fcfaf7;
+  color:#746962;
+  font-size:12px;
+  line-height:1.7
+}
+.price-message p {
+  margin:0
+}
+.price-message .button {
+  flex-shrink:0
+}
+.price-message-error {
+  color:#9f4038
+}
+.price-message-error button {
+  border-bottom:1px solid currentColor;
+  white-space:nowrap
+}
+.price-favorite-selector {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:22px
+}
+.price-favorite-option {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+  padding:10px;
+  border:1px solid #e5ddd6;
+  background:#fcfaf7;
+  text-align:left;
+  transition:border-color .2s,box-shadow .2s
+}
+.price-favorite-option:hover,.price-favorite-option.is-selected {
+  border-color:#a4755b;
+  box-shadow:0 4px 16px #4c39300d
+}
+.price-favorite-option img {
+  width:58px;
+  height:68px;
+  flex-shrink:0;
+  object-fit:cover;
+  background:#e6ddd3
+}
+.price-favorite-option>span {
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  gap:5px;
+  min-width:0
+}
+.price-favorite-option small {
+  color:#96877e;
+  font-size:8px
+}
+.price-favorite-option strong {
+  overflow:hidden;
+  color:#29212a;
+  font-size:11px;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+.price-favorite-option em {
+  color:#8d6651;
+  font-size:10px;
+  font-style:normal
+}
+.price-favorite-option>svg {
+  flex-shrink:0;
+  color:#8d6651
 }
 .dashboard-grid {
   display:grid;
@@ -2435,6 +2536,13 @@ img {
   }
   .dashboard-grid {
     grid-template-columns:1fr
+  }
+  .price-favorite-selector {
+    grid-template-columns:1fr
+  }
+  .price-message {
+    align-items:flex-start;
+    flex-direction:column
   }
   .dashboard-card {
     padding:20px
