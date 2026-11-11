@@ -86,6 +86,13 @@ npm run build:site --prefix frontend
 
 저장소의 [`render.yaml`](render.yaml)에 Render 서비스 구성이 있습니다.
 
+### 배포 페이지
+
+| 플랫폼 | 주소 |
+| --- | --- |
+| GitHub Pages | [ONFIT 페이지 열기](https://hsohsh1111-sys.github.io/Semiproject/) |
+| Netlify | [ONFIT 페이지 열기](https://onfit3.netlify.app/) |
+
 - **정적 웹 서비스** — 프론트엔드와 AI 패션 화면을 빌드해 배포합니다.
 - **웹 서비스** — FastAPI를 실행하고 `/health` 경로로 상태를 확인합니다.
 - **Cron 작업** — 설정된 일정에 따라 가격 갱신 작업을 실행합니다.
