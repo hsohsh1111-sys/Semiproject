@@ -1,0 +1,59 @@
+.shop-chrome{min-height:100dvh;display:flex;flex-direction:column;overflow-x:clip;background:#f5f1ec;color:#29212a;font-family:"Pretendard","DM Sans",sans-serif}
+.shop-chrome a{color:inherit;text-decoration:none}
+.shop-announcement{height:34px;flex:none;display:flex;align-items:center;justify-content:center;gap:11px;background:#29212a;color:#f7f2eb;font-size:10px;letter-spacing:.045em}
+.shop-announcement span{color:#d2b58d;font-weight:700;letter-spacing:.16em}
+.shop-announcement i{width:3px;height:3px;border-radius:50%;background:#d2b58d}
+.shop-announcement a{margin-left:4px;color:#d8c4a5;font-weight:600}
+.shop-site-header{position:sticky;top:0;z-index:50;height:86px;flex:none;display:flex;align-items:center;padding:0 6.3%;background:#f5f1ec;border-bottom:1px solid #2d242b17}
+.shop-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.shop-brand img{width:42px;height:42px}
+.shop-brand span{display:flex;flex-direction:column;gap:2px}
+.shop-brand strong{font-family:"DM Sans",sans-serif;font-size:18px;font-weight:700;letter-spacing:.17em}
+.shop-brand small{color:#8a7e82;font-size:7px;letter-spacing:.2em}
+.shop-main-nav{display:flex;align-items:center;gap:clamp(10px,1.7vw,38px);margin:auto;font-size:12px;color:#574f51;white-space:nowrap}
+.shop-main-nav a:hover,.shop-auth-link:hover,.shop-footer-links a:hover{color:#9b7259}
+.shop-header-actions{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.shop-icon-link{position:relative;display:grid;place-items:center;width:34px;height:34px}
+.shop-icon-link svg{width:19px;height:19px}
+.shop-bag-link b{position:absolute;right:0;top:0;display:grid;place-items:center;width:14px;height:14px;border-radius:50%;background:#b87e6d;color:#fff;font-size:8px}
+.shop-header-divider{height:20px;width:1px;background:#d9d1ca}
+.shop-auth-link{font-size:11px}
+.shop-signup-link{display:flex;align-items:center;height:36px;padding:0 13px;border:1px solid #29212a;color:#8c7769!important;font-size:10px}
+.shop-signup-link:hover{background:#29212a;color:#f5f1ec!important}
+.shop-chrome .shop-menu-button{display:none}
+.shop-site-footer{flex:none;background:#29212a;color:#f1e9df;padding:49px 8% 20px;text-align:left}
+.shop-footer-main{display:grid;grid-template-columns:1fr 1.1fr 1.3fr;align-items:center;gap:25px;padding-bottom:39px}
+.shop-footer-main .shop-brand small{color:#b9aaa8}
+.shop-footer-main .shop-brand img{border:1px solid #d2b58d;border-radius:50%}
+.shop-footer-main p{margin:0;color:#c2b5b5;font-size:10px;line-height:1.8}
+.shop-footer-links{display:flex;justify-content:flex-end;gap:21px;color:#cfc3bf;font-size:9px}
+.shop-footer-bottom{display:flex;justify-content:space-between;padding-top:15px;border-top:1px solid #ffffff22;color:#95898d;font:7px "DM Sans",sans-serif;letter-spacing:.11em}
+.shop-chrome .landing-header{display:none}
+.shop-chrome .landing-page{min-height:calc(100dvh - 120px)}
+.shop-chrome .studio-shell{height:auto;min-height:calc(100dvh - 120px);overflow:visible}
+.shop-chrome .studio-grid{min-height:620px}
+@media(max-width:1100px){
+  .shop-site-header{height:70px;display:grid;grid-template-columns:44px minmax(120px,1fr) auto;gap:4px;padding:0 12px}
+  .shop-chrome .shop-menu-button{display:grid;place-items:center;width:44px;height:44px;min-height:44px;padding:0;background:transparent;color:#29212a;font-size:24px;font-weight:400}
+  .shop-site-header>.shop-brand{justify-self:center}
+  .shop-main-nav{display:none;position:absolute;top:70px;left:0;right:0;z-index:51;flex-direction:column;align-items:stretch;gap:0;margin:0;padding:17px 22px 22px;background:#f5f1ec;box-shadow:0 12px 20px #29212a14;white-space:normal}
+  .shop-main-nav.is-open{display:flex}
+  .shop-main-nav a{display:flex;align-items:center;min-height:44px;padding:12px 0;border-bottom:1px solid #e8dfd7}
+  .shop-header-actions{justify-self:end;gap:4px}
+  .shop-search-link,.shop-header-divider,.shop-auth-link{display:none}
+  .shop-signup-link{height:44px;padding:0 6px;font-size:9px}
+}
+@media(max-width:768px){
+  .shop-announcement{height:31px;gap:7px;font-size:8px}
+  .shop-announcement span{font-size:8px}
+  .shop-announcement a{display:none}
+  .shop-brand img{width:36px;height:36px}
+  .shop-brand strong{font-size:15px}
+  .shop-brand small{font-size:6px}
+  .shop-site-footer{padding:37px 23px 17px}
+  .shop-footer-main{grid-template-columns:1fr;gap:16px;padding-bottom:27px}
+  .shop-footer-links{justify-content:flex-start;flex-wrap:wrap;gap:13px 20px}
+  .shop-footer-bottom{gap:10px;font-size:6px}
+  .shop-chrome .mobile-app{position:relative;inset:auto;height:calc(100dvh - 101px)}
+  .shop-chrome .mobile-app.mobile-landing{height:auto;min-height:calc(100dvh - 101px)}
+}
