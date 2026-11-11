@@ -1,19 +1,5 @@
 <div align="center">
 
-# ONFIT
-
-### AI 기반 개인 맞춤형 코디 추천과 가상 피팅 서비스
-
-체형과 스타일 취향을 반영한 코디를 확인하고, 옷장 관리와 가격 비교까지 한곳에서 경험하는 패션 플랫폼입니다.
-
-![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-API-009688?logo=fastapi&logoColor=white)
-![TiDB](https://img.shields.io/badge/Database-TiDB%20Cloud-00A8E0)
-
-</div>
-
 ## 서비스 소개
 
 ONFIT은 사용자의 스타일 프로필과 체형 정보를 바탕으로 패션 탐색과 구매 결정을 돕는 웹 서비스입니다. 코디 추천, 디지털 옷장, 상품 가격 비교, 가격 흐름 분석, 3D 가상 피팅과 이미지 기반 AI 패션 검색 기능을 제공합니다.
@@ -32,14 +18,14 @@ ONFIT은 사용자의 스타일 프로필과 체형 정보를 바탕으로 패�
 
 ## 기술 스택
 
-| 구분 | 기술 | 역할 |
-| --- | --- | --- |
-| 웹 프론트엔드 | React, Vite, Tailwind CSS | ONFIT 화면과 사용자 인터랙션 |
-| AI 패션 화면 | React, Vite | 이미지 선택 및 패션 검색 인터페이스 |
-| 백엔드 API | Python, FastAPI, SQLAlchemy | 인증, 스타일링, 피팅, 상품 및 가격 API |
-| 데이터베이스 | TiDB Cloud, MySQL 호환 드라이버 | 계정과 서비스 데이터 저장 |
-| 3D 그래픽 | Three.js, React Three Fiber | 아바타 및 의류 가상 피팅 |
-| 배포 | Render | 정적 프론트엔드, API, 가격 갱신 작업 |
+| 구분          | 기술                            | 역할                                   |
+| ------------- | ------------------------------- | -------------------------------------- |
+| 웹 프론트엔드 | React, Vite, Tailwind CSS       | ONFIT 화면과 사용자 인터랙션           |
+| AI 패션 화면  | React, Vite                     | 이미지 선택 및 패션 검색 인터페이스    |
+| 백엔드 API    | Python, FastAPI, SQLAlchemy     | 인증, 스타일링, 피팅, 상품 및 가격 API |
+| 데이터베이스  | TiDB Cloud, MySQL 호환 드라이버 | 계정과 서비스 데이터 저장              |
+| 3D 그래픽     | Three.js, React Three Fiber     | 아바타 및 의류 가상 피팅               |
+| 배포          | Render                          | 정적 프론트엔드, API, 가격 갱신 작업   |
 
 ## 로컬 실행
 
@@ -78,13 +64,13 @@ python -m venv backend/.venv
 
 시작 스크립트는 프론트엔드, FastAPI 백엔드, AI 패션 화면을 로컬에서 실행합니다.
 
-| 화면 | 주소 |
-| --- | --- |
-| ONFIT | http://127.0.0.1:5173/ |
-| AI 패션 검색 | http://127.0.0.1:5173/ai-fashion/ |
+| 화면                   | 주소                              |
+| ---------------------- | --------------------------------- |
+| ONFIT                  | http://127.0.0.1:5173/            |
+| AI 패션 검색           | http://127.0.0.1:5173/ai-fashion/ |
 | AI 패션 화면 직접 접속 | http://127.0.0.1:5174/ai-fashion/ |
-| API 문서 | http://127.0.0.1:8000/docs |
-| API 상태 확인 | http://127.0.0.1:8000/health |
+| API 문서               | http://127.0.0.1:8000/docs        |
+| API 상태 확인          | http://127.0.0.1:8000/health      |
 
 개별 프론트엔드 작업은 `frontend` 폴더에서 `npm run dev`, 프로덕션 빌드는 `npm run build`로 실행합니다. 통합 사이트 배포용 정적 파일은 다음 명령으로 생성합니다.
 
@@ -122,12 +108,12 @@ Semiproject/
 
 ## 팀 구성
 
-| 이름 | 담당 업무 |
-| --- | --- |
-| 성승건 | 회원·프로필, 개인 맞춤 코디, 인바디, 3D 피팅 및 관련 프론트엔드·백엔드 |
-| 황상옥 | 공통 프론트엔드 및 UI |
-| 안종범 | 상품 크롤링, 동일 상품 매칭, 가격 비교 |
-| 이승호 | 가격 이력, 구매 타이밍 분석, 가격 수집 자동화 |
+| 이름   | 담당 업무                                                                |
+| ------ | ------------------------------------------------------------------------ |
+| 송성근 | 회원·프로필, 개인 맞춤 코디, 인바디, 3D 피팅 및 관련 프론트엔드·백엔드 |
+| 황상옥 | 공통 프론트엔드 및 UI                                                    |
+| 안종범 | 상품 크롤링, 동일 상품 매칭, 가격 비교, 카메라연동 백엔드 구축           |
+| 이승호 | 가격 이력, 구매 타이밍 분석, 가격 수집 자동화                            |
 
 ## 보안 및 데이터
 
