@@ -155,7 +155,7 @@ def _search_diagnostics(keywords, stats, candidate_count, elapsed_ms):
 
 
 def extract_products(markup, keyword, limit):
-    soup = BeautifulSoup(markup, 'html.parser')
+    soup = markup if isinstance(markup, BeautifulSoup) else BeautifulSoup(markup, 'html.parser')
     items, seen = [], set()
     for image_link in soup.select(SELECTOR):
         pid = str(image_link.get('data-item-id') or '')
@@ -242,6 +242,7 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                     keyword_started, before = time.monotonic(), len(products)
                     collected = type_filtered = duplicate = capacity_skipped = 0
                     query_status = 'executed'
+                    markup = document = body = extracted = None
                     try:
                         keyword_index, http_status = index + 1, None
                         stage, stage_started = 'navigation', time.monotonic()
@@ -281,7 +282,7 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                         if any(text.lower() in body.lower() for text in ACCESS_DENIED_TEXT):
                             raise SearchError('무신사 접근 제한 또는 CAPTCHA가 감지됐습니다.', 'access_blocked')
                         stage, stage_started = 'extraction', time.monotonic()
-                        extracted = extract_products(markup, keyword, MAX_PRODUCTS)
+                        extracted = extract_products(document, keyword, MAX_PRODUCTS)
                         collected = len(extracted)
                         if not collected:
                             logger.warning('Musinsa extraction_empty keyword_index=%s elapsed_ms=%s '
@@ -316,6 +317,7 @@ def search_products(keywords, product_type=None, include_diagnostics=False):
                         failure_logged = True
                         raise
                     finally:
+                        markup = document = body = extracted = None
                         elapsed_ms = round((time.monotonic() - keyword_started) * 1000)
                         stats.append({'keyword': keyword, 'status': query_status,
                                       'collected_count': collected, 'added_count': len(products) - before,
