@@ -6,9 +6,9 @@ services:
     runtime: docker
     plan: free
     region: singapore
-    branch: integration/team-develop-20261106
-    dockerfilePath: Semiproject-front/backend/Dockerfile
-    dockerContext: Semiproject-front/backend
+    branch: develop
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
     healthCheckPath: /health
     envVars:
       - key: APP_ENV
