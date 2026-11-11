@@ -72,6 +72,28 @@ CREATE TABLE IF NOT EXISTS outfits (
   CONSTRAINT fk_outfit_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TABLE IF NOT EXISTS seasonal_favorites (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  favorite_key VARCHAR(512) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  vendor VARCHAR(255),
+  image_url VARCHAR(2048) NOT NULL,
+  price DECIMAL(12,2),
+  currency_code VARCHAR(3),
+  product_url VARCHAR(2048),
+  item_type VARCHAR(80) NOT NULL,
+  look_title VARCHAR(255) NOT NULL,
+  season VARCHAR(40) NOT NULL,
+  style VARCHAR(80) NOT NULL,
+  age VARCHAR(40) NOT NULL,
+  gender VARCHAR(20) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_seasonal_favorite_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT uq_seasonal_favorite_user_key UNIQUE (user_id, favorite_key),
+  INDEX ix_seasonal_favorites_user_id (user_id)
+);
+
 CREATE TABLE IF NOT EXISTS outfit_items (
   outfit_id BIGINT NOT NULL,
   product_id BIGINT NOT NULL,

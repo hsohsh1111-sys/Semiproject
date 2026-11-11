@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Icon from './Icon.jsx'
 import { API_BASE } from '../../services/api.js'
+import { notifyAuthenticationChanged } from '../../services/auth.js'
 
 export default function AuthModal({ mode, onClose }) {
   const [notice, setNotice] = useState('')
@@ -27,6 +28,7 @@ export default function AuthModal({ mode, onClose }) {
       if (!response.ok) throw new Error(result.detail || '요청을 처리하지 못했습니다.')
       localStorage.setItem('onfit_access_token', result.access_token)
       localStorage.setItem('onfit_user', JSON.stringify(result.user))
+      notifyAuthenticationChanged()
       setNotice(`${result.user.name}님, ${signup ? '회원가입이 완료되었습니다.' : '로그인되었습니다.'}`)
       window.setTimeout(() => onClose(), 900)
     } catch (error) {

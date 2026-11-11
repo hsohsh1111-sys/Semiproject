@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import BrandMark from './BrandMark.jsx'
 import Icon from './Icon.jsx'
+import { AUTH_CHANGE_EVENT, getAccessToken } from '../../services/auth.js'
 import { FAVORITES_CHANGE_EVENT, getSeasonalFavorites } from '../../services/seasonalFavorites.js'
 
 const nav = [
@@ -12,18 +13,31 @@ export default function Header({ onAuth }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [favoriteCount, setFavoriteCount] = useState(0)
   useEffect(() => {
+    let requestId = 0
     const updateFavoriteCount = (event) => {
       try {
-        setFavoriteCount(event?.detail?.length ?? getSeasonalFavorites().length)
+        if (event?.detail) {
+          setFavoriteCount(event.detail.length)
+          return
+        }
+        if (event?.type === AUTH_CHANGE_EVENT && getAccessToken()) setFavoriteCount(0)
+        const currentRequest = ++requestId
+        getSeasonalFavorites().then((favorites) => {
+          if (currentRequest === requestId) setFavoriteCount(favorites.length)
+        }).catch((error) => {
+          console.error('찜한 아이템 수를 불러오지 못했습니다.', error)
+        })
       } catch (error) {
         console.error('찜한 아이템 수를 불러오지 못했습니다.', error)
       }
     }
     updateFavoriteCount()
     window.addEventListener(FAVORITES_CHANGE_EVENT, updateFavoriteCount)
+    window.addEventListener(AUTH_CHANGE_EVENT, updateFavoriteCount)
     window.addEventListener('storage', updateFavoriteCount)
     return () => {
       window.removeEventListener(FAVORITES_CHANGE_EVENT, updateFavoriteCount)
+      window.removeEventListener(AUTH_CHANGE_EVENT, updateFavoriteCount)
       window.removeEventListener('storage', updateFavoriteCount)
     }
   }, [])
