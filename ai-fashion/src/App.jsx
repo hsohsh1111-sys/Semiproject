@@ -570,6 +570,13 @@ export default function App() {
     onUploadTryOnPerson={uploadTryOnPerson} onRestoreTryOnPerson={restoreTryOnPerson}
     onCreateTryOn={createTryOn} onLeaveTryOn={leaveMobileTryOn} />
 
+  if (!image) return <main className="app-shell landing-shell">
+    <CameraView onImage={acceptImage} onCaptureConfirm={(data) => {
+      acceptImage(data)
+      setPcStep(2)
+    }} landing />
+  </main>
+
   const hasRecommendationList = Array.isArray(recommendations?.recommendations)
   const showDebug = import.meta.env.DEV && new URLSearchParams(window.location.search).get('debug') === '1'
   const analysisFailed = !!result && result.status !== 'success'
