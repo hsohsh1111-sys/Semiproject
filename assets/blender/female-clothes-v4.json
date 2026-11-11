@@ -1,0 +1,242 @@
+[
+  {
+    "source": "ONFIT_TShirt_BodyBuild_v10.glb",
+    "source_sha256": "07eb3cffd7349fbc5f387f06f0b73747e1a9289205829e19b4c775fa23b517e1",
+    "output": "ONFIT_TShirt_Female_v4.glb",
+    "checks": [
+      {
+        "mesh": "ONFIT_TShirt",
+        "vertices": 17301,
+        "gender_delta_max_m": 0.07161479458593564,
+        "correction_max_m": 0.004535330435916522,
+        "female_default_gap_before_correction": {
+          "samples": 3461,
+          "inside_over_5mm": 0,
+          "min_signed_sample_m": 0.002848753792932257
+        },
+        "female_default_gap_after_correction": {
+          "samples": 3461,
+          "inside_over_5mm": 0,
+          "min_signed_sample_m": 0.005977315900963731
+        },
+        "states": {
+          "default": {
+            "normal_reversals_vs_default": 0
+          },
+          "abdomen_max_pelvis_min": {
+            "normal_reversals_vs_default": 0
+          },
+          "lean": {
+            "normal_reversals_vs_default": 0
+          },
+          "muscular": {
+            "normal_reversals_vs_default": 0
+          }
+        },
+        "UV_preserved": true,
+        "target_names": [
+          "garment_abdomen_front",
+          "garment_pelvis_width",
+          "garment_shoulder_width",
+          "garment_chest_volume",
+          "garment_waist_width",
+          "garment_hip_volume",
+          "garment_build_relief",
+          "garment_build_lean",
+          "garment_build_muscular"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "ONFIT_LongSleeve_BodyBuild_v10.glb",
+    "source_sha256": "b82c779d84ed1a789c7da20e2ae5b829e32f2b692e325d030d304235048ab16e",
+    "output": "ONFIT_LongSleeve_Female_v4.glb",
+    "checks": [
+      {
+        "mesh": "ONFIT_LongSleeve",
+        "vertices": 10052,
+        "gender_delta_max_m": 0.07106008813820151,
+        "correction_max_m": 0.00353026544939155,
+        "female_default_gap_before_correction": {
+          "samples": 3351,
+          "inside_over_5mm": 0,
+          "min_signed_sample_m": 0.0032630949863232672
+        },
+        "female_default_gap_after_correction": {
+          "samples": 3351,
+          "inside_over_5mm": 0,
+          "min_signed_sample_m": 0.004527173688984476
+        },
+        "states": {
+          "default": {
+            "normal_reversals_vs_default": 0
+          },
+          "abdomen_max_pelvis_min": {
+            "normal_reversals_vs_default": 0
+          },
+          "lean": {
+            "normal_reversals_vs_default": 0
+          },
+          "muscular": {
+            "normal_reversals_vs_default": 0
+          }
+        },
+        "UV_preserved": true,
+        "target_names": [
+          "garment_shoulder_width",
+          "garment_chest_volume",
+          "garment_waist_width",
+          "garment_abdomen_front",
+          "garment_pelvis_width",
+          "garment_build_relief",
+          "garment_build_lean",
+          "garment_build_muscular"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "ONFIT_Pants_BodyBuild_v10.glb",
+    "source_sha256": "fdce55cc10ccf804244fd219d831565be2c9704c99325d4b805f8b21eb37f318",
+    "output": "ONFIT_Pants_Female_v4.glb",
+    "checks": [
+      {
+        "mesh": "ONFIT_Pants",
+        "vertices": 6731,
+        "gender_delta_max_m": 0.0700072785878379,
+        "correction_max_m": 0.006387419831683834,
+        "female_default_gap_before_correction": {
+          "samples": 3366,
+          "inside_over_5mm": 0,
+          "min_signed_sample_m": 0.0024381328923936962
+        },
+        "female_default_gap_after_correction": {
+          "samples": 3366,
+          "inside_over_5mm": 0,
+          "min_signed_sample_m": 0.005872058995862517
+        },
+        "states": {
+          "default": {
+            "normal_reversals_vs_default": 0
+          },
+          "abdomen_max_pelvis_min": {
+            "normal_reversals_vs_default": 0
+          },
+          "lean": {
+            "normal_reversals_vs_default": 0
+          },
+          "muscular": {
+            "normal_reversals_vs_default": 0
+          }
+        },
+        "UV_preserved": true,
+        "target_names": [
+          "garment_waist_width",
+          "garment_pelvis_width",
+          "garment_hip_volume",
+          "garment_thigh_girth",
+          "garment_build_relief",
+          "garment_build_lean",
+          "garment_build_muscular"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "ONFIT_Outer_BodyBuild_v10.glb",
+    "source_sha256": "c7b931cf47c1f0058628b72ad5fa443987273abf2c749a5d1a83584f4ac15287",
+    "output": "ONFIT_Outer_Female_v4.glb",
+    "checks": [
+      {
+        "mesh": "ONFIT_Outer",
+        "vertices": 9568,
+        "gender_delta_max_m": 0.07118302058855659,
+        "correction_max_m": 0.011739946738676656,
+        "female_default_gap_before_correction": {
+          "samples": 3085,
+          "inside_over_5mm": 0,
+          "min_signed_sample_m": 0.0033435852674301714
+        },
+        "female_default_gap_after_correction": {
+          "samples": 3085,
+          "inside_over_5mm": 0,
+          "min_signed_sample_m": 0.011506236507557333
+        },
+        "states": {
+          "default": {
+            "normal_reversals_vs_default": 0
+          },
+          "abdomen_max_pelvis_min": {
+            "normal_reversals_vs_default": 2
+          },
+          "lean": {
+            "normal_reversals_vs_default": 8
+          },
+          "muscular": {
+            "normal_reversals_vs_default": 6
+          }
+        },
+        "UV_preserved": true,
+        "target_names": [
+          "garment_shoulder_width",
+          "garment_chest_volume",
+          "garment_waist_width",
+          "garment_abdomen_front",
+          "garment_pelvis_width",
+          "garment_build_relief",
+          "garment_build_lean",
+          "garment_build_muscular"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "ONFIT_HoodedJacket_BodyBuild_v10.glb",
+    "source_sha256": "2acdbd50727e1bb238a8bf4214c82a48112edd789226e84dec6ee20bd5381482",
+    "output": "ONFIT_HoodedJacket_Female_v4.glb",
+    "checks": [
+      {
+        "mesh": "ONFIT_HoodedJacket",
+        "vertices": 13304,
+        "gender_delta_max_m": 0.07075183207236076,
+        "correction_max_m": 0.05496463274295739,
+        "female_default_gap_before_correction": {
+          "samples": 3260,
+          "inside_over_5mm": 56,
+          "min_signed_sample_m": -0.04620350059121847
+        },
+        "female_default_gap_after_correction": {
+          "samples": 3260,
+          "inside_over_5mm": 1,
+          "min_signed_sample_m": -0.005629417835734785
+        },
+        "states": {
+          "default": {
+            "normal_reversals_vs_default": 0
+          },
+          "abdomen_max_pelvis_min": {
+            "normal_reversals_vs_default": 0
+          },
+          "lean": {
+            "normal_reversals_vs_default": 7
+          },
+          "muscular": {
+            "normal_reversals_vs_default": 8
+          }
+        },
+        "UV_preserved": true,
+        "target_names": [
+          "garment_shoulder_width",
+          "garment_chest_volume",
+          "garment_waist_width",
+          "garment_abdomen_front",
+          "garment_pelvis_width",
+          "garment_build_relief",
+          "garment_build_lean",
+          "garment_build_muscular"
+        ]
+      }
+    ]
+  }
+]

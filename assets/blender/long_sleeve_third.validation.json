@@ -1,0 +1,64 @@
+{
+  "input_hashes": {
+    "ONFIT_Human_BodyMorph_v3.glb": "328fba3993e353d7b20b44d2116c571f034071feb2c004a1a0d5bc3ac783c4eb",
+    "ONFIT_LongSleeve_v1.glb": "920e142d7a573e80fdc60cd5f8c609ac047a443cf300b95810f2b90d9a80b630",
+    "ONFIT_Pants_BodyMorph_v2.glb": "e5776e6ec38a5e5da5f70442f0c18839129810279d590d7fa57a14558c349855",
+    "ONFIT_Outer_BodyMorph_v1.glb": "1b249fa0f8783674837b28f5f11ef6e19050d2a56fc812b07364a9b79a17bde6"
+  },
+  "vertices": 8705,
+  "triangles": 9632,
+  "morph_targets": 0,
+  "bounds_blender": {
+    "min": [
+      -0.4788496792316437,
+      -0.21317309141159058,
+      0.8242082595825195
+    ],
+    "max": [
+      0.4788496792316437,
+      0.11612231284379959,
+      1.4307365417480469
+    ]
+  },
+  "checks": {
+    "body": {
+      "overlap_pairs": 0,
+      "min_near_signed_gap_m": 0.0034999765048269182,
+      "near_samples": 8705,
+      "inside_over_2mm": 0,
+      "near_coplanar_samples_under_half_mm": 0,
+      "overlap_locations": []
+    },
+    "bottom": {
+      "overlap_pairs": 0,
+      "min_near_signed_gap_m": -0.0020649570287787355,
+      "near_samples": 948,
+      "inside_over_2mm": 3,
+      "near_coplanar_samples_under_half_mm": 1,
+      "overlap_locations": []
+    },
+    "outer": {
+      "overlap_pairs": 0,
+      "min_near_signed_gap_m": -0.04088020913678747,
+      "near_samples": 8671,
+      "inside_over_2mm": 8314,
+      "near_coplanar_samples_under_half_mm": 38,
+      "overlap_locations": []
+    }
+  },
+  "self_nonadjacent_overlap_pairs": 1,
+  "self_overlap_locations": [
+    [
+      0.4386690656344096,
+      -0.20876370867093405,
+      1.0273161729176838
+    ]
+  ],
+  "degenerate_triangles": 0,
+  "uv_layers": 1,
+  "materials": [
+    "Human.male_casualsuit02"
+  ],
+  "note": "Static baseline only. Triangle checks and nearest gaps do not replace visual review or prove absence of z-fighting.",
+  "browser_verified": false
+}

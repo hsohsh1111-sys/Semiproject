@@ -1,0 +1,237 @@
+﻿[
+    {
+        "Name":  ".codex-build-check",
+        "Deleted":  false,
+        "Error":  "Access is denied"
+    },
+    {
+        "Name":  ".codex-build-check-onfit",
+        "Deleted":  false,
+        "Error":  "Access is denied"
+    },
+    {
+        "Name":  ".codex-glb-camera-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-shirt-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-shirt-lighting-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-garment-glb-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-body-morph-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-body-morph-v1-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-body-morph-v1-final-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-garment-morph-v1-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-garment-morph-v2-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-abdomen-mapping-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-camera-persistence-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-body-morph-v2-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-garment-morph-v3-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-body-morph-v3-build",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-pants-final-check",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-pants-morph-final-check",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-pants-morph-final-verified",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-garment-quality-v5-v2",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-outer-v1-final",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-outer-morph-v1-final",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-long-sleeve-v1-final",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-long-sleeve-morph-v1-final",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-hooded-jacket-v1",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-hooded-jacket-morph-v1",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-cap-v1",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-cap-neutral-v1",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-fitting-v1",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-fitting-v1-final",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-design-v1",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-design-v1-final",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-sizes-v1",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-sizes-v1-final",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-size-quality-v2",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-size-cm-v3",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-size-cm-complete",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-size-cm-complete-final",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-product-size-cm-releasecheck",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-catalog-contract-20261105",
+        "Deleted":  true,
+        "Error":  ""
+    },
+    {
+        "Name":  ".codex-photo-workflow-20261105",
+        "Deleted":  false,
+        "Error":  "The directory is not empty.\r\n"
+    },
+    {
+        "Name":  ".codex-logo-drag-20261105",
+        "Deleted":  false,
+        "Error":  "The directory is not empty.\r\n"
+    },
+    {
+        "Name":  ".codex-body-build-20261105",
+        "Deleted":  false,
+        "Error":  "\u0027E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-build-20261105\\examples\u0027 경로에 대한 액세스가 거부되었습니다."
+    },
+    {
+        "Name":  ".codex-body-build-v3-20261105",
+        "Deleted":  false,
+        "Error":  "\u0027E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-build-v3-20261105\\examples\u0027 경로에 대한 액세스가 거부되었습니다."
+    },
+    {
+        "Name":  ".codex-body-abs-v6-20261105",
+        "Deleted":  false,
+        "Error":  "\u0027E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-body-abs-v6-20261105\\examples\u0027 경로에 대한 액세스가 거부되었습니다."
+    },
+    {
+        "Name":  ".codex-muscular-v7-20261105",
+        "Deleted":  false,
+        "Error":  "\u0027E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\.codex-muscular-v7-20261105\\models\u0027 경로에 대한 액세스가 거부되었습니다."
+    },
+    {
+        "Name":  ".codex-reference-v10-codecheck",
+        "Deleted":  true,
+        "Error":  ""
+    }
+]

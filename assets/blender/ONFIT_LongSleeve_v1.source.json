@@ -1,0 +1,45 @@
+{
+  "blender": "5.2.3 LTS",
+  "mpfb": "2.0.18",
+  "source_blend": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyMorph_v3.blend",
+  "source_blend_sha256": "9733c0593bb6197cc4f1fe0d8df6db8a84af5d3b1b75cdecf075d9847cb9a852",
+  "asset": "C:\\Users\\pc06-00\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.user\\blender_org\\mpfb\\data\\clothes\\male_casualsuit02\\male_casualsuit02.mhclo",
+  "asset_sha256": "f9e6821704a1508a02d5e416b2360785b705cfe5a130c359021a4b4570dcc43a",
+  "asset_name": "male_casualsuit02",
+  "extracted_component": "round-neck long-sleeve top",
+  "license": "CC0",
+  "license_url": "https://www.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html",
+  "blend_output": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_LongSleeve_v1.blend",
+  "glb_output": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_LongSleeve_v1.glb",
+  "glb_sha256": "fda6b633ff8b23f3ba9aecd9404b564bcc0a57b9bc42aaf9494a18e3ee4adeee",
+  "vertices": 4910,
+  "triangles": 9632,
+  "texture_nodes": 3,
+  "bounds": {
+    "min": [
+      -0.4788218678634924,
+      0.8242082595825195,
+      -0.11612231284379959
+    ],
+    "max": [
+      0.47882539529018686,
+      1.4307365417480469,
+      0.21321584548044537
+    ]
+  },
+  "penetration_check": {
+    "samples": 4910,
+    "inside_over_2mm": 0,
+    "inside_over_10mm": 0,
+    "max_inside_m": 0,
+    "method": "Nearest-surface normal estimate; not full cloth collision simulation"
+  },
+  "morph_targets": 0,
+  "backups": [],
+  "max_clearance_correction_m": 0.00654916193716781,
+  "shirt_reference_sha256": null,
+  "visual_verification": false,
+  "initial_fitted_glb_sha256": "a22b9b4ac5faf88aef6e612bd350063e9b88ca32be26554c3add0d6595e67272",
+  "local_fitting_max_m": 0.012016357799757646,
+  "layering_method": "3mm front-chest ease excluding armpits; 0.5mm arm ease adjustment; cuff moved up to 12mm along skin tangent with 3.5mm vertex clearance floor."
+}

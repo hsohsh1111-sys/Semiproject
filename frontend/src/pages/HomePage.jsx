@@ -20,7 +20,6 @@ export default function HomePage() {
         <h1>취향을 입고,<br /><em>나답게 빛나다.</em></h1>
         <p className="hero-description">옷장 속 작은 고민부터 새로운 발견까지.<br />ONFIT이 당신만의 스타일을 세심하게 큐레이션합니다.</p>
         <div className="hero-ctas"><a className="button button-dark" href="#/style">나의 스타일 찾기 <Icon name="ArrowRight" size={17} /></a><a className="text-link" href="#projects">ONFIT 둘러보기 <Icon name="ArrowDownRight" size={16} /></a></div>
-        <div className="ai-fashion-cta"><a className="button button-dark" href="/ai-fashion/">AI 패션 검색 <Icon name="ArrowRight" size={17} /></a></div>
         <div className="hero-caption"><span>01</span><i /> PERSONAL STYLE, CONSIDERED</div>
       </div>
       <div className="hero-visual">

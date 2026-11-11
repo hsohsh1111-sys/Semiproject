@@ -1,0 +1,17 @@
+{
+  "source": "ONFIT_ERD_단일통합_가로형.pdf; docs/progress/송성근_개발시작_점검.md",
+  "scope": "Confirmed table/column names only. Types and migrations require team review.",
+  "tables": {
+    "users": ["id", "email", "password_hash", "name", "created_at"],
+    "user_profiles": ["id", "user_id", "height_cm", "weight_kg", "body_shape", "preferred_fit", "preferred_style", "personal_color", "preferred_colors"],
+    "inbody_records": ["id", "user_id", "height_cm", "weight_kg", "skeletal_muscle_kg", "body_fat_pct", "measured_at", "created_at"],
+    "outfits": ["id", "user_id", "recommendation_type", "explanation", "estimated_total", "created_at"],
+    "outfit_items": ["id", "outfit_id", "product_id", "slot", "price_snapshot"],
+    "favorites": ["id", "user_id", "product_id", "created_at"],
+    "products": ["id", "brand", "model_code", "name", "category", "color", "size", "style_tags", "image_url"],
+    "crawl_logs": ["id", "job_type", "status", "collected_count", "failed_count", "started_at", "finished_at"],
+    "sellers": ["id", "name", "website_url"],
+    "product_offers": ["id", "product_id", "seller_id", "source_item_key", "product_url", "current_price", "availability", "last_checked_at"],
+    "price_histories": ["id", "offer_id", "price", "collected_at"]
+  }
+}

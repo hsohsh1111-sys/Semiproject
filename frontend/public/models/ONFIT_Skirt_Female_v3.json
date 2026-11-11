@@ -1,0 +1,20 @@
+{
+  "source": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_Female_v2.blend",
+  "source_sha256": "99445b57d653b48acbef3baa8efa3a5c282c1d70f69cb86c289737769cfbc113",
+  "asset": "C:\\Users\\pc06-00\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.user\\blender_org\\mpfb\\data\\clothes\\female_elegantsuit01\\female_elegantsuit01.mhclo",
+  "asset_sha256": "8ed657dbc49466e6a485993cfdcfd7b6ac30a0f44408dfd38de7a649477d8928",
+  "license": "CC0",
+  "asset_name": "female_elegantsuit01 (skirt component)",
+  "source_url": "https://www.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html",
+  "vertices": 1518,
+  "targets": [
+    "garment_waist_width",
+    "garment_pelvis_width",
+    "garment_hip_volume",
+    "garment_abdomen_front",
+    "garment_build_lean",
+    "garment_build_muscular"
+  ],
+  "correction_max_m": 0.027311818566275833,
+  "limitations": "Rules-based transfer, not cloth physics or calibrated sizing. Browser and extreme-body fit need validation."
+}

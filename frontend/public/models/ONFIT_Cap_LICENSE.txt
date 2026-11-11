@@ -1,0 +1,11 @@
+ONFIT_Cap_v1.glb asset provenance
+
+Asset: toigo_maga_hat (MAGA-Hat)
+Author: MargaretToigo in the official pack index; MRT in the MHCLO header.
+License: CC0 (confirmed in the official pack index and original MHCLO header).
+Source: https://static.makehumancommunity.org/assets/assetpacks/hats01.html
+Download: https://files2.makehumancommunity.org/asset_packs/hats01/hats01_cc0.zip
+
+ONFIT derivative, 2026-11-03: MPFB fitted to the Human v3 reference and
+exported as a separate static headwear GLB. Original UVs, material and red
+printed texture retained. No morph targets or cloth simulation added.

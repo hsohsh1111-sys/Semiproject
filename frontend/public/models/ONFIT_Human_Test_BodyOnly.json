@@ -1,0 +1,55 @@
+{
+  "source_blend": "ONFIT_Human_Master.blend",
+  "source_blend_sha256": "2d7c7857cc83fcfd87587c9fb930092e5040cc5dc0eb88a8c5e04be5cfd368cf",
+  "original_glb": "ONFIT_Human_Test.glb",
+  "original_glb_sha256": "2b6da61fdee5d30da415861e05211b91b4602f43f487c3c2f7f04ec1d97482ec",
+  "derivative_glb": "ONFIT_Human_Test_BodyOnly.glb",
+  "derivative_glb_sha256": "d527c0e920abd0a79f5989987cab13d93f26fdcc761977241afe5b14ccf207ad",
+  "mask_modifier": "Hide helpers",
+  "mask_group": "body",
+  "hidden_helper_groups": [
+    "helper-genital",
+    "helper-hair",
+    "helper-l-eye",
+    "helper-l-eyelashes-1",
+    "helper-l-eyelashes-2",
+    "helper-lower-teeth",
+    "helper-r-eye",
+    "helper-r-eyelashes-1",
+    "helper-r-eyelashes-2",
+    "helper-skirt",
+    "helper-tights",
+    "helper-tongue",
+    "helper-upper-teeth"
+  ],
+  "source_vertices": 19158,
+  "body_vertices": 13380,
+  "source_polygons": 18486,
+  "body_polygons": 13378,
+  "body_triangles": 26756,
+  "body_bounds": {
+    "min": [
+      -0.5255246162414551,
+      1.132139004766941e-08,
+      -0.09550102800130844
+    ],
+    "max": [
+      0.5255246162414551,
+      1.6594313383102417,
+      0.33447206020355225
+    ]
+  },
+  "default_weights": {
+    "$md-$as-$fe-$yn": 0.16500000655651093,
+    "$md-$as-$ma-$yn": 0.16500000655651093,
+    "$md-$ca-$fe-$yn": 0.16500000655651093,
+    "$md-$ca-$ma-$yn": 0.16500000655651093,
+    "$md-$af-$fe-$yn": 0.16500000655651093,
+    "$md-$af-$ma-$yn": 0.16500000655651093,
+    "$md-universal-$fe-$yn-$av$mu-$av$wg": 0.5,
+    "$md-universal-$ma-$yn-$av$mu-$av$wg": 0.5,
+    "$md-$fe-$yn-$av$mu-$av$wg-$avcup-max$fi": 0.08856657892465591,
+    "$md-$fe-$yn-$av$mu-$av$wg-maxcup-$av$fi": 0.088466577231884,
+    "stomach-pregnant-incr": 0.5
+  }
+}

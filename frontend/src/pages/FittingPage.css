@@ -1,0 +1,108 @@
+.fitting-page { max-width: 1640px; width: 100%; box-sizing: border-box; margin: auto; padding: 32px 24px; }
+.fitting-page h1 { font-size: clamp(28px, 4vw, 44px); margin: 12px 0; }
+.fitting-page h2 { font-size: 20px; }
+.fitting-diagnostics { margin-top: 12px; font-size: 13px; }
+.fitting-diagnostics summary { cursor: pointer; color: #42665b; }
+.fitting-page p { line-height: 1.7; margin: 12px 0; }
+.fitting-eyebrow { color: #42665b; letter-spacing: .12em; font-size: 12px; }
+.fitting-layout { display: grid; grid-template-columns: minmax(380px, 0.9fr) minmax(0, 1.4fr); align-items: start; gap: 24px; margin-top: 24px; }
+.fitting-panel { padding: 24px; border: 1px solid #d9dfd9; background: #fff; border-radius: 20px; min-width: 0; }
+.fitting-api-status { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 18px; }
+.fitting-api-status p { margin: 4px 0; }
+.fitting-api-status small { color: #54655d; }
+.fitting-panel fieldset { border: 0; padding: 0; margin: 20px 0; min-width: 0; }
+.fitting-panel legend { font-weight: 600; }
+.fitting-panel label { display: grid; gap: 6px; margin: 12px 0; font-size: 14px; }
+.fitting-panel input { width: 100%; min-width: 0; padding: 10px; border: 1px solid #b9c8c1; border-radius: 8px; }
+.fitting-panel input[type=range] { padding: 0; accent-color: #42665b; }
+.fitting-panel button { background: #254e42; color: #fff; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
+.fitting-panel button:disabled { opacity: .45; cursor: not-allowed; }
+.fitting-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.fitting-inbody-apply { margin-top: 10px; }
+.fitting-inbody-analysis { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.fitting-inbody-analysis button { flex-shrink: 0; }
+.fitting-panel .fitting-inbody-analysis p { flex: 1 1 180px; margin: 0; font-size: 13px; color: #42665b; line-height: 1.5; }
+.fitting-inbody-fields, .fitting-wardrobe-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; }
+.fitting-wardrobe-grid { margin-top: 16px; }
+.fitting-panel .fitting-measurements-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 18px; }
+.fitting-measurements-grid > button, .fitting-measurements-grid > .fitting-reset-actions { grid-column: 1 / -1; justify-self: start; }
+.fitting-measurements-grid .fitting-measurement { margin: 8px 0; }
+.fitting-measurements-grid .fitting-measurement-controls { grid-template-columns: minmax(0, 1fr) 76px; gap: 8px; }
+@media (max-width: 1100px) {
+  .fitting-panel .fitting-measurements-grid { grid-template-columns: 1fr; }
+  .fitting-wardrobe-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) { .fitting-page { padding: 24px 16px; } }
+@media (max-width: 420px) { .fitting-inbody-fields { grid-template-columns: 1fr; } }
+.fitting-measurement { margin: 16px 0; }
+.fitting-measurement-controls { display: grid; grid-template-columns: minmax(0, 1fr) 88px; align-items: center; gap: 12px; }
+.fitting-measurement small { color: #54655d; }
+.fitting-reset-actions { margin-top: 12px; }
+.fitting-wear-controls { margin: 10px 0; }
+.fitting-storage-note { padding: 10px 12px; background: #edf1ee; border-radius: 8px; font-size: 13px; }
+.fitting-records { list-style: none; padding: 0; }
+.fitting-records li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #d9dfd9; }
+.fitting-records li div { display: grid; gap: 4px; }
+.fitting-records li span { font-size: 13px; color: #54655d; }
+@media (max-width: 560px) { .fitting-records li { align-items: flex-start; flex-direction: column; } }
+.fitting-fit-options button[aria-pressed=false] { color: #254e42; background: #edf1ee; }
+.fitting-fit-options button[aria-pressed=true] { outline: 2px solid #254e42; outline-offset: 2px; }
+.fitting-panel .fitting-toggle { display: flex; align-items: center; gap: 8px; }
+.fitting-panel .fitting-toggle input { width: auto; accent-color: #254e42; }
+.fitting-canvas { height: 480px; border-radius: 12px; overflow: hidden; margin-top: 16px; background: #edf1ee; }
+.fitting-empty { display: grid; place-items: center; padding: 24px; }
+.fitting-badge { display: inline-block; padding: 6px 10px; color: #254e42; background: #edf1ee; border-radius: 8px; font-size: 13px; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] { padding: 18px; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] fieldset { margin: 0 0 18px; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] legend { margin-bottom: 6px; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] .fitting-actions { gap: 8px; align-items: center; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] fieldset > button + .fitting-actions { margin-top: 8px; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] button { padding: 7px 10px; min-height: 34px; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] .fitting-toggle { margin: 6px 0; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] p { margin: 6px 0; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] .fitting-custom-color { margin: 0; display: flex; align-items: center; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] .fitting-custom-color input { width: 42px; height: 34px; padding: 2px; }
+.fitting-panel[aria-label="3D 마네킹 미리보기"] .fitting-canvas { margin-top: 10px; }
+.fitting-wardrobe-grid { gap: 16px; align-items: stretch; }
+.fitting-panel .fitting-wardrobe-grid fieldset {
+  margin: 0; padding: 12px 14px 14px; border: 1px solid #e1e7e3; border-radius: 12px;
+}
+.fitting-wardrobe-grid, .fitting-wardrobe-grid button, .fitting-wardrobe-grid input {
+  font-family: inherit; font-size: 13px; line-height: 1.4;
+}
+.fitting-panel .fitting-wardrobe-grid legend { padding: 0 4px; font-size: 14px; font-weight: 600; }
+.fitting-panel .fitting-wardrobe-grid button {
+  min-height: 34px; padding: 7px 10px; font-weight: 500; border: 1px solid transparent;
+}
+.fitting-wardrobe-grid button[aria-pressed=true] { outline: none; border-color: #254e42; background: #254e42; color: #fff; }
+.fitting-wardrobe-grid .fitting-wear-controls { margin: 12px 0; }
+.fitting-wardrobe-grid .fitting-color-controls { margin-top: 12px; }
+.fitting-control-label { color: #53675e; font-size: 12px; min-width: 28px; flex-shrink: 0; }
+.fitting-view-guide { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; padding: 10px 12px; margin-top: 16px; background: #edf3ef; border: 1px solid #d5e1d9; border-radius: 8px; color: #344e42; font-size: 13px; line-height: 1.6; }
+.fitting-view-guide strong { color: #254e42; font-weight: 600; }
+.product-fitting { padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid #d9dfd9; }
+.product-fitting select, .product-fitting textarea { width: 100%; padding: 10px; border: 1px solid #b9c8c1; border-radius: 8px; background: #fff; }
+.product-fitting textarea { min-height: 80px; }
+.product-fitting dl { display: grid; grid-template-columns: 85px minmax(0, 1fr); gap: 6px; font-size: 13px; }
+.product-fitting dd { margin: 0; overflow-wrap: anywhere; }
+.product-fitting-image { margin: 16px 0; }
+.product-fitting-image img { width: 100%; max-height: 260px; object-fit: contain; background: #f7f7f7; }
+.product-fitting-image figcaption { font-size: 12px; color: #54655d; }
+.product-fitting-chart { white-space: pre-wrap; overflow-wrap: anywhere; }
+.product-fitting details { margin: 16px 0; }
+.product-fitting a { text-decoration: underline; }
+.product-fitting .product-purpose { font-size: 14px; margin: 6px 0; }
+.product-fitting .product-limit { color: #66736b; font-size: 12px; margin: 4px 0 14px; }
+.product-workflow-step { border-top: 1px solid #e4e9e5; padding-top: 12px; margin-top: 14px; }
+.product-workflow-step h3 { font-size: 15px; font-weight: 600; margin: 0 0 8px; color: #254e42; }
+.product-workflow-step .product-image-paste { min-height: 60px; }
+.product-workflow-step .product-fitting-image img { max-height: 180px; }
+.product-integration-tools { border-top: 1px solid #e4e9e5; padding-top: 12px; font-size: 12px; }
+.product-fitting summary { cursor: pointer; }
+.fitting-logo-tools { align-items: center; margin: 8px 0; font-size: 12px; }
+.fitting-logo-editing canvas { cursor: grab; touch-action: none; }
+.fitting-logo-editing canvas:active { cursor: grabbing; }
+.product-size-editor table { min-width: 620px; width: 100%; font-size: 12px; }
+.product-size-editor th, .product-size-editor td { padding: 4px; text-align: left; }
+.product-size-editor td input { min-width: 75px; }
+@media (max-width: 760px) { .fitting-layout { grid-template-columns: 1fr; } .fitting-canvas { height: 400px; } }

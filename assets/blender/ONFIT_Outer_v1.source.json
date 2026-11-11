@@ -1,0 +1,45 @@
+{
+  "blender": "5.2.3 LTS",
+  "mpfb": "2.0.18",
+  "source_blend": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyMorph_v3.blend",
+  "source_blend_sha256": "9733c0593bb6197cc4f1fe0d8df6db8a84af5d3b1b75cdecf075d9847cb9a852",
+  "asset": "C:\\Users\\pc06-00\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.user\\blender_org\\mpfb\\data\\clothes\\male_casualsuit05\\male_casualsuit05.mhclo",
+  "asset_sha256": "df41c9fba3da054e35b964706ad2f8d189e65cc00a45f4a34f65235946f647f0",
+  "asset_name": "male_casualsuit05",
+  "extracted_component": "long-sleeve padded jacket with authored front closure",
+  "license": "CC0",
+  "license_url": "https://www.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html",
+  "blend_output": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Outer_v1.blend",
+  "glb_output": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_Outer_v1.glb",
+  "glb_sha256": "158ebc2af62e38df94bc7b9323e822e29c0e9c3fc8a643beeec971b22dd76e9b",
+  "vertices": 6519,
+  "triangles": 12800,
+  "texture_nodes": 3,
+  "bounds": {
+    "min": [
+      -0.5020133852958679,
+      0.7990800738334656,
+      -0.12738236784934998
+    ],
+    "max": [
+      0.5020133256912231,
+      1.4177285432815552,
+      0.22727446258068085
+    ]
+  },
+  "penetration_check": {
+    "samples": 6519,
+    "inside_over_2mm": 0,
+    "inside_over_10mm": 0,
+    "max_inside_m": 0,
+    "method": "Nearest-surface normal estimate; not full cloth collision simulation"
+  },
+  "morph_targets": 0,
+  "backups": [],
+  "max_clearance_correction_m": 0.01620380388782044,
+  "shirt_reference_sha256": "1ee6c4b0f1ca159ced2be0434b40fdc225fda529d764724832a96bbd1efcd8e7",
+  "visual_verification": false,
+  "initial_fitted_glb_sha256": "265d9a0701c1623eb744253baf0d197984d094a3b023fc7d6670502bac3366d3",
+  "front_hem_correction_max_m": 0.008000000000000007,
+  "front_hem_method": "8mm feathered anterior lower opening and 3.5mm rear-side hem ease; source UV, texture, index bytes preserved."
+}

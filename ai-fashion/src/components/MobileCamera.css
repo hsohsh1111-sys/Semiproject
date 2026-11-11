@@ -1,4 +1,5 @@
 .mobile-app {
+  --mobile-action-accent: #c7b5e8;
   --mobile-card-width: 48%;
   position: fixed;
   inset: 0;
@@ -6,8 +7,8 @@
   overflow: hidden;
   overscroll-behavior: contain;
   touch-action: manipulation;
-  background: #0a1118;
-  color: #f3f7f6;
+  background: var(--onfit-ink);
+  color: var(--onfit-cream);
 }
 .mobile-onfit-return {
   display: inline-flex;
@@ -16,10 +17,10 @@
   justify-content: center;
   min-height: 36px;
   padding: 6px 9px;
-  border: 1px solid #60808b;
+  border: 1px solid var(--onfit-border);
   border-radius: 999px;
-  background: #263a47;
-  color: #f3f7f6;
+  background: var(--onfit-surface);
+  color: var(--onfit-ink);
   font-size: .75rem;
   font-weight: 700;
   text-decoration: none;
@@ -32,7 +33,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  background: #0a1118;
+  background: var(--onfit-ink);
 }
 
 .mobile-live-video { object-fit: cover; }
@@ -45,7 +46,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #0a1118;
+  background: var(--onfit-ink);
   pointer-events: none;
 }
 .mobile-zoom-preview.is-hidden { display: none; }
@@ -64,8 +65,8 @@
   transform: translate(-50%, -50%);
   color: #fff;
   text-align: center;
-  text-shadow: 0 2px 5px #071017, 0 0 16px #071017d9;
-  -webkit-text-stroke: .3px #07101799;
+  text-shadow: 0 2px 5px #29212a, 0 0 16px #29212ad9;
+  -webkit-text-stroke: .3px #29212a99;
   pointer-events: none;
 }
 .mobile-center-guide::before {
@@ -76,12 +77,12 @@
   margin: 0 auto 7px;
   border: 2px solid #fff;
   border-radius: 50%;
-  box-shadow: 0 0 10px #071017cc, inset 0 0 4px #07101799;
+  box-shadow: 0 0 10px #29212acc, inset 0 0 4px #29212a99;
 }
 .mobile-center-guide.is-loading::before {
   border-color: #ffffff66;
-  border-top-color: #76c9ff;
-  border-right-color: #76c9ff;
+  border-top-color: var(--onfit-gold);
+  border-right-color: var(--onfit-gold);
   animation: mobile-guide-spin .9s linear infinite;
 }
 .mobile-center-guide strong {
@@ -129,12 +130,14 @@
   align-items: center;
   justify-content: center;
   padding: 28px 24px;
-  background: radial-gradient(circle at 50% 30%, #203846, #101b25 65%);
+  background: radial-gradient(circle at 50% 30%, var(--onfit-surface), var(--onfit-canvas) 65%);
+  color: var(--onfit-ink);
   text-align: center;
 }
 
 .mobile-start h1 {
   margin: 0 0 38px;
+  font-family: var(--onfit-font-body);
   font-size: clamp(1.8rem, 7vw, 2.5rem);
   line-height: 1.15;
   letter-spacing: -.04em;
@@ -153,8 +156,8 @@
   font-weight: 750;
 }
 
-.mobile-app .mobile-primary { background: #c9fb62; color: #17230b; }
-.mobile-app .mobile-secondary { background: #263a47; color: #f3f7f6; border: 1px solid #60808b; }
+.mobile-app .mobile-primary { background: var(--onfit-ink); color: var(--onfit-cream); }
+.mobile-app .mobile-secondary { background: var(--onfit-surface); color: var(--onfit-ink); border: 1px solid var(--onfit-border); }
 
 .mobile-top-overlay {
   position: absolute;
@@ -168,7 +171,7 @@
   gap: 8px;
   min-height: calc(56px + env(safe-area-inset-top));
   padding: calc(6px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 8px calc(14px + env(safe-area-inset-left));
-  background: linear-gradient(#071017b8, #07101700);
+  background: linear-gradient(#29212ab8, #29212a00);
 }
 .mobile-camera-header { padding-right: 130px; }
 .mobile-top-overlay h1,
@@ -176,7 +179,7 @@
   flex: 1 1 auto;
   min-width: 0;
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--onfit-font-body);
   font-size: clamp(1.27rem, 5.8vw, 1.42rem);
   font-weight: 500;
   line-height: 1.12;
@@ -203,7 +206,7 @@
   padding: 0;
   border: 1px solid rgba(255, 255, 255, .35);
   border-radius: 50%;
-  background: rgba(12, 28, 39, .75);
+  background: rgba(41, 33, 42, .75);
   color: #fff;
   line-height: 0;
 }
@@ -227,7 +230,7 @@
   padding: 10px 12px;
   border: 1px solid rgba(255, 255, 255, .3);
   border-radius: 15px;
-  background: rgba(8, 22, 33, .42);
+  background: rgba(41, 33, 42, .42);
   box-shadow: 0 8px 24px rgba(0, 0, 0, .24);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
@@ -238,7 +241,7 @@
 .mobile-info-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .mobile-info-heading h2 { margin: 0; font-size: .95rem; }
 .mobile-analysis-info p { margin: 7px 0; font-size: .8rem; line-height: 1.3; overflow-wrap: anywhere; }
-.mobile-analysis-info p strong { display: block; margin-bottom: 2px; color: #c9fb62; font-size: .75rem; }
+.mobile-analysis-info p strong { display: block; margin-bottom: 2px; color: var(--onfit-gold); font-size: .75rem; }
 .mobile-analysis-info p span {
   display: -webkit-box;
   overflow: hidden;
@@ -246,7 +249,7 @@
   -webkit-line-clamp: 2;
 }
 .mobile-analysis-info p:nth-of-type(2) span { -webkit-line-clamp: 3; }
-.mobile-analysis-info small { display: block; margin-top: 8px; color: #d1dbdd; font-size: .72rem; line-height: 1.25; }
+.mobile-analysis-info small { display: block; margin-top: 8px; color: #d8c4a5; font-size: .72rem; line-height: 1.25; }
 
 .mobile-app .mobile-info-toggle,
 .mobile-app .mobile-products-toggle {
@@ -259,16 +262,16 @@
   min-height: 0;
   padding: 0;
   margin: 0;
-  border: 1px solid #66747b;
+  border: 1px solid var(--onfit-border);
   border-radius: 50%;
-  background: #1b2329e8;
-  color: #d1d9dc;
+  background: #29212ae8;
+  color: var(--onfit-cream);
   line-height: 0;
 }
 .mobile-app .mobile-info-toggle.is-active,
 .mobile-app .mobile-products-toggle.is-active {
-  border-color: #76c9ff;
-  background: #15609b;
+  border-color: var(--onfit-gold);
+  background: var(--onfit-accent);
   color: #fff;
 }
 .mobile-info-toggle svg,.mobile-products-toggle svg { display: block; margin: 0; padding: 0; }
@@ -295,7 +298,7 @@
   padding: 6px 10px;
   border: 1px solid rgba(255, 255, 255, .28);
   border-radius: 14px;
-  background: rgba(8, 22, 33, .76);
+  background: rgba(41, 33, 42, .76);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   box-shadow: 0 5px 16px rgba(0, 0, 0, .22);
@@ -307,8 +310,8 @@
   flex: 0 0 auto;
   padding: 3px 7px;
   border-radius: 999px;
-  background: rgba(42, 61, 75, .9);
-  color: #c9fb62;
+  background: rgba(73, 56, 67, .9);
+  color: var(--onfit-gold);
   font-size: .75rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -335,9 +338,9 @@
   overflow: hidden;
   scroll-snap-align: start;
   padding: 9px;
-  border: 1px solid rgba(255, 255, 255, .3);
+  border: 1px solid rgba(255, 255, 255, .36);
   border-radius: 17px;
-  background: rgba(8, 22, 33, .44);
+  background: rgba(41, 33, 42, .42);
   box-shadow: 0 10px 26px rgba(0, 0, 0, .26);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
@@ -362,7 +365,7 @@
   width: 5px;
   min-height: 18px;
   border-radius: 999px;
-  background: #c9fb62;
+  background: var(--onfit-gold);
   box-shadow: 0 0 6px rgba(0, 0, 0, .4);
 }
 .mobile-product-link {
@@ -422,7 +425,7 @@
 .mobile-card-navigation {
   position: absolute;
   left: 50%;
-  color: #f3f7f6;
+  color: var(--onfit-cream);
   font-size: .78rem;
   line-height: 1.2;
   font-variant-numeric: tabular-nums;
@@ -432,7 +435,7 @@
 .mobile-recommendation-actions .mobile-product-grade {
   display: block;
   overflow: hidden;
-  color: #c9fb62;
+  color: var(--onfit-gold);
   font-size: .75rem;
   line-height: 1.25;
   white-space: nowrap;
@@ -443,12 +446,13 @@
   width: 100%;
   min-height: 40px;
   padding: 8px 5px;
-  background: #c9fb62;
-  color: #17230b;
+  border: 1px solid var(--onfit-border);
+  background: var(--onfit-cream);
+  color: var(--onfit-ink);
   font-size: .8rem;
   text-shadow: none;
 }
-.mobile-recommendation-card .mobile-tryon-selected { color: #c9fb62; font-size: .7rem; text-align: center; }
+.mobile-recommendation-card .mobile-tryon-selected { color: var(--onfit-gold); font-size: .7rem; text-align: center; }
 
 .mobile-app .mobile-close {
   position: absolute;
@@ -461,7 +465,7 @@
   min-height: 0;
   padding: 0;
   border-radius: 50%;
-  background: #071017a8;
+  background: #29212aa8;
   color: white;
   font-size: 2rem;
   line-height: 1;
@@ -478,7 +482,7 @@
   min-height: 0;
   padding: 0;
   border-radius: 50%;
-  background: #071017a8;
+  background: #29212aa8;
   color: white;
   font-size: 1.6rem;
   line-height: 1;
@@ -497,10 +501,10 @@
   padding: 9px 4px;
   border: 1px solid rgba(255, 255, 255, .25);
   border-radius: 999px;
-  background: rgba(8, 22, 33, .7);
+  background: rgba(41, 33, 42, .7);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  color: #f3f7f6;
+  color: var(--onfit-cream);
   box-shadow: 0 5px 18px rgba(0, 0, 0, .26);
 }
 .mobile-camera-zoom span { font-size: .65rem; line-height: 1; }
@@ -526,20 +530,20 @@
 .mobile-camera-zoom input::-webkit-slider-runnable-track {
   height: 4px;
   border-radius: 999px;
-  background: #77909a;
+  background: #aa9c94;
 }
 .mobile-camera-zoom input::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
   margin-top: -8px;
-  border: 2px solid #17230b;
+  border: 2px solid var(--onfit-ink);
   border-radius: 50%;
   -webkit-appearance: none;
-  background: #c9fb62;
+  background: var(--onfit-gold);
   box-shadow: 0 1px 5px rgba(0, 0, 0, .5);
 }
 .mobile-camera-zoom output {
-  color: #c9fb62;
+  color: var(--onfit-gold);
   font-size: .75rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
@@ -570,7 +574,7 @@
   justify-content: center;
   min-height: 130px;
   padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
-  background: linear-gradient(#07101700, #071017c9);
+  background: linear-gradient(#29212a00, #29212ac9);
 }
 
 .mobile-app .mobile-shutter {
@@ -618,6 +622,12 @@
   white-space: nowrap;
 }
 .mobile-photo-actions .mobile-primary svg { flex: 0 0 auto; }
+.mobile-app .mobile-photo-actions .mobile-action-row .mobile-primary {
+  border: 1px solid var(--mobile-action-accent);
+  background: var(--mobile-action-accent);
+  color: var(--onfit-ink);
+  font-weight: 800;
+}
 .mobile-app .mobile-photo-actions .mobile-action-row .mobile-secondary {
   display: inline-flex;
   align-items: center;
@@ -625,9 +635,9 @@
   gap: 5px;
   min-height: 48px;
   padding: 8px 6px;
-  border: 1px solid rgba(255, 255, 255, .35);
+  border: 1px solid rgba(255, 255, 255, .72);
   border-radius: 999px;
-  background: rgba(12, 28, 39, .48);
+  background: rgba(41, 33, 42, .48);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 13px rgba(0, 0, 0, .2);
@@ -654,7 +664,7 @@
   gap: 8px;
   width: min(100%, 420px);
   margin: 0;
-  color: #f3f7f6;
+  color: var(--onfit-cream);
   font-size: .82rem;
   line-height: 1.35;
   text-align: center;
@@ -706,7 +716,7 @@
   padding: 0;
   border: 1px solid rgba(255, 255, 255, .12);
   border-radius: 999px;
-  background: #182f3e;
+  background: var(--onfit-plum-hover);
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, .32);
   overflow: hidden;
 }
@@ -717,7 +727,7 @@
   left: 1px;
   width: calc(50% - 1px);
   border-radius: 999px 0 0 999px;
-  background: #c9fb62;
+  background: var(--onfit-gold);
   box-shadow: 1px 0 3px rgba(0, 0, 0, .2);
   transition: transform .18s ease, border-radius .18s ease;
   pointer-events: none;
@@ -748,7 +758,7 @@
 }
 .mobile-app .mobile-tryon-compare button.is-active {
   background: transparent;
-  color: #17230b;
+  color: var(--onfit-ink);
 }
 @media (prefers-reduced-motion: reduce) {
   .mobile-tryon-active-segment { transition: none; }
@@ -764,7 +774,7 @@
   gap: 10px;
   min-height: calc(56px + env(safe-area-inset-top));
   padding: calc(6px + env(safe-area-inset-top)) 14px 8px;
-  background: linear-gradient(#071017c9, #07101700);
+  background: linear-gradient(#29212ac9, #29212a00);
 }
 .mobile-app .mobile-tryon-header button {
   display: flex;
@@ -777,12 +787,13 @@
   padding: 0;
   border: 1px solid rgba(255, 255, 255, .3);
   border-radius: 50%;
-  background: rgba(12, 28, 39, .52);
+  background: rgba(41, 33, 42, .52);
   color: #fff;
   line-height: 0;
 }
 .mobile-tryon-header button svg { display: block; margin: 0; }
 .mobile-tryon-product-panel {
+  color: var(--onfit-ink);
   position: absolute;
   z-index: 3;
   top: calc(64px + env(safe-area-inset-top));
@@ -793,9 +804,9 @@
   gap: 7px;
   max-width: 420px;
   padding: 6px 9px;
-  border: 1px solid rgba(255, 255, 255, .28);
+  border: 1px solid var(--onfit-border);
   border-radius: 14px;
-  background: rgba(8, 22, 33, .42);
+  background: rgba(245, 241, 236, .88);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   box-shadow: 0 8px 22px rgba(0, 0, 0, .22);
@@ -818,7 +829,7 @@
   font-size: .82rem;
   line-height: 1.2;
 }
-.mobile-tryon-product small { color: #e1ecee; font-size: .7rem; }
+.mobile-tryon-product small { color: var(--onfit-muted); font-size: .7rem; }
 .mobile-tryon-loading { z-index: 3; }
 .mobile-tryon-actions {
   position: absolute;
@@ -831,7 +842,7 @@
   align-items: center;
   gap: 8px;
   padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
-  background: linear-gradient(#07101700, #071017dd 30%);
+  background: linear-gradient(#29212a00, #29212add 30%);
 }
 .mobile-tryon-action-row { display: flex; width: min(100%, 420px); gap: 8px; }
 .mobile-tryon-action-row button { flex: 1; min-width: 0; }
@@ -858,12 +869,12 @@
   line-height: 1.2;
 }
 .mobile-app .mobile-tryon-secondary {
-  border: 1px solid rgba(255, 255, 255, .35);
+  border: 2px solid var(--onfit-brown);
   border-radius: 999px;
-  background: rgba(12, 28, 39, .52);
+  background: rgba(245, 241, 236, .9);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  color: #fff;
+  color: var(--onfit-ink);
 }
 .mobile-app .mobile-tryon-generate,
 .mobile-app .mobile-tryon-return,
@@ -873,15 +884,17 @@
 }
 .mobile-app .mobile-tryon-generate,
 .mobile-app .mobile-tryon-save {
-  background: #c9fb62;
-  color: #17230b;
+  border: 1px solid var(--mobile-action-accent);
+  background: var(--mobile-action-accent);
+  color: var(--onfit-ink);
+  font-weight: 800;
 }
 .mobile-app .mobile-tryon-return {
-  border: 1px solid rgba(255, 255, 255, .35);
-  background: rgba(12, 28, 39, .52);
+  border: 2px solid var(--onfit-brown);
+  background: rgba(245, 241, 236, .9);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  color: #fff;
+  color: var(--onfit-ink);
 }
 .mobile-tryon-actions .mobile-error {
   width: min(100%, 420px);

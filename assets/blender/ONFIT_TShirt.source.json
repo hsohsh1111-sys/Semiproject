@@ -1,0 +1,44 @@
+{
+  "blender": "5.2.3 LTS",
+  "mpfb": "2.0.18",
+  "source_blend": "E:\\송성근(심화)\\ONFIT_Human_Master.blend",
+  "source_blend_sha256": "2d7c7857cc83fcfd87587c9fb930092e5040cc5dc0eb88a8c5e04be5cfd368cf",
+  "asset": "C:\\Users\\pc06-00\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.user\\blender_org\\mpfb\\data\\clothes\\male_casualsuit06\\male_casualsuit06.mhclo",
+  "asset_sha256": "9cebda22a0fa57fc556a1a77723f59b176724dc7e987c01214283677444ddcc5",
+  "asset_name": "male_casualsuit06",
+  "extracted_component": "round-neck short-sleeve shirt",
+  "license": "CC0",
+  "license_url": "https://www.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html",
+  "blend_output": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_TShirt_MPFB.blend",
+  "glb_output": "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_TShirt.glb",
+  "glb_sha256": "5a2f4efba8f106ea0d83ea4587712baf5344eea668a47d1714383f741c1ff0c5",
+  "vertices": 11102,
+  "triangles": 21824,
+  "texture_nodes": 3,
+  "bounds": {
+    "min": [
+      -0.30367177724838257,
+      0.8403090834617615,
+      -0.10631098598241806
+    ],
+    "max": [
+      0.2916828989982605,
+      1.4196614027023315,
+      0.20459872484207153
+    ]
+  },
+  "penetration_check": {
+    "samples": 11102,
+    "inside_over_2mm": 88,
+    "inside_over_10mm": 1,
+    "max_inside_m": 0.010172877664444968,
+    "method": "Nearest-surface normal estimate; not full cloth collision simulation"
+  },
+  "morph_targets": 0,
+  "backups": [
+    "E:\\송성근(심화)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_TShirt_MPFB_before_opaque.blend",
+    "E:\\송성근(심화)\\semiProject\\Semiproject-front\\frontend\\public\\models\\ONFIT_TShirt_before_opaque.glb"
+  ],
+  "visual_verification": false,
+  "material_alpha": "OPAQUE, matching source MHMAT transparent False"
+}

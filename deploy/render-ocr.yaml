@@ -1,0 +1,29 @@
+# Optional Docker API service only. Does not replace the current Python service.
+# Paths are from repository root; rootDir is deliberately omitted.
+services:
+  - type: web
+    name: onfit-api-ocr
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: integration/team-develop-20261106
+    dockerfilePath: Semiproject-front/backend/Dockerfile
+    dockerContext: Semiproject-front/backend
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: FRONTEND_ORIGINS
+        sync: false
+      - key: TIDB_HOST
+        sync: false
+      - key: TIDB_PORT
+        value: "4000"
+      - key: TIDB_USERNAME
+        sync: false
+      - key: TIDB_PASSWORD
+        sync: false
+      - key: TIDB_DATABASE
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true

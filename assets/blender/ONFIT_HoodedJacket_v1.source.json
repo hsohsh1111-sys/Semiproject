@@ -1,0 +1,23 @@
+{
+  "asset_name": "elvs_hooded_sweat_jacket1",
+  "author": "Elvaerwyn",
+  "asset": "C:\\Users\\pc06-00\\AppData\\Roaming\\Blender Foundation\\Blender\\5.2\\extensions\\.user\\blender_org\\mpfb\\data\\clothes\\elvs_hooded_sweat_jacket1\\elvs_hooded_sweat_jacket1.mhclo",
+  "asset_sha256": "0bcba0098a56c32f66b9f22ae37e8d0329e1cd515c44ce384edbaf848ef6fcb0",
+  "source_blend": "E:\\\uc1a1\uc131\uadfc(\uc2ec\ud654)\\semiProject\\Semiproject-front\\assets\\blender\\ONFIT_Human_BodyMorph_v3.blend",
+  "source_blend_sha256": "9733c0593bb6197cc4f1fe0d8df6db8a84af5d3b1b75cdecf075d9847cb9a852",
+  "glb_sha256": "ab3965c7dd1a11d59dd630d97b6578b88c805ee66668f5cd29ea5eec3ddffeae",
+  "vertices": 9935,
+  "polygons": 9787,
+  "uv_layers": 1,
+  "images": [
+    "hoodietex1.png",
+    "hoodietex1.png",
+    "normalshoodie.png"
+  ],
+  "morph_targets": 0,
+  "license_metadata": "# Exported from MakeClothes (TM)\n# author Elvaerwyn\n# license CC_by\n# homepage http://www.makehuman.org/\nuuid 5d8b6290-71e2-4c35-a651-0e2e199e208c\nbasemesh hm08\n\nname ladieshoodiedown1\nobj_file ladieshoodiedown1.obj\nx_scale 5399 11998 1.3980\nz_scale 962 5320 1.8441\ny_scale 791 881 2.2028\nz_depth 61\nmax_pole 10\nmaterial ladieshoodiedown1.mhmat\nverts 0\n17765 16941 16490 0.31452 0.39001 0.29547 0.01299 0.00654 -0.04293\n16476 15580 15581 0.19801 0.60360 0.19839 -0.01439 0.04852 0.06278\n16436 16435 15629 0.23742 0.44260 0.31998 0.00943 -0.01771 0.06296\n15618 15634 15635 0.14926 0.15367 0.69706 -0.02897 0.12325 0.00581\n15617 15616 15632 0.28618 0.52049 0.19333 -0.00806 0.01170 -0.00949\n15878 15563 15557 0.31818 0.38947 0.29234 -0.01411 0.13479 0.10362\n15579 15572 15573 0.09364 0.58338 0.32298 -0.03917 0.09723 0.11643\n16436 15626 15611 0.31014 0.44657 0.24329 0.00111 -0.02261 0.04880\n16435 16493 16490 0.36204 0.19391 0.44405 -0.00598 -0.00274 0.01774\n15573 15580 15579 0.31764 0.61513 0.06723 -0.02464 0.06265 0.07677\n15633 15634 15618 0.52128 0.22444 0.25428 -0.01531 0.07026 -0.01641\n15616 15611 15626 0.35948 0.29030 0.35022 0.00989 -0.01526 0.04391\n15639 15556 15564 -0.02662 -0.00378 1.03039 -0.04763 0.13367 0.01603\n15877 15878 15565 0.08687 0.63649 0.27665 0.01706 0.09888 0.12617\n15626 16436 16435 0.36342 0.36032 0.27625 0.00210 -0.02508 0.05251\n15580 16476 16475 0.19541 0.21694 0.58765 -0.02887 0.07418 0.13249\n16919 16476 16478 0.14333 0.70245 0.15422 -0.00130 0.04625 0.07999\n1558",
+  "browser_verified": false,
+  "local_clearance_max_m": 0.0219999977294963,
+  "adjusted_vertices": 301,
+  "modifications": "MPFB body fit; local skin/jeans clearance capped 22mm; fabric roughness 0.8, metallic 0, authored normal texture strength 0.6; no morphs"
+}

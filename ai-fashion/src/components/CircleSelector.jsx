@@ -272,7 +272,7 @@ export function createSelection(points, width, height) {
 }
 
 export default function CircleSelector({ image, selection, onSelectionChange, visionGeometry,
-  mobile = false, hideSelection = false, locked = false, onLockedPointerDown }) {
+  mobile = false, embedded = false, stageStyle, hideSelection = false, locked = false, onLockedPointerDown }) {
   const imageRef = useRef(null)
   const stageRef = useRef(null)
   const canvasRef = useRef(null)
@@ -337,16 +337,16 @@ export default function CircleSelector({ image, selection, onSelectionChange, vi
     })
     if (selection && !draft.length) context.closePath()
     context.lineWidth = 3
-    context.strokeStyle = '#c9fb62'
+    context.strokeStyle = mobile ? '#c9fb62' : '#e44b92'
     context.shadowColor = '#101b25'
     context.shadowBlur = 5
     context.stroke()
     context.shadowBlur = 0
     if (selection && !draft.length) {
-      context.fillStyle = 'rgba(201, 251, 98, 0.2)'
+      context.fillStyle = mobile ? 'rgba(201, 251, 98, 0.2)' : 'rgba(255, 40, 160, 0.22)'
       context.fill()
     }
-  }, [draft, selection, visionGeometry, size, image.width, image.height, hideSelection])
+  }, [draft, selection, visionGeometry, size, image.width, image.height, hideSelection, mobile])
 
   function getPoint(event) {
     const rect = canvasRef.current.getBoundingClientRect()
@@ -428,10 +428,10 @@ export default function CircleSelector({ image, selection, onSelectionChange, vi
   }
 
   return (
-    <section className={mobile ? 'mobile-selector' : 'card'} aria-label="영역 선택">
-      {!mobile && <><div className="section-heading"><span className="step">02</span><h2>물체 둘러 그리기</h2></div>
+    <section className={mobile ? 'mobile-selector' : embedded ? 'pc-selector' : 'card'} aria-label="영역 선택">
+      {!mobile && !embedded && <><div className="section-heading"><span className="step">02</span><h2>물체 둘러 그리기</h2></div>
       <p className="hint">사진 속 물체의 바깥선을 손가락이나 마우스로 한 번에 그리세요.</p></>}
-      <div ref={stageRef} className={mobile ? 'image-stage mobile-image-stage' : 'image-stage'}>
+      <div ref={stageRef} className={mobile ? 'image-stage mobile-image-stage' : 'image-stage'} style={mobile ? undefined : stageStyle}>
         <img ref={imageRef} src={image.url} alt="선택할 원본 사진" draggable="false" />
         <canvas ref={canvasRef} className="drawing-canvas"
           style={mobile ? { left: size.left || 0, top: size.top || 0,
@@ -439,7 +439,7 @@ export default function CircleSelector({ image, selection, onSelectionChange, vi
           onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp}
           onPointerCancel={pointerCancel} aria-label="사진 위에 선택 영역 그리기" />
       </div>
-      {!mobile && <div className="button-row"><button className="secondary" onClick={reset}>선택 초기화 · 다시 그리기</button></div>}
+      {!mobile && !embedded && <div className="button-row"><button className="secondary" onClick={reset}>선택 초기화 · 다시 그리기</button></div>}
       {error && <p className={mobile ? 'mobile-drawing-error' : 'error'} role="alert">{error}</p>}
     </section>
   )
