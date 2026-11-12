@@ -1,10 +1,12 @@
 # ONFIT
 
+🌐 [ONFIT 프로젝트 포트폴리오 바로가기](https://kimchi-2025.github.io/ONFIT/)
+
 ![React](https://img.shields.io/badge/React-19-20232A?logo=react&logoColor=61DAFB) ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white) ![FastAPI](https://img.shields.io/badge/FastAPI-Python-009688?logo=fastapi&logoColor=white) ![Three.js](https://img.shields.io/badge/Three.js-3D-222222?logo=threedotjs&logoColor=white) ![Playwright](https://img.shields.io/badge/Playwright-Chromium-2EAD33?logo=playwright&logoColor=white)
 
 **ONFIT은 쇼핑몰 탐색, 스타일 큐레이션, 체형 기반 3D 미리보기, 사진 속 패션 상품 검색과 AI 가상 착용을 한곳에서 경험하도록 만든 4인 팀 프로젝트입니다.**
 
-[GitHub 저장소](https://github.com/hsoshh1111-sys/Semiproject) · [프로젝트 소개 페이지 (준비 중)](https://kimchi-2025.github.io/ONFIT/) — 소개 페이지는 서비스 실행 데모가 아닙니다.
+포트폴리오 페이지는 서비스 실행 데모가 아닙니다.
 
 ## 1. 프로젝트 소개 및 주요 기능
 
