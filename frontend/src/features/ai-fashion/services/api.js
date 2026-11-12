@@ -65,6 +65,7 @@ export async function sendTryOn(personFile, product, analysis, boundingBox, sign
     product_name: product.product_name,
     brand: product.brand,
     image_url: product.image_url,
+    ...(product.favoriteSource === 'seasonal' ? { source: 'seasonal' } : {}),
   }))
   form.append('analysis', JSON.stringify({
     selected_object: {

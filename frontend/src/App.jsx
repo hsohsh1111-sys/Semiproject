@@ -37,6 +37,9 @@ const pages = {
 
 export default function App() {
   const [route, setRoute] = useState(readRoute)
+  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia('(min-width: 769px)').matches)
+  const [hasPcAiFashion, setHasPcAiFashion] = useState(() =>
+    window.matchMedia('(min-width: 769px)').matches && readRoute() === '/ai-fashion')
   const [authMode, setAuthMode] = useState(null)
   const [session, setSession] = useState(null)
   const [restoring, setRestoring] = useState(true)
@@ -44,6 +47,31 @@ export default function App() {
   const [restoreAttempt, setRestoreAttempt] = useState(0)
   const restoreController = useRef(null)
   const authRevision = useRef(0)
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 769px)')
+    const update = () => setIsDesktop(query.matches)
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
+  useEffect(() => {
+    if (!isDesktop) setHasPcAiFashion(false)
+    else if (route === '/ai-fashion') setHasPcAiFashion(true)
+  }, [isDesktop, route])
+  useEffect(() => {
+    const handlePcAiFashionLink = (event) => {
+      if (!window.matchMedia('(min-width: 769px)').matches || event.defaultPrevented || event.button !== 0 ||
+          event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+      const link = event.composedPath().find((node) => node instanceof HTMLAnchorElement)
+      if (!link || (link.target && link.target !== '_self')) return
+      const href = link.getAttribute('href')
+      if (href === '/ai-fashion/' || (href === '/#/home' && readRoute() === '/ai-fashion')) {
+        event.preventDefault()
+        window.location.hash = href === '/ai-fashion/' ? '/ai-fashion' : '/home'
+      }
+    }
+    document.addEventListener('click', handlePcAiFashionLink, true)
+    return () => document.removeEventListener('click', handlePcAiFashionLink, true)
+  }, [])
   function updateSession(next) {
     const saved = saveLoginSession(next)
     if (session?.user?.id && session.user.id !== next?.user?.id) clearFittingMeasurements(session.user.id)
@@ -86,12 +114,15 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleRoute)
   }, [])
   const Page = pages[route] || HomePage
+  const showAiFashion = route === '/ai-fashion'
+  const retainPcAiFashion = showAiFashion || (isDesktop && hasPcAiFashion)
   if (restoring) return <main className="inner-page"><p role="status">로그인 상태 확인 중…</p></main>
   return <div className="app-shell min-h-screen bg-canvas text-ink">
     <Header onAuth={setAuthMode} session={session} onLogout={() => updateSession(null)} />
     {restoreError && <div role="status">{restoreError} <button type="button" onClick={() => setRestoreAttempt(value => value + 1)}>다시 확인</button></div>}
     <Suspense fallback={<p role="status">화면을 불러오는 중입니다.</p>}>
-      <Page session={session} onSessionChange={updateSession} onRequestLogin={() => setAuthMode('login')} />
+      {!showAiFashion && <Page session={session} onSessionChange={updateSession} onRequestLogin={() => setAuthMode('login')} />}
+      {retainPcAiFashion && <div hidden={!showAiFashion}><AiFashionPage active={showAiFashion} /></div>}
     </Suspense>
     <Footer />
     <ScrollToTopButton />

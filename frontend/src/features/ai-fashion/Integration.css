@@ -4,6 +4,51 @@
 .studio-shell { height: auto; min-height: calc(100dvh - 120px); overflow: visible; }
 .studio-grid { min-height: 620px; }
 
+@media (min-width: 769px) {
+  .landing-shell .pc-camera {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100dvh - 140px);
+    margin: clamp(10px, 1.5vh, 20px) auto;
+    padding: clamp(16px, 2vh, 24px);
+  }
+  .landing-shell .pc-camera .hint { margin: 8px 0 12px; }
+  .landing-shell .pc-camera .camera-video,
+  .landing-shell .pc-camera-photo {
+    flex: 0 1 auto;
+    min-height: 0;
+    height: clamp(240px, calc(100dvh - 390px), 640px);
+    max-height: none;
+    object-fit: contain;
+  }
+  .landing-shell .pc-camera-actions { flex-shrink: 0; }
+
+  .studio-shell {
+    height: calc(100dvh - 120px);
+    min-height: 610px;
+  }
+  .studio-grid { min-height: 0; }
+  .studio-side-scroll { overscroll-behavior-y: auto; }
+  .studio-analysis { padding: clamp(10px, 1.5vh, 16px) clamp(16px, 1.6vw, 24px) 8px; }
+  .studio-analysis h2 { margin-bottom: 5px; }
+  .studio-analysis-details { gap: clamp(4px, .6vh, 8px); margin-top: clamp(8px, 1.1vh, 12px); }
+  .studio-analysis-details p { line-height: 1.4; }
+  .studio-analysis-details + .studio-progress { margin-top: 8px; }
+  .studio-products { padding: 5px clamp(16px, 1.6vw, 24px) 10px; }
+  .studio-products-head { margin-bottom: 8px; }
+  .studio-carousel-track { grid-auto-columns: clamp(150px, 34%, 210px); gap: 10px; padding-bottom: 6px; }
+  .studio-product-select { gap: 4px; padding: 8px; }
+  .studio-product-select img { height: clamp(105px, 13dvh, 155px); }
+  .studio-product-card > a { padding: 6px 8px 8px; }
+  .studio-shell.has-products { height: auto; min-height: calc(100dvh - 120px); overflow: visible; }
+  .studio-shell.has-products .studio-grid { flex: 0 0 auto; align-items: start; }
+  .studio-shell.has-products .studio-viewer { height: max(455px, calc(100dvh - 265px)); }
+  .studio-shell.has-products .studio-side,
+  .studio-shell.has-products .studio-side-scroll { height: auto; min-height: 0; overflow: visible; }
+  .studio-shell.has-products .studio-side-scroll { flex: none; }
+  .studio-shell.has-products .studio-side-actions { max-height: none; overflow-y: visible; }
+}
+
 @media (max-width: 768px) {
   .mobile-app { position: relative; inset: auto; height: calc(100dvh - 120px); }
   .mobile-app.mobile-landing { height: auto; min-height: calc(100dvh - 120px); }

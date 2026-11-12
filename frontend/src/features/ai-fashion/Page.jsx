@@ -8,7 +8,7 @@ import integrationCss from './Integration.css?inline'
 
 const styles = [appCss, mobileCss, landingCss, integrationCss].join('\n')
 
-export default function AiFashionPage() {
+export default function AiFashionPage({ active = true }) {
   const hostRef = useRef(null)
   const [shadowRoot, setShadowRoot] = useState(null)
 
@@ -18,6 +18,6 @@ export default function AiFashionPage() {
   }, [])
 
   return <div ref={hostRef} className="ai-fashion-host">
-    {shadowRoot && createPortal(<><style>{styles}</style><App /></>, shadowRoot)}
+    {shadowRoot && createPortal(<><style>{styles}</style><App active={active} /></>, shadowRoot)}
   </div>
 }

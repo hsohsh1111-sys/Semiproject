@@ -7,7 +7,7 @@ import { mockProducts } from '../services/api.js'
 
 const projects = [
   { number: '01', title: 'PERSONAL OUTFIT', korean: '취향 맞춤 코디', description: '체형, 좋아하는 색과 무드로\n오늘 나에게 가장 잘 어울리는 룩을 찾아요.', label: 'STYLE × AI', href: '#/outfits', image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1050&q=85', color: 'plum' },
-  { number: '02', title: 'SMART COMPARISON', korean: '같은 상품, 한눈에 비교', description: '브랜드와 상품 옵션을 매칭해\n판매처별 가격을 보기 쉽게 모아드려요.', label: 'CRAWL × MATCH', href: '#/compare', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1050&q=85', color: 'clay' },
+  { number: '02', title: 'AI FASHION SEARCH', korean: <>사진 속 스타일,<br />내 옷장으로</>, description: '마음에 드는 아이템을 사진에서 찾아보세요.\nAI가 비슷한 상품을 추천하고 가상 착용까지.', label: 'AI FASHION SEARCH', href: '#/ai-fashion', image: '/ai-fashion/images/AIfashion.png', color: 'clay' },
   { number: '03', title: 'SEASONAL OUTFIT', korean: '시즌 코디', description: '계절에 어울리는 스타일을 살펴보고\n마음에 드는 코디를 찾아보세요.', label: 'SEASON × CURATION', href: '#/seasonal', image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1050&q=85', color: 'olive' },
 ]
 

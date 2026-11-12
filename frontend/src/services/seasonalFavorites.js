@@ -96,3 +96,42 @@ export function removeSeasonalFavorite(id) {
   const favorites = getSeasonalFavorites()
   return saveFavorites(favorites.filter((favorite) => favorite.id !== id))
 }
+
+export function getAiFashionFavoriteId(product) {
+  return `ai-fashion:musinsa:${product.product_id}`
+}
+
+export function toggleAiFashionFavorite(product) {
+  const favorites = getSeasonalFavorites()
+  const id = getAiFashionFavoriteId(product)
+  if (favorites.some((favorite) => favorite.id === id)) {
+    return saveFavorites(favorites.filter((favorite) => favorite.id !== id))
+  }
+  return saveFavorites([...favorites, {
+    id,
+    source: 'ai-fashion',
+    productId: String(product.product_id),
+    title: product.product_name,
+    vendor: product.brand,
+    imageUrl: product.image_url,
+    price: product.price,
+    currencyCode: 'KRW',
+    productUrl: product.product_url,
+    type: '추천 상품',
+    lookTitle: 'AI 패션 검색',
+    season: 'AI 패션 검색',
+  }])
+}
+
+export function favoriteToTryOnProduct(favorite) {
+  return {
+    product_id: favorite.source === 'ai-fashion' ? favorite.productId || favorite.id : `seasonal:${favorite.id}`,
+    product_name: favorite.title,
+    brand: favorite.vendor,
+    image_url: favorite.imageUrl,
+    product_url: favorite.productUrl,
+    price: favorite.price,
+    favoriteId: favorite.id,
+    favoriteSource: favorite.source || 'seasonal',
+  }
+}

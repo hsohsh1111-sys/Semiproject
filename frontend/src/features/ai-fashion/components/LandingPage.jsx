@@ -27,8 +27,9 @@ export default function LandingPage({ onCamera, onUpload, busy = false, error = 
     <section className="landing-hero">
       <div className="landing-copy">
         <p className="landing-kicker">AI FASHION SEARCH</p>
-        <h1>AI 패션 검색</h1>
+        <h1><span className="landing-mobile-title">AI 패션 검색</span><span className="landing-desktop-title">사진 속 스타일을,<br /><em>나의 스타일로.</em></span></h1>
         <p className="landing-tagline">사진 속 스타일을, <strong>나의 스타일로.</strong></p>
+        <p className="landing-desktop-subtitle">AI 패션 검색</p>
         <p className="landing-description">마음에 드는 옷이나 패션 아이템을 사진에서 골라보세요. 비슷한 상품을 찾아보고, 내 사진에 가상으로 착용할 수 있습니다.</p>
         <div className="landing-actions">
           <button type="button" className="landing-primary" onClick={onCamera} disabled={busy}>

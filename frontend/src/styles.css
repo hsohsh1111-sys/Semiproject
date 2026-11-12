@@ -575,6 +575,9 @@ img {
   transition:transform .7s;
   filter:saturate(.78)
 }
+.project-clay .project-image img {
+  object-position:center 12%
+}
 .project-card:hover .project-image img {
   transform:scale(1.045)
 }

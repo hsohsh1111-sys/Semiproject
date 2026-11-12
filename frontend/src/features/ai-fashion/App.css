@@ -246,3 +246,13 @@ button,input,select,textarea{font-family:var(--onfit-font-body)}
 .studio-viewer-loading{gap:16px}
 .studio-viewer-loading strong{font-size:clamp(1.3rem,2vw,1.7rem);line-height:1.45;text-shadow:0 2px 5px #000,0 0 12px #000,0 0 22px #000;animation:studio-guide-pulse 1.8s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.studio-search-spinner,.studio-viewer-loading strong{animation:none}}
+
+@media(min-width:769px){
+  .studio-products .studio-product-check{left:8px;right:auto}
+  .studio-favorite-button{position:absolute;z-index:2;top:12px;right:12px;display:grid;place-items:center;width:36px;height:36px;min-height:36px;padding:0;border:0;border-radius:50%;background:#fffdfae8;color:#6b594b}
+  .studio-favorite-button.is-saved{color:#ad655c}
+  .studio-favorite-button.is-saved svg{fill:#ad655c}
+  .studio-favorite-button:focus-visible{outline:2px solid var(--onfit-brown);outline-offset:2px}
+  .studio-wardrobe{margin-top:8px;padding-top:16px;border-top:1px solid var(--onfit-border)}
+  .studio-wardrobe-track{display:grid;grid-template-rows:auto;grid-auto-flow:column;grid-auto-columns:clamp(150px,34%,210px);gap:10px;overflow-x:auto;scrollbar-width:thin;padding:2px 2px 10px}
+}

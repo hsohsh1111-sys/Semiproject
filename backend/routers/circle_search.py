@@ -1,6 +1,7 @@
 import io
 import json
 import math
+import re
 import warnings
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
@@ -17,6 +18,16 @@ MAX_FILE_BYTES = 10 * 1024 * 1024
 MAX_IMAGE_SIDE = 8000
 MAX_POLYGON_POINTS = 2048
 ALLOWED_FORMATS = {"JPEG": "image/jpeg", "PNG": "image/png", "WEBP": "image/webp"}
+
+
+def valid_tryon_product_id(product_id: object, source: object) -> bool:
+    if not isinstance(product_id, str):
+        return False
+    if source is None:
+        return product_id.isdecimal() and len(product_id) <= 20
+    if source == 'seasonal':
+        return re.fullmatch(r'seasonal:[\w:/. -]{1,240}', product_id) is not None
+    return False
 
 
 def fail(message: str) -> None:
@@ -181,10 +192,10 @@ async def try_on(image: UploadFile = File(...), product: str = Form(...),
         fail('상품 및 분석 정보는 올바른 JSON 객체여야 합니다.')
     product_id, name, image_url = (item.get('product_id'), item.get('product_name'),
                                    item.get('image_url'))
-    if (not isinstance(product_id, str) or not product_id.isdecimal() or len(product_id) > 20 or
+    if (not valid_tryon_product_id(product_id, item.get('source')) or
             not isinstance(name, str) or not (1 <= len(name.strip()) <= 200) or
             not isinstance(image_url, str) or not (1 <= len(image_url) <= 2048)):
-        fail('유효한 무신사 상품 ID, 상품명, 이미지 주소가 필요합니다.')
+        fail('유효한 상품 ID, 상품명, 이미지 주소가 필요합니다.')
     brand = item.get('brand')
     if brand is not None and (not isinstance(brand, str) or len(brand) > 100):
         fail('브랜드 정보가 올바르지 않습니다.')

@@ -40,13 +40,13 @@ export default function WardrobePage() {
               <article className="wardrobe-seasonal-card" key={favorite.id}>
                 <div className="wardrobe-seasonal-image">
                   <img src={favorite.imageUrl} alt={favorite.title} loading="lazy" />
-                  <span>{favorite.season} · {favorite.type}</span>
+                  <span>{favorite.source === 'ai-fashion' ? 'AI 패션 검색 · 추천 상품' : `${favorite.season} · ${favorite.type}`}</span>
                   <button type="button" className="seasonal-favorite-button is-saved" aria-label={`${favorite.title} 찜 취소`} onClick={() => handleRemoveFavorite(favorite.id)}>
                     <Icon name="Heart" size={17} />
                   </button>
                 </div>
                 <div className="wardrobe-seasonal-copy">
-                  <p>{favorite.lookTitle} <i /> {favorite.age} · {favorite.gender}</p>
+                  <p>{favorite.source === 'ai-fashion' ? 'AI 패션 검색' : <>{favorite.lookTitle} <i /> {favorite.age} · {favorite.gender}</>}</p>
                   <h3>{favorite.title}</h3>
                   <p>{favorite.vendor}</p>
                   {Number.isFinite(favorite.price) && <strong>{new Intl.NumberFormat('ko-KR', { style: 'currency', currency: favorite.currencyCode || 'KRW', maximumFractionDigits: 0 }).format(favorite.price)}</strong>}

@@ -8,6 +8,9 @@ import { downloadTryOnImage } from './components/PcTryOnPanel.jsx'
 import BeforeAfterSlider from './components/BeforeAfterSlider.jsx'
 import { sendRecommendations, sendSelection, sendTryOn } from './services/api.js'
 import { createSearchImageCrop } from './services/searchCrop.js'
+import Icon from '../../components/common/Icon.jsx'
+import { FAVORITES_CHANGE_EVENT, getAiFashionFavoriteId, getSeasonalFavorites,
+  toggleAiFashionFavorite, removeSeasonalFavorite, favoriteToTryOnProduct } from '../../services/seasonalFavorites.js'
 
 const similarityLabels = {
   very_similar: '매우 유사',
@@ -48,6 +51,35 @@ const tryOnUnavailableReason = (product, personImage) => {
   return ''
 }
 const canTryOnProduct = (product, personImage) => !tryOnUnavailableReason(product, personImage)
+const pcTryOnUnavailableReason = (product, personImage) => {
+  if (product?.favoriteSource === 'seasonal') {
+    if (!personImage?.file) return '원본 인물 사진이 필요합니다.'
+    if (!/^seasonal:[\p{L}\p{N}_:\/. \-]{1,240}$/u.test(String(product.product_id ?? '')) ||
+        typeof product.product_name !== 'string' || !product.product_name.trim() ||
+        typeof product.image_url !== 'string' || !product.image_url.trim()) {
+      return '시즌 코디 상품 ID·이름·이미지 주소가 필요합니다.'
+    }
+  } else {
+    const reason = tryOnUnavailableReason(product, personImage)
+    if (reason) return reason
+  }
+  if (product?.favoriteSource) {
+    try {
+      const url = new URL(product.image_url)
+      const allowedHost = product.favoriteSource === 'seasonal'
+        ? ['image.msscdn.net', 'cdn.shopify.com'].includes(url.hostname)
+        : url.hostname === 'image.msscdn.net'
+      if (url.protocol !== 'https:' || !allowedHost || url.port) {
+        return product.favoriteSource === 'seasonal'
+          ? '이 시즌 코디 상품 이미지는 아직 가상 착용을 지원하지 않습니다.'
+          : '이 상품 이미지는 현재 가상 착용을 지원하지 않습니다.'
+      }
+    } catch {
+      return '이 상품 이미지는 현재 가상 착용을 지원하지 않습니다.'
+    }
+  }
+  return ''
+}
 
 class SearchResultBoundary extends React.Component {
   state = { failed: false }
@@ -67,7 +99,7 @@ class SearchResultBoundary extends React.Component {
   }
 }
 
-export default function App() {
+export default function App({ active = true }) {
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 768px)').matches)
   const [image, setImage] = useState(null)
   const [selectorReset, setSelectorReset] = useState(0)
@@ -81,6 +113,8 @@ export default function App() {
   const [searchDiagnostics, setSearchDiagnostics] = useState(null)
   const [searchAttempt, setSearchAttempt] = useState(0)
   const [tryOnProduct, setTryOnProduct] = useState(null)
+  const [savedItems, setSavedItems] = useState([])
+  const [favoritesError, setFavoritesError] = useState('')
   const [tryOnResult, setTryOnResult] = useState(null)
   const [pcTryOnHistory, setPcTryOnHistory] = useState([])
   const [activePcTryOnId, setActivePcTryOnId] = useState(null)
@@ -114,6 +148,42 @@ export default function App() {
   const pcTryOnSequence = useRef(0)
   const pcHistoryUrls = useRef(new Set())
   const selectionVersion = useRef(0)
+
+  useEffect(() => {
+    if (isMobile) return undefined
+    const update = (event) => {
+      try {
+        setSavedItems(Array.isArray(event?.detail) ? event.detail : getSeasonalFavorites())
+        setFavoritesError('')
+      } catch (caught) {
+        setFavoritesError(caught.message)
+      }
+    }
+    update()
+    window.addEventListener(FAVORITES_CHANGE_EVENT, update)
+    window.addEventListener('storage', update)
+    return () => {
+      window.removeEventListener(FAVORITES_CHANGE_EVENT, update)
+      window.removeEventListener('storage', update)
+    }
+  }, [isMobile, active])
+
+  useEffect(() => {
+    if (active || isMobile) return
+    photoRequestRef.current += 1
+    selectionVersion.current += 1
+    tryOnVersion.current += 1
+    tryOnAbortRef.current?.abort()
+    tryOnAbortRef.current = null
+    inFlight.current = false
+    searchInFlight.current = null
+    tryOnInFlight.current = false
+    setPhotoChanging(false)
+    setTryOnPhotoLoading(false)
+    setSending(false)
+    setSearching(false)
+    setTryOnLoading(false)
+  }, [active, isMobile])
 
   useEffect(() => {
     const query = window.matchMedia('(max-width: 768px)')
@@ -353,6 +423,33 @@ export default function App() {
     }
   }
 
+  function changeFavorite(product) {
+    try {
+      toggleAiFashionFavorite(product)
+      setFavoritesError('')
+    } catch (caught) {
+      setFavoritesError(caught.message)
+    }
+  }
+
+  function removeSavedFavorite(id) {
+    try {
+      removeSeasonalFavorite(id)
+      setFavoritesError('')
+    } catch (caught) {
+      setFavoritesError(caught.message)
+    }
+  }
+
+  function selectSavedProduct(favorite) {
+    if (tryOnInFlight.current) return
+    setTryOnError('')
+    setTryOnPhotoError('')
+    setTryOnProduct(favoriteToTryOnProduct(favorite))
+    setPcStep(3)
+    if (viewerTab === 'tryon') setViewerTab('original')
+  }
+
   async function uploadTryOnPerson(event) {
     const file = event.target.files?.[0]
     event.target.value = ''
@@ -409,7 +506,8 @@ export default function App() {
         : viewerTab === 'tryon' ? selectedResult?.person || image : image
     const product = tryOnProduct
     const usesAlternatePerson = person && person !== image && person.alternate !== false
-    if (!product || !person?.file || !result || tryOnInFlight.current || tryOnPhotoLoading) return
+    if (!product || !person?.file || !result || tryOnInFlight.current || tryOnPhotoLoading ||
+        (!isMobile && pcTryOnUnavailableReason(product, person))) return
     const currentVersion = tryOnVersion.current
     const controller = new AbortController()
     tryOnInFlight.current = true
@@ -569,12 +667,12 @@ export default function App() {
     onUploadTryOnPerson={uploadTryOnPerson} onRestoreTryOnPerson={restoreTryOnPerson}
     onCreateTryOn={createTryOn} onLeaveTryOn={leaveMobileTryOn} />
 
-  if (!image) return <main className="app-shell landing-shell">
+  if (!image) return active ? <main className="app-shell landing-shell">
     <CameraView onImage={acceptImage} onCaptureConfirm={(data) => {
       acceptImage(data)
       setPcStep(2)
     }} landing />
-  </main>
+  </main> : null
 
   const hasRecommendationList = Array.isArray(recommendations?.recommendations)
   const showDebug = import.meta.env.DEV && new URLSearchParams(window.location.search).get('debug') === '1'
@@ -604,7 +702,7 @@ export default function App() {
     : viewerTab === 'selection' && !selection && pcStep !== 2 ? 'original' : viewerTab
 
   return (
-    <main className="studio-shell">
+    <main className={'studio-shell' + (pcStep >= 3 ? ' has-products' : '')}>
       <header className="studio-header">
         <a className="studio-home-link" href="/#/home">← ONFIT 쇼핑몰</a>
         <div className="studio-title"><span>ONFIT AI FASHION SEARCH</span>
@@ -731,10 +829,12 @@ export default function App() {
                 {tryOnPhotoLoading ? '사진 준비 중…' : '다른 사진 업로드'}
               </button>
               <button type="button" className="studio-primary-action" onClick={createTryOn}
-                disabled={tryOnLoading || tryOnPhotoLoading}>
+                disabled={tryOnLoading || tryOnPhotoLoading || !!pcTryOnUnavailableReason(tryOnProduct, image)}>
                 {tryOnLoading ? '가상 착용 생성 중…' : '가상 착용하기'}
               </button>
             </div>}
+            {pcStep >= 3 && tryOnProduct?.favoriteId && pcTryOnUnavailableReason(tryOnProduct, image) &&
+              <p className="studio-inline-status" role="status">{pcTryOnUnavailableReason(tryOnProduct, image)}</p>}
             {photoChangeError && <p className="error" role="alert">{photoChangeError}</p>}
             {pcStep === 2 && error && <p className="error" role="alert">{error}</p>}
             {pcStep === 2 && analysisFailed && !error && <p className="error" role="alert">{progressMessage}</p>}
@@ -789,11 +889,18 @@ export default function App() {
                       }
                     }}>
                     {recommendedProducts.map((product, index) => <article className={'studio-product-card' +
-                      (tryOnProduct?.product_id === product.product_id ? ' is-selected' : '')} key={product.product_id ?? index}>
-                      {tryOnProduct?.product_id === product.product_id &&
+                      (!tryOnProduct?.favoriteId && tryOnProduct?.product_id === product.product_id ? ' is-selected' : '')} key={product.product_id ?? index}>
+                      {!tryOnProduct?.favoriteId && tryOnProduct?.product_id === product.product_id &&
                         <span className="studio-product-check" aria-hidden="true">✓ 선택됨</span>}
+                      <button type="button" className={'studio-favorite-button' +
+                        (savedItems.some((favorite) => favorite.id === getAiFashionFavoriteId(product)) ? ' is-saved' : '')}
+                        aria-label={`${product.product_name || '상품'} ${savedItems.some((favorite) => favorite.id === getAiFashionFavoriteId(product)) ? '찜 취소' : '찜하기'}`}
+                        aria-pressed={savedItems.some((favorite) => favorite.id === getAiFashionFavoriteId(product))}
+                        onClick={() => changeFavorite(product)}>
+                        <Icon name="Heart" size={17} />
+                      </button>
                       <button type="button" className="studio-product-select" onClick={() => selectTryOn(product)}
-                        aria-pressed={tryOnProduct?.product_id === product.product_id}
+                        aria-pressed={!tryOnProduct?.favoriteId && tryOnProduct?.product_id === product.product_id}
                         disabled={tryOnLoading || !canTryOnProduct(product, image)}
                         title={tryOnUnavailableReason(product, image) || undefined}>
                         {typeof product.image_url === 'string' && <img src={product.image_url}
@@ -810,6 +917,32 @@ export default function App() {
                   </div>}
                 </SearchResultBoundary>
               </section>}
+              {pcStep >= 3 && savedItems.length > 0 && <section className="studio-products studio-wardrobe" aria-label="나의 옷장">
+                <div className="studio-products-head"><h3>나의 옷장</h3></div>
+                <div className="studio-wardrobe-track">
+                  {savedItems.map((favorite) => <article className={'studio-product-card' +
+                    (tryOnProduct?.favoriteId === favorite.id ? ' is-selected' : '')} key={favorite.id}>
+                    {tryOnProduct?.favoriteId === favorite.id &&
+                      <span className="studio-product-check" aria-hidden="true">✓ 선택됨</span>}
+                    <button type="button" className="studio-favorite-button is-saved"
+                      aria-label={`${favorite.title} 찜 취소`} aria-pressed="true"
+                      onClick={() => removeSavedFavorite(favorite.id)}>
+                      <Icon name="Heart" size={17} />
+                    </button>
+                    <button type="button" className="studio-product-select" onClick={() => selectSavedProduct(favorite)}
+                      aria-pressed={tryOnProduct?.favoriteId === favorite.id} disabled={tryOnLoading}>
+                      {favorite.imageUrl && <img src={favorite.imageUrl} alt={favorite.title} loading="lazy" />}
+                      <span className="studio-product-brand">{favorite.source === 'ai-fashion' ? 'AI 패션 검색' : '시즌 코디'} · {favorite.vendor || '브랜드 정보 없음'}</span>
+                      <strong>{favorite.title}</strong>
+                      <span className="studio-product-price">{Number.isFinite(favorite.price) ?
+                        new Intl.NumberFormat('ko-KR', { style: 'currency', currency: favorite.currencyCode || 'KRW', maximumFractionDigits: 0 }).format(favorite.price)
+                        : '가격 정보 없음'}</span>
+                    </button>
+                    {favorite.productUrl && <a href={favorite.productUrl} target="_blank" rel="noopener noreferrer">상품 상세 보기 ↗</a>}
+                  </article>)}
+                </div>
+              </section>}
+              {pcStep >= 3 && favoritesError && <p className="error" role="alert">{favoritesError}</p>}
               {searchError && <p className="error" role="alert">{searchError}</p>}
               {showDebug && selection && <SelectionPreview image={image} selection={selection} visionGeometry={result?.geometry} />}
               {showDebug && (recommendations?.search_diagnostics || searchDiagnostics) &&
