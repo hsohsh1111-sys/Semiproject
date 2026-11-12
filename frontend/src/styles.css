@@ -1474,6 +1474,40 @@ img {
   gap:12px;
   margin-bottom:22px
 }
+.price-history-demo {
+  margin-bottom:40px
+}
+.price-history-demo h2 {
+  font:500 24px "Playfair Display","Pretendard",serif;
+  margin:8px 0
+}
+.price-history-demo > p {
+  color:#746962;
+  font-size:12px;
+  line-height:1.7
+}
+.price-history-details {
+  margin-top:18px;
+  color:#746962;
+  font-size:12px
+}
+.price-history-details summary {
+  cursor:pointer
+}
+.price-history-details table {
+  width:100%;
+  margin-top:12px;
+  border-collapse:collapse;
+  text-align:left
+}
+.price-history-details caption {
+  text-align:left;
+  margin-bottom:8px
+}
+.price-history-details th,.price-history-details td {
+  border-bottom:1px solid #e5ddd6;
+  padding:8px
+}
 .price-favorite-option {
   display:flex;
   align-items:center;

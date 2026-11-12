@@ -154,7 +154,7 @@ export async function toggleSeasonalFavorite(look, season, type, product, isSave
   return saveLocalFavorites(
     isSaved
       ? favorites.filter((item) => item.id !== favorite.id)
-      : [...favorites, favorite],
+      : [...favorites, { ...favorite, createdAt: new Date().toISOString() }],
   )
 }
 

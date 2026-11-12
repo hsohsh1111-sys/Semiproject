@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import PriceTrendChart from '../components/price/PriceTrendChart.jsx'
 import Icon from '../components/common/Icon.jsx'
-import { getAccessToken } from '../services/auth.js'
 import { getSeasonalFavorites } from '../services/seasonalFavorites.js'
+import { getDemoPriceHistory } from '../services/priceHistoryDemo.js'
 
 function formatPrice(value, currencyCode) {
   if (!Number.isFinite(value)) return '가격 정보 없음'
@@ -10,7 +10,6 @@ function formatPrice(value, currencyCode) {
     return new Intl.NumberFormat('ko-KR', {
       style: 'currency',
       currency: currencyCode || 'KRW',
-      maximumFractionDigits: 0,
     }).format(value)
   } catch {
     return `${value.toLocaleString('ko-KR')} ${currencyCode || ''}`.trim()
@@ -24,7 +23,7 @@ function formatDate(value) {
   return new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium' }).format(date)
 }
 
-export default function PriceTimingPage({ onRequestLogin, session }) {
+export default function PriceTimingPage({ session }) {
   const [favorites, setFavorites] = useState([])
   const [selectedId, setSelectedId] = useState('')
   const [loading, setLoading] = useState(true)
@@ -32,13 +31,6 @@ export default function PriceTimingPage({ onRequestLogin, session }) {
 
   const loadFavorites = useCallback(async () => {
     setError('')
-    if (!getAccessToken()) {
-      setFavorites([])
-      setSelectedId('')
-      setLoading(false)
-      return
-    }
-
     setLoading(true)
     try {
       const loaded = await getSeasonalFavorites()
@@ -58,28 +50,25 @@ export default function PriceTimingPage({ onRequestLogin, session }) {
   }, [loadFavorites, session?.user?.id])
 
   const selected = favorites.find((favorite) => favorite.id === selectedId)
-  const price = Number.isFinite(selected?.price) ? selected.price : null
+  const price = Number.isFinite(selected?.price) && selected.price >= 0 ? selected.price : null
   const currencyCode = selected?.currencyCode || 'KRW'
-  const hasPriceObservation = price !== null && Boolean(selected?.createdAt)
-    && !Number.isNaN(new Date(selected.createdAt).getTime())
-  const priceHistory = hasPriceObservation
+  const priceHistory = price !== null
     ? [{ price, observedAt: selected.createdAt }]
     : []
 
-  return <main className="inner-page"><div className="page-hero page-hero-clay"><span className="eyebrow">04 / PRICE MOMENT</span><h1>마음에 든 겨울 코디,<br /><em>가격도 살펴보기.</em></h1><p>로그인 후 찜한 상품을 선택해 가격 기록을 확인해 보세요.</p><span className="page-hero-mark">↗</span></div>
+  const demoHistory = price === null ? [] : getDemoPriceHistory(price, selected.productUrl || selected.id)
+  const demoPrices = demoHistory.map((point) => point.price)
+
+  return <main className="inner-page"><div className="page-hero page-hero-clay"><span className="eyebrow">04 / PRICE MOMENT</span><h1>마음에 든 겨울 코디,<br /><em>가격도 살펴보기.</em></h1><p>찜한 상품을 선택해 저장된 가격과 지난 1년의 가격 흐름 예시를 확인해 보세요.</p><span className="page-hero-mark">↗</span></div>
     <section className="price-dashboard section-wrap">
       <div className="dashboard-heading">
-        <div><span className="eyebrow">YOUR PRICE WATCH</span><h2>찜한 상품 가격 리포트</h2><p>상품을 선택하면 저장된 가격과 수집된 가격 기록을 확인할 수 있어요.</p></div>
+        <div><span className="eyebrow">YOUR PRICE WATCH</span><h2>찜한 상품 가격 리포트</h2><p>상품을 선택하면 저장된 가격을 기준으로 시연용 그래프를 보여드려요. 비로그인 찜 목록은 현재 브라우저에 저장됩니다.</p></div>
         <a href="#/seasonal" className="button button-outline">시즌 코디 둘러보기 <Icon name="ArrowRight" size={15} /></a>
       </div>
 
       {loading && <p className="price-message" role="status">찜한 상품을 불러오는 중입니다.</p>}
       {!loading && error && <p className="price-message price-message-error" role="alert">{error} <button type="button" onClick={loadFavorites}>다시 시도</button></p>}
-      {!loading && !error && !getAccessToken() && <div className="price-message">
-        <p>로그인하면 시즌 코디에서 찜한 상품을 골라볼 수 있어요.</p>
-        <button type="button" className="button button-dark" onClick={onRequestLogin}>로그인하기</button>
-      </div>}
-      {!loading && !error && getAccessToken() && favorites.length === 0 && <div className="price-message">
+      {!loading && !error && favorites.length === 0 && <div className="price-message">
         <p>아직 찜한 상품이 없습니다. 시즌 코디에서 관심 있는 상품을 찜해 보세요.</p>
         <a className="button button-dark" href="#/seasonal">시즌 코디 보러 가기</a>
       </div>}
@@ -95,10 +84,31 @@ export default function PriceTimingPage({ onRequestLogin, session }) {
           ))}
         </div>
 
+        {selected && <article className="dashboard-card price-history-demo" aria-labelledby="demo-history-title">
+          <div className="panel-top">
+            <div><span className="eyebrow">ONE YEAR PRICE HISTORY · DEMO</span><h2 id="demo-history-title">{selected.title} · 1년 가격 추이 예시</h2></div>
+            <span className="status-pill">시연용 가상 데이터</span>
+          </div>
+          {price !== null ? <>
+            <p>{formatDate(demoHistory[0].observedAt)} ~ {formatDate(demoHistory[demoHistory.length - 1].observedAt)} · 찜할 때 저장된 가격 기준</p>
+            <div className="chart-big"><PriceTrendChart history={demoHistory} currencyCode={currencyCode} /></div>
+            <div className="price-stats">
+              <div><span>기준 가격 (찜한 시점)</span><strong>{formatPrice(price, currencyCode)}</strong></div>
+              <div><span>예시 1년 최저가</span><strong>{formatPrice(Math.min(...demoPrices), currencyCode)}</strong></div>
+              <div><span>예시 1년 최고가</span><strong>{formatPrice(Math.max(...demoPrices), currencyCode)}</strong></div>
+            </div>
+            <details className="price-history-details">
+              <summary>월별 예시 가격 보기</summary>
+              <table><caption>시연용 월별 가격 예시</caption><thead><tr><th scope="col">날짜</th><th scope="col">예시 가격</th></tr></thead>
+                <tbody>{demoHistory.map((point) => <tr key={point.observedAt}><td>{formatDate(point.observedAt)}</td><td>{formatPrice(point.price, currencyCode)}</td></tr>)}</tbody>
+              </table>
+            </details>
+          </> : <p role="status">저장된 상품 가격이 없어 시연용 그래프를 표시할 수 없습니다.</p>}
+        </article>}
+
         {selected && <div className="dashboard-grid">
           <article className="dashboard-card trend-panel">
             <div className="panel-top"><div><span className="eyebrow">{selected.vendor || '찜한 상품'} · {selected.season}</span><h3>{selected.title}</h3></div><span className="status-pill">가격 기록 {price === null ? '대기 중' : '확인'}</span></div>
-            <div className="chart-big"><PriceTrendChart history={priceHistory} currencyCode={currencyCode} /></div>
             <div className="price-stats">
               <div><span>찜할 때 표시 가격</span><strong>{price === null ? '가격 정보 없음' : formatPrice(price, currencyCode)}</strong></div>
               <div><span>가격 이력</span><strong>{priceHistory.length}건</strong></div>

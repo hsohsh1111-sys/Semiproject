@@ -4,7 +4,6 @@ function formatPrice(value, currencyCode = 'KRW') {
     return new Intl.NumberFormat('ko-KR', {
       style: 'currency',
       currency: currencyCode || 'KRW',
-      maximumFractionDigits: 0,
     }).format(value)
   } catch {
     return `${value.toLocaleString('ko-KR')} ${currencyCode}`
@@ -14,7 +13,7 @@ function formatPrice(value, currencyCode = 'KRW') {
 function formatDate(value) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return ''
-  return new Intl.DateTimeFormat('ko-KR', { month: 'numeric', day: 'numeric' }).format(date)
+  return new Intl.DateTimeFormat('ko-KR', { year: '2-digit', month: 'numeric' }).format(date)
 }
 
 export default function PriceTrendChart({ history = [], currencyCode = 'KRW', demo = false }) {
@@ -28,7 +27,7 @@ export default function PriceTrendChart({ history = [], currencyCode = 'KRW', de
   }
 
   const validHistory = history
-    .filter((point) => Number.isFinite(point.price))
+    .filter((point) => Number.isFinite(point.price) && point.observedAt && !Number.isNaN(new Date(point.observedAt).getTime()))
     .sort((left, right) => new Date(left.observedAt) - new Date(right.observedAt))
 
   if (validHistory.length < 2) {
@@ -44,8 +43,10 @@ export default function PriceTrendChart({ history = [], currencyCode = 'KRW', de
   const minimum = Math.min(...prices)
   const maximum = Math.max(...prices)
   const range = maximum - minimum || 1
+  const start = new Date(validHistory[0].observedAt).getTime()
+  const duration = new Date(validHistory[validHistory.length - 1].observedAt).getTime() - start
   const points = validHistory.map((point, index) => {
-    const x = index * 378 / (validHistory.length - 1)
+    const x = duration ? (new Date(point.observedAt).getTime() - start) * 378 / duration : index * 378 / (validHistory.length - 1)
     const y = 88 - ((point.price - minimum) / range) * 76
     return { x, y, point }
   })
@@ -59,10 +60,11 @@ export default function PriceTrendChart({ history = [], currencyCode = 'KRW', de
     </div>
     <svg viewBox="0 0 378 100" preserveAspectRatio="none" aria-hidden="true">
       <polyline points={line} fill="none" stroke="#9b7259" strokeWidth="2.4" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" />
-      {points.map(({ x, y }, index) => <circle key={`${x}-${index}`} cx={x} cy={y} r="3.5" fill="#fff" stroke="#9b7259" strokeWidth="2" vectorEffect="non-scaling-stroke" />)}
+      {points.map(({ x, y, point }, index) => <circle key={`${x}-${index}`} cx={x} cy={y} r="3.5" fill="#fff" stroke="#9b7259" strokeWidth="2" vectorEffect="non-scaling-stroke"><title>{formatDate(point.observedAt)} · {formatPrice(point.price, currencyCode)}</title></circle>)}
     </svg>
     <div className="chart-labels">
-      {points.map(({ point }, index) => <span key={`${point.observedAt}-${index}`}>{formatDate(point.observedAt)}</span>)}
+      {points.filter((_, index) => index === 0 || index === points.length - 1 || index % Math.ceil((points.length - 1) / 6) === 0)
+        .map(({ point }, index) => <span key={`${point.observedAt}-${index}`}>{formatDate(point.observedAt)}</span>)}
     </div>
   </div>
 }
