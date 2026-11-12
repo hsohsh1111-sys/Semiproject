@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.api.auth import get_current_user
-from app.db.session import get_db
-from app.models import SeasonalFavorite, User
+from app.features.auth.dependencies import auth_db, get_current_user
+from app.db.models.user import User
+from app.models import SeasonalFavorite
 from app.schemas.favorite import SeasonalFavoriteInput, SeasonalFavoriteOutput
 from app.schemas.profile import StyleProfileInput
 from app.services.outfit_recommender import recommend_outfits
@@ -39,7 +39,7 @@ def favorite_output(favorite: SeasonalFavorite) -> SeasonalFavoriteOutput:
 @router.get("/favorites", response_model=list[SeasonalFavoriteOutput])
 def list_favorites(
     user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
+    db: Session = Depends(auth_db),
 ) -> list[SeasonalFavoriteOutput]:
     favorites = db.scalars(
         select(SeasonalFavorite)
@@ -53,7 +53,7 @@ def list_favorites(
 def save_favorite(
     payload: SeasonalFavoriteInput,
     user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
+    db: Session = Depends(auth_db),
 ) -> SeasonalFavoriteOutput:
     favorite = db.scalar(
         select(SeasonalFavorite).where(
@@ -88,7 +88,7 @@ def save_favorite(
 def delete_favorite(
     favorite_key: str = Query(max_length=512),
     user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
+    db: Session = Depends(auth_db),
 ) -> Response:
     favorite = db.scalar(
         select(SeasonalFavorite).where(

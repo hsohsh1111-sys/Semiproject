@@ -12,6 +12,7 @@ from app.core.security import password_hasher
 from app.db.models.user import User
 from app.features.auth.dependencies import auth_db
 from app.main import app
+from app.features.auth.router import login_db
 
 
 @pytest.fixture
@@ -20,22 +21,31 @@ def client(monkeypatch):
     engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
     User.__table__.create(engine)
     monkeypatch.setattr(settings, "secret_key", "test-only-secret-not-for-production-0123456789")
+    monkeypatch.setattr(settings, "admin_username", "")
+    monkeypatch.setattr(settings, "admin_password_hash", "")
 
     def override():
         with Session(engine) as session:
             yield session
 
     app.dependency_overrides[auth_db] = override
+    app.dependency_overrides[login_db] = override
     try:
         with TestClient(app) as test_client:
             yield test_client, engine
     finally:
         app.dependency_overrides.pop(auth_db, None)
+        app.dependency_overrides.pop(login_db, None)
         engine.dispose()
 
 
 def signup(client, email="member@example.com"):
-    return client.post("/api/auth/signup", json={"email": email, "password": "test-password-123", "name": "Member"})
+    # Fixture setup proof only. The complete emailed-code flow is tested separately.
+    now = datetime.now(timezone.utc)
+    proof = jwt.encode({'sub': email.strip().lower(), 'iat': now, 'exp': now + timedelta(minutes=15),
+                        'type': 'email-verification', 'iss': 'onfit-api', 'aud': 'onfit-signup'},
+                       settings.secret_key, algorithm='HS256')
+    return client.post("/api/auth/signup", json={"email": email, "password": "test-password-123", "name": "Member", "verification_token": proof})
 
 
 def login(client, email="member@example.com", password="test-password-123"):
@@ -46,7 +56,7 @@ def test_signup_login_and_self(client):
     c, engine = client
     response = signup(c, " MEMBER@EXAMPLE.COM ")
     assert response.status_code == 201
-    assert set(response.json()) == {"id", "email", "name", "created_at"}
+    assert set(response.json()) == {"id", "email", "name", "created_at", "is_admin"}
     assert response.json()["email"] == "member@example.com"
     with Session(engine) as db:
         user = db.scalar(select(User))

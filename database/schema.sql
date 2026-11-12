@@ -1,7 +1,12 @@
 -- TiDB Cloud (MySQL compatible). Review with the team before applying.
 CREATE TABLE IF NOT EXISTS users (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  email VARCHAR(255) NOT NULL UNIQUE,
+  email VARCHAR(255) NULL UNIQUE,
+  phone_number VARCHAR(20) NULL,
+  sms_marketing_consent BOOLEAN NOT NULL DEFAULT FALSE,
+  sms_marketing_consented_at DATETIME NULL,
+  signup_consent JSON NULL,
+  username VARCHAR(32) NULL UNIQUE,
   display_name VARCHAR(80) NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP

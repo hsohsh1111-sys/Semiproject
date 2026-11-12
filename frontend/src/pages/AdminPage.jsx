@@ -10,7 +10,7 @@ function formatDate(value, compact = false) {
   return new Intl.DateTimeFormat('ko-KR', options).format(new Date(value))
 }
 
-export default function AdminPage() {
+export default function AdminPage({ session }) {
   const [memberData, setMemberData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -22,7 +22,7 @@ export default function AdminPage() {
       setLoading(true)
       setError('')
       try {
-        const response = await fetch(`${API_BASE}/auth/public-members`, { signal: controller.signal })
+        const response = await fetch(`${API_BASE}/auth/public-members`, { signal: controller.signal, headers: {Authorization: `Bearer ${session.access_token}`} })
         const result = await response.json()
         if (!response.ok) throw new Error(result.detail || '가입 정보를 불러오지 못했습니다.')
         setMemberData(result)
@@ -36,7 +36,7 @@ export default function AdminPage() {
     }
     loadMembers()
     return () => controller.abort()
-  }, [refreshKey])
+  }, [refreshKey, session.access_token])
 
   const members = memberData?.members ?? []
   const latestSignup = members[0]?.created_at
@@ -45,16 +45,16 @@ export default function AdminPage() {
     <main className="inner-page admin-page">
       <section className="admin-hero">
         <div className="section-wrap">
-          <span className="eyebrow">ONFIT · ADMIN DEMO</span>
+          <span className="eyebrow">ONFIT · ADMIN</span>
           <h1>가입 현황을 한눈에</h1>
-          <p>관리자 데모 페이지에서 서비스 가입 통계와 최근 가입 내역을 확인할 수 있습니다.</p>
+          <p>서비스 가입 통계와 최근 가입 내역을 확인할 수 있습니다.</p>
         </div>
       </section>
 
       <section className="section-wrap admin-dashboard">
         <div className="admin-public-note">
-          <strong>공개 데모</strong>
-          <span>이 페이지는 누구나 볼 수 있습니다. 이름과 이메일 일부를 가리고 비밀번호와 전체 개인정보는 제공하지 않습니다.</span>
+          <strong>관리자 전용</strong>
+          <span>권한이 있는 계정만 접근할 수 있습니다. 닉네임과 연락처는 일부만 표시합니다.</span>
         </div>
 
         <div className="admin-stat-grid">
@@ -92,14 +92,15 @@ export default function AdminPage() {
           ) : (
             <table className="admin-member-table">
               <thead>
-                <tr><th>회원</th><th>이름 (마스킹)</th><th>이메일 (마스킹)</th><th>가입일</th></tr>
+                <tr><th>회원</th><th>닉네임 (마스킹)</th><th>연락처 (마스킹)</th><th>이벤트 문자</th><th>가입일</th></tr>
               </thead>
               <tbody>
                 {members.map((member) => (
                   <tr key={member.id}>
                     <td>{member.member_label}</td>
                     <td>{member.masked_name}</td>
-                    <td>{member.masked_email}</td>
+                    <td>{member.masked_phone || member.masked_email || '미등록'}</td>
+                    <td>{member.sms_marketing_consent ? '수신 동의' : '미동의'}</td>
                     <td>{formatDate(member.created_at)}</td>
                   </tr>
                 ))}

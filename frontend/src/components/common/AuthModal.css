@@ -1,0 +1,27 @@
+.auth-modal{max-height:90dvh;overflow-y:auto;width:min(500px,calc(100vw - 32px))}
+.auth-form{gap:16px}
+.auth-form label{font-size:13px;line-height:1.7}
+.auth-input-action{display:flex;gap:8px;align-items:center}
+.auth-input-action input{min-width:0;flex:1}
+.auth-input-action button{flex-shrink:0;border:1px solid #b9c9c2;background:#edf3ef;color:#214f43;border-radius:7px;padding:11px 10px;font-size:12px;font-weight:600}
+.auth-modal button:disabled{opacity:.5;cursor:not-allowed}
+.auth-verified{color:#205846;font-size:13px;background:#edf6f0;padding:9px 12px;border-radius:7px}
+.auth-notice{line-height:1.8;font-size:13px}
+.signup-terms{margin-top:28px;text-align:left}
+.signup-terms label,.signup-terms .terms-row{display:flex;align-items:center;gap:9px;font-size:13px;line-height:1.6;color:#24483d}
+.signup-terms input[type=checkbox]{width:18px;height:18px;margin:0;flex:0 0 18px;accent-color:#244f43}
+.signup-terms .terms-all{font-size:15px;font-weight:600;padding:0 0 22px;border-bottom:1px solid #dfe5e1;margin-bottom:12px}
+.terms-items{display:grid;gap:8px;margin-bottom:26px}
+.terms-items>.terms-row,.terms-items>div>.terms-row{padding:9px 0}
+.terms-row>label{min-width:0;flex:1}
+.terms-row>button{border:0;background:none;font-size:12px;white-space:nowrap;color:#647c70;text-decoration:underline;padding:4px}
+.terms-notice{border:1px solid #d8e3dc;border-radius:7px;background:#fff;padding:14px;margin:3px 0 12px;max-height:230px;overflow-y:auto}
+.terms-notice h3{font-size:14px;font-weight:600;margin-bottom:8px}
+.terms-notice p{font-size:12px;line-height:1.8;margin:7px 0;color:#53665c}
+.terms-back{font-size:12px;text-align:left;background:none;border:0;color:#536e60;text-decoration:underline;padding:0}
+.auth-form small{display:block;font-size:11px;color:#586b64;font-weight:400;margin-top:5px}
+.auth-consents{display:grid;gap:10px;margin-block:4px}
+.auth-modal .auth-form .auth-consents label{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.7}
+.auth-modal .auth-consents input[type=checkbox]{width:16px;height:16px;min-height:16px;padding:0;flex:0 0 16px;margin:3px 0 0;accent-color:#244f43}
+.header-member{font-size:13px;font-weight:600;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#244c41}
+@media(max-width:600px){.header-member{max-width:75px;font-size:12px}.auth-modal{padding:26px 22px}.auth-input-action button{font-size:11px;padding-inline:8px}}
