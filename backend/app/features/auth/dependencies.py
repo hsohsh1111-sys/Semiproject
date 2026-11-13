@@ -26,6 +26,11 @@ def unauthorized() -> HTTPException:
     return HTTPException(401, "Invalid credentials or access token.", headers={"WWW-Authenticate": "Bearer"})
 
 
+def is_admin(user: User) -> bool:
+    # Member accounts never gain admin privileges through an email address.
+    return False
+
+
 def get_current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
     ready: None = Depends(auth_ready),
@@ -41,3 +46,19 @@ def get_current_user(
     if user is None:
         raise unauthorized()
     return user
+
+
+def require_admin(credentials: HTTPAuthorizationCredentials | None = Depends(bearer),
+                  ready: None = Depends(auth_ready)):
+    from app.features.auth.admin_auth import authenticate
+    if credentials is None:
+        raise unauthorized()
+    try:
+        return authenticate(credentials.credentials)
+    except HTTPException:
+        # A valid member token is still insufficient for administrator access.
+        try:
+            decode_user_id(credentials.credentials)
+        except jwt.InvalidTokenError:
+            raise unauthorized() from None
+        raise HTTPException(403, '관리자 권한이 필요합니다.') from None

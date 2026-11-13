@@ -10,6 +10,20 @@ function storage() {
 const session = { access_token: 'synthetic-token', expires_in: 1800,
   user: { id: 7, name: 'Test' }, password: 'must-not-store' }
 
+test('administrator refresh uses a separate server identity and rejects revoked privilege', async () => {
+  const store=storage()
+  saveLoginSession({...session,auth_type:'admin',user:{id:'admin:test-admin',is_admin:true}},store,1000)
+  const result=await restoreLoginSession(async url=>{
+    assert.ok(url.endsWith('/auth/admin/me'))
+    return {ok:true,json:async()=>({id:'admin:test-admin',name:'Administrator',is_admin:true})}
+  },store,undefined,()=>2000)
+  assert.equal(result.auth_type,'admin')
+  assert.equal(result.user.is_admin,true)
+  assert.ok(!JSON.stringify([...store.values.values()]).includes('must-not-store'))
+  assert.equal(await restoreLoginSession(async()=>({ok:false,status:403}),store,undefined,()=>2000),null)
+  assert.equal(store.values.size,0)
+})
+
 test('refresh restores a verified user without persisting password or user details', async () => {
   const store = storage()
   saveLoginSession(session, store, 1000)

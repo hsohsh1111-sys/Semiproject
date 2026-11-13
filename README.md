@@ -1,113 +1,136 @@
 # ONFIT
 
-🌐 [ONFIT 프로젝트 포트폴리오 바로가기](https://kimchi-2025.github.io/ONFIT/)
+### AI 기반 개인 맞춤형 코디 추천과 가상 피팅 서비스
 
-![React](https://img.shields.io/badge/React-19-20232A?logo=react&logoColor=61DAFB) ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white) ![FastAPI](https://img.shields.io/badge/FastAPI-Python-009688?logo=fastapi&logoColor=white) ![Three.js](https://img.shields.io/badge/Three.js-3D-222222?logo=threedotjs&logoColor=white) ![Playwright](https://img.shields.io/badge/Playwright-Chromium-2EAD33?logo=playwright&logoColor=white)
+체형과 스타일 취향을 반영한 코디를 확인하고, 옷장 관리와 가격 비교까지 한곳에서 경험하는 패션 플랫폼입니다.
 
-**ONFIT은 쇼핑몰 탐색, 스타일 큐레이션, 체형 기반 3D 미리보기, 사진 속 패션 상품 검색과 AI 가상 착용을 한곳에서 경험하도록 만든 4인 팀 프로젝트입니다.**
+## 서비스 소개
 
-포트폴리오 페이지는 서비스 실행 데모가 아닙니다.
+ONFIT은 사용자의 스타일 프로필과 체형 정보를 바탕으로 패션 탐색과 구매 결정을 돕는 웹 서비스입니다. 코디 추천, 디지털 옷장, 상품 가격 비교, 가격 흐름 분석, 3D 가상 피팅과 이미지 기반 AI 패션 검색 기능을 제공합니다.
 
-## 1. 프로젝트 소개 및 주요 기능
+## 주요 기능
 
-| 영역 | 현재 구현 내용 |
-| --- | --- |
-| 쇼핑몰·회원 | 반응형 상품 탐색, 회원가입·로그인, 스타일·색상·핏 선호 저장. 홈 상품·일반 추천 코디·가격 화면에는 시연용 데이터가 포함됩니다. |
-| 시즌 코디 | 겨울 코디를 연령대·성별로 탐색하고 Mock.shop **샘플 카탈로그**의 아우터·니트·소품을 조합합니다. 마음에 드는 상품은 브라우저에 찜할 수 있습니다. |
-| 3D 피팅 | 치수·체형 프리셋 또는 확인한 인바디 수치를 적용해 3D 마네킹과 의류를 미리 봅니다. 회전, 색상·의류 변경을 지원하며 실제 사이즈 적합성 판정은 아닙니다. |
-| AI Fashion | 사진 촬영·업로드 → 의류 영역 그리기 → Vision 분석 → 무신사 유사 상품 검색·추천 → 선택 상품의 AI 가상 착용·결과 비교·저장으로 이어집니다. |
-| 기타 | 시즌 코디 찜 목록을 보여 주는 옷장, 시연용 가격 인사이트·판매처 비교, 개인정보를 가린 가입 현황 관리자 데모를 제공합니다. |
+- **스타일 프로필** — 취향과 체형 정보를 입력해 개인화 추천의 기반을 설정합니다.
+- **코디 추천** — 상황과 계절에 맞는 코디를 탐색하고 저장합니다.
+- **디지털 옷장** — 보유 의류를 관리하고 코디에 활용합니다.
+- **가격 비교와 분석** — 상품별 판매 가격을 비교하고 가격 흐름과 구매 시점을 확인합니다.
+- **3D 가상 피팅** — 체형 정보를 반영한 아바타와 의류 모델을 확인합니다.
+- **AI 패션 검색** — 이미지에서 관심 영역을 선택해 유사한 패션 상품을 찾습니다.
+- **계정 관리** — 회원가입과 로그인을 통해 프로필과 저장 정보를 관리합니다.
 
-## 2. Architecture & Data Pipeline
+상품과 가격 데이터는 데이터베이스 및 외부 연동 설정에 따라 달라질 수 있습니다. 실제 판매처 데이터가 연결되지 않은 환경에서는 일부 화면에 예시 데이터가 표시될 수 있습니다.
 
-```mermaid
-flowchart LR
-    U[PC·모바일 브라우저] --> F["React·Vite 쇼핑몰<br/>AI Fashion 통합 페이지"]
-    F -->|/api| B[FastAPI 단일 앱]
-    B --> D[("TiDB<br/>회원·프로필·인바디 기록")]
-    F -->|샘플 상품 조회| M[Mock.shop]
-    F -->|사진·선택 좌표| B
-    B -->|선택 영역 분석·검색어 생성| O[OpenAI Vision]
-    B -->|Playwright 검색| S[무신사]
-    B -->|후보 이미지 비교·가상 착용| O
-    B -->|추천 상품·착용 이미지| F
+로그인하지 않아도 시즌 코디 상품을 찜하고 가격 인사이트에서 찜한 시점의 가격을 확인할 수 있습니다. 비로그인 찜 목록은 현재 브라우저에 저장되며 로그인 계정과 자동으로 동기화되지 않습니다. 실제 가격 추이와 구매 적기 분석에는 별도의 가격 수집 연동이 필요합니다.
+가격 인사이트의 지난 1년 차트는 선택한 상품의 찜할 때 저장된 가격을 기준으로 상품별 패턴을 임의 생성한 시연용 데이터이며, 실제 가격 이력이나 계절별 변동이 아닙니다.
+
+## 기술 스택
+
+| 구분 | 기술 | 역할 |
+| --- | --- | --- |
+| 웹 프론트엔드 | React, Vite, Tailwind CSS | ONFIT 화면과 사용자 상호작용 |
+| AI 패션 화면 | React, Vite | 이미지 선택 및 패션 검색 화면 |
+| 백엔드 API | Python, FastAPI, SQLAlchemy | 인증, 스타일 추천, 피팅, 상품 및 가격 정보 제공 |
+| 데이터베이스 | TiDB Cloud, MySQL 호환 드라이버 | 계정과 서비스 데이터 저장 |
+| 3D 그래픽 | Three.js, React Three Fiber | 아바타 및 의류 가상 피팅 |
+| 배포 | Render | 정적 웹사이트, API 서버, 가격 갱신 작업 |
+
+## 로컬 실행
+
+### 준비물
+
+- Node.js와 npm
+- Python 3.11 이상
+- TiDB Cloud 데이터베이스와 접속 정보 (데이터베이스 연동 기능을 사용하는 경우)
+
+### 환경 변수 설정
+
+저장소 루트의 `.env.example`을 참고해 `.env`를 설정합니다. 기존 `.env` 파일이 있으면 보존하고 필요한 항목만 수정하세요.
+
+```dotenv
+TIDB_HOST=
+TIDB_PORT=4000
+TIDB_USERNAME=
+TIDB_PASSWORD=
+TIDB_DATABASE=
+SECRET_KEY=
 ```
 
-AI Fashion은 사용자가 그린 다각형과 원본 사진을 분석에 전달합니다. 검색용 이미지를 잘라 무신사 상품 후보를 수집한 뒤, 후보 이미지를 비교해 추천합니다. 사용자가 상품을 고르고 실행할 때만 가상 착용 이미지를 생성합니다. 메인 React 앱은 공통 Header/Footer를 사용하며 AI Fashion 페이지를 지연 로딩합니다.
+`DATABASE_URL`을 사용하는 경우에는 다섯 개의 `TIDB_*` 항목 대신 연결 문자열을 설정할 수 있습니다. `SECRET_KEY`에는 충분히 긴 임의의 값을 사용하세요. 데이터베이스 연결이 필요하지 않은 화면 개발은 TiDB 항목을 비워둔 채 진행할 수 있습니다.
 
-## 3. Key Technical Challenges & Solutions
+### 설치 및 시작 (Windows PowerShell)
 
-| 문제 | 접근과 현재 상태 |
-| --- | --- |
-| 사진 속 일부 아이템을 상품 검색어로 연결 | 자유형 선택 좌표를 검증하고 Vision으로 상품 특징·검색어를 추출했습니다. Playwright로 수집한 후보를 의류 유형으로 걸러 이미지 비교를 거쳐 추천합니다. |
-| 별도 React 앱의 디자인 충돌 | AI Fashion을 메인 frontend의 지연 로딩 페이지로 복사·통합하고 Shadow DOM으로 스타일을 격리했습니다. 공통 Header/Footer와 로컬 /api 프록시를 공유하며 원본 ai-fashion 앱은 보존했습니다. |
-| Render Free에서 Chromium 메모리 한계 | 추천 동시 실행 제한, 이미지 축소·캐시 상한, 브라우저 정리 및 컨테이너 메모리 진단 로그를 적용했습니다. **512MB 환경의 OOM은 아직 해결 완료로 검증되지 않았습니다.** |
-
-## 4. Tech Stack
-
-| 구분 | 확인된 기술 |
-| --- | --- |
-| Frontend | React 19, Vite 8, Tailwind CSS, Three.js·React Three Fiber |
-| Backend | Python, FastAPI, SQLAlchemy, Pydantic |
-| AI / Machine Learning | OpenAI Vision·Images API, Pillow 기반 이미지 전처리 |
-| RPA / Data Processing | Playwright Chromium, BeautifulSoup |
-| Database | TiDB Cloud(MySQL 호환), PyMySQL, Alembic |
-| Infrastructure / Deployment | Docker 멀티스테이지 빌드 설정, Render 배포 설정·실험, 향후 AWS EC2 검토 |
-
-## 5. API Architecture / Directory Structure
-
-```text
-frontend/src/                       메인 React 앱·공통 Header/Footer·쇼핑몰·3D 피팅
-frontend/src/features/ai-fashion/   통합 AI Fashion 페이지·컴포넌트·API 클라이언트
-ai-fashion/                         보존 중인 독립 React 앱
-backend/app/main.py                 단일 FastAPI 진입점·라우터·정적 파일 마운트
-backend/app/api/                    회원·프로필·코디·상품·가격 API
-backend/app/features/              3D 피팅·인바디·2D 피팅 관련 API
-backend/routers/circle_search.py   AI Fashion API
-backend/services/                 Vision·무신사 검색·추천·가상 착용 처리
-```
-
-핵심 AI Fashion API는 POST /api/circle-search/segment(선택 영역 분석), POST /api/circle-search/recommend(검색·추천), POST /api/circle-search/try-on(가상 착용)입니다. 쇼핑몰 API는 /api/auth/*, /api/profiles/*, /api/fitting/*, /api/inbody/* 등을 사용합니다. GET /health는 서버 상태 확인용입니다.
-
-## 6. 실행 및 배포
-
-로컬 개발은 **FastAPI 8000 + 통합 React/Vite 5173** 두 서버로 실행합니다(Windows PowerShell 기준).
+저장소 루트에서 실행합니다.
 
 ```powershell
-# 터미널 1: backend/requirements.txt와 Playwright Chromium 설치, backend/.env 설정 후
-cd backend
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+npm ci --prefix frontend
+npm ci --prefix ai-fashion
+python -m venv backend/.venv
+.\backend\.venv\Scripts\python.exe -m pip install -r backend/requirements.txt
 
-# 터미널 2
-cd frontend
-npm.cmd ci
-npm.cmd run dev
+if (-not (Test-Path .env)) {
+    Copy-Item .env.example .env
+}
+
+.\Start-ONFIT.ps1
 ```
 
-쇼핑몰은 http://127.0.0.1:5173/, 통합 AI Fashion은 http://127.0.0.1:5173/ai-fashion/에서 엽니다. Vite가 /api를 로컬 FastAPI로 프록시하므로 개발용 VITE_API_BASE_URL은 비우거나 /api로 설정합니다. 첫 실행 시 backend 가상환경에 requirements.txt를 설치하고 python -m playwright install chromium을 실행합니다.
+시작 스크립트는 ONFIT 프론트엔드, FastAPI 백엔드, AI 패션 화면을 로컬에서 실행합니다. 스크립트가 실행 중인 터미널을 닫으면 스크립트가 시작한 서버도 종료됩니다.
 
-환경변수는 .env.example을 참고해 **값을 직접 설정**합니다. 회원·인바디 저장에는 DATABASE_URL 또는 TIDB_HOST, TIDB_PORT, TIDB_USERNAME, TIDB_PASSWORD, TIDB_DATABASE와 SECRET_KEY가 필요합니다. AI Fashion에는 backend/.env 또는 프로세스 환경변수의 OPENAI_API_KEY가 필요하며 OPENAI_VISION_MODEL, OPENAI_TRYON_MODEL은 선택 설정입니다. 키와 접속 문자열은 저장소에 넣지 않습니다.
+| 화면 | 주소 |
+| --- | --- |
+| ONFIT | [http://127.0.0.1:5173/](http://127.0.0.1:5173/) |
+| 3D 피팅 | [http://127.0.0.1:5173/#/fitting](http://127.0.0.1:5173/#/fitting) |
+| AI 패션 검색 | [http://127.0.0.1:5173/ai-fashion/](http://127.0.0.1:5173/ai-fashion/) |
+| AI 패션 화면 직접 접속 | [http://127.0.0.1:5174/ai-fashion/](http://127.0.0.1:5174/ai-fashion/) |
+| API 문서 | [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) |
+| API 상태 확인 | [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health) |
 
-render.yaml은 팀 배포 설정이고 Dockerfile.ajb는 별도 단일 컨테이너 실험용입니다. **현재 Dockerfile과 FastAPI 정적 마운트는 보존된 독립 ai-fashion/dist를 별도로 제공**하므로, 통합 React의 /ai-fashion/를 운영 주소에서 제공하려면 정적 라우팅·빌드 설정을 추가로 맞춰야 합니다. Render Free의 Chromium 메모리 문제는 미해결이며, AWS EC2 배포는 향후 계획입니다.
+개별 프론트엔드 개발 서버는 각 프로젝트 폴더에서 `npm run dev`로 실행합니다. 프론트엔드 배포용 빌드는 `npm run build --prefix frontend`, 통합 사이트 배포 파일은 다음 명령으로 생성합니다.
 
-## 7. 구현 현황 및 향후 개선 계획
+```powershell
+npm run build:site --prefix frontend
+```
 
-- **구현:** 통합 React 화면, 회원·프로필 API, 시즌 코디 샘플 탐색, 3D 체형 미리보기, AI Fashion의 검색·가상 착용 흐름.
-- **시연·제약:** 홈 상품·일반 추천 코디·가격 비교 화면은 예시 데이터가 포함됩니다. 별도 /api/tryon2d/jobs는 기본 모델 어댑터가 미연결인 API 프로토타입이며 AI Fashion의 가상 착용 API와 다릅니다.
-- **향후:** 실제 상품·가격 데이터 연결, 통합 앱의 정적 배포 경로 정리, 메모리 여유가 있는 환경에서 검색 안정성 검증.
+## 배포
 
-## 8. My Contributions — AJB
+저장소의 [`render.yaml`](./render.yaml)에 Render 서비스 구성이 있습니다.
 
-시즌 코디와 3D 피팅은 팀의 다른 기능으로 구분하고, 이 브랜치에서 담당한 AI Fashion 작업을 요약합니다.
+- **정적 웹 서비스** — 프론트엔드와 AI 패션 화면을 빌드해 배포합니다.
+- **웹 서비스** — FastAPI를 실행하고 `/health` 경로로 상태를 확인합니다.
+- **예약 작업** — 설정된 일정에 따라 가격 갱신 작업을 실행합니다.
 
-- 사진 촬영·업로드와 자유형 영역 선택을 PC·모바일 흐름에 연결하고 선택 좌표를 API 입력으로 전달.
-- Vision 분석에서 상품 속성·검색어를 얻어 무신사 Playwright 검색과 추천 요청으로 연결.
-- 후보 이미지 전처리·비교, 상품 선택 후 가상 착용, 원본/결과 비교와 최근 결과 히스토리 구현.
-- 추천 요청의 동시 실행·이미지 캐시·Chromium 종료 경로를 다듬고 메모리 진단 로그 추가.
-- 독립 AI Fashion 화면을 메인 React 앱에 통합하면서 공통 Header/Footer와 CSS 격리 적용.
+Render 대시보드에서 서비스에 맞는 `DATABASE_URL` 또는 TiDB 접속 정보, `FRONTEND_ORIGINS`, 프론트엔드의 `VITE_API_BASE_URL` 등을 설정해야 합니다. 배포 주소는 Render에서 서비스를 생성한 뒤 확인할 수 있습니다.
 
-## 9. Deep Dive: AI Fashion
+## 프로젝트 구조
 
-- **분석과 실시간 검색을 분리:** Vision이 선택한 아이템의 특징과 검색어를 만들고, Playwright가 실제 상품 후보를 수집합니다. 후보가 없는 경우와 검색 오류는 별도로 처리합니다.
-- **비교 품질과 비용을 함께 관리:** 전체 후보를 그대로 AI에 보내지 않고 유형·검색어별 후보를 추린 뒤 작은 상품 이미지 묶음과 선택 영역 crop을 비교합니다. 동일 요청 결과는 캐시하고 상품 선택만으로 가상 착용 API를 호출하지 않습니다.
-- **제한된 메모리에서의 운영 경험:** 이미지 크기·캐시와 추천 동시 실행을 제한하고 검색 단계별 메모리를 기록했습니다. Render Free의 OOM은 남아 있어 배포 환경 변경과 실측 검증이 필요합니다.
+```text
+Semiproject/
+├── frontend/                 # 메인 React 웹사이트, 페이지, 3D 피팅
+├── ai-fashion/               # 이미지 기반 AI 패션 검색 화면
+├── backend/
+│   ├── app/api/              # API 라우터
+│   ├── app/features/         # 인증, 스타일링, 피팅, 인바디, 이미지 검색
+│   ├── app/services/         # 추천 및 외부 서비스 연동
+│   └── requirements.txt
+├── assets/                   # 피팅용 모델 및 관련 에셋
+├── database/                 # 데이터베이스 스키마와 시드 자료
+├── docs/                     # 프로젝트 문서
+├── scripts/                  # 빌드 및 개발 스크립트
+├── Start-ONFIT.ps1           # 로컬 통합 실행 스크립트
+└── render.yaml               # Render 배포 구성
+```
+
+## 팀 구성
+
+| 이름 | 담당 업무 |
+| --- | --- |
+| 성승건 | 회원·프로필, 개인 맞춤 코디, 인바디, 3D 피팅 및 관련 프론트엔드·백엔드 |
+| 황상옥 | 공통 웹 화면 및 사용자 인터페이스 |
+| 안종범 | 상품 크롤링, 동일 상품 매칭, 가격 비교 |
+| 이승호 | 가격 이력, 구매 타이밍 분석, 가격 수집 자동화 |
+
+## 보안 및 데이터
+
+- `.env`, `backend/.env`, `frontend/.env.local`은 개인 환경 설정용이며 Git 저장소에 올리지 않습니다.
+- `VITE_*` 변수는 브라우저 코드에 포함될 수 있으므로 비밀 키나 데이터베이스 비밀번호를 넣지 마세요.
+- API 키와 배포용 비밀 값은 로컬 환경 변수 또는 Render 환경 변수로 관리하세요.

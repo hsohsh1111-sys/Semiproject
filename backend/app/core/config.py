@@ -16,6 +16,17 @@ class Settings(BaseSettings):
     secret_key: str = "development-only-change-me"
     access_token_expire_minutes: int = Field(default=30, ge=1, le=1440)
     collection_interval_hours: int = 12
+    admin_username: str = ""
+    admin_password_hash: str = ""
+    email_provider: str = "smtp"
+    brevo_api_key: str = ""
+    brevo_sender_email: str = ""
+    smtp_host: str = ""
+    smtp_port: int = Field(default=587, ge=1, le=65535)
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = ""
+    smtp_use_ssl: bool = False
     tesseract_cmd: str = ""
     tesseract_data_dir: str = ""
 

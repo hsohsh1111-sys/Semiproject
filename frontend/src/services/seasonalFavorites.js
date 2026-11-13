@@ -1,3 +1,6 @@
+import { API_BASE } from './api.js'
+import { getAccessToken } from './auth.js'
+
 const STORAGE_KEY = 'onfit_seasonal_favorites'
 export const FAVORITES_CHANGE_EVENT = 'onfit-seasonal-favorites-change'
 
@@ -5,7 +8,7 @@ function notifyFavoritesChanged(favorites) {
   window.dispatchEvent(new CustomEvent(FAVORITES_CHANGE_EVENT, { detail: favorites }))
 }
 
-function saveFavorites(favorites) {
+function saveLocalFavorites(favorites) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites))
   notifyFavoritesChanged(favorites)
   return favorites
@@ -38,7 +41,7 @@ function migrateLegacyFavorites(favorites) {
   return { items, migrated }
 }
 
-export function getSeasonalFavorites() {
+function getLocalFavorites() {
   const saved = window.localStorage.getItem(STORAGE_KEY)
   if (!saved) return []
 
@@ -57,44 +60,116 @@ export function getSeasonalFavorites() {
   }
 
   const { items, migrated } = migrateLegacyFavorites(parsed)
-  if (migrated) saveFavorites(items)
+  if (migrated) saveLocalFavorites(items)
   return items
+}
+
+async function favoriteRequest(path, options = {}) {
+  let response
+  try {
+    response = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+        ...options.headers,
+      },
+    })
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error('찜한 상품을 저장하려면 서버 연결을 확인해 주세요.')
+    }
+    throw error
+  }
+
+  if (!response.ok) {
+    let detail = ''
+    try {
+      detail = (await response.json()).detail || ''
+    } catch {
+      // Use a status-based message when the server does not return JSON.
+    }
+    if (response.status === 401) throw new Error('로그인 상태를 확인해 주세요.')
+    throw new Error(detail || '찜한 상품을 처리하지 못했습니다.')
+  }
+  if (response.status === 204) return null
+
+  try {
+    return await response.json()
+  } catch {
+    throw new Error('서버에서 올바르지 않은 찜 목록 응답을 받았습니다.')
+  }
+}
+
+export async function getSeasonalFavorites() {
+  if (!getAccessToken()) return getLocalFavorites()
+  const favorites = await favoriteRequest('/outfits/favorites')
+  if (!Array.isArray(favorites)) {
+    throw new Error('서버에서 올바르지 않은 찜 목록 응답을 받았습니다.')
+  }
+  return favorites
 }
 
 export function getSeasonalFavoriteId(look, product, type) {
   return `${look.id}:${product.id || product.handle || type}`
 }
 
-export function toggleSeasonalFavorite(look, season, type, product) {
-  const favorites = getSeasonalFavorites()
-  const id = getSeasonalFavoriteId(look, product, type)
-  if (favorites.some((favorite) => favorite.id === id)) {
-    return saveFavorites(favorites.filter((favorite) => favorite.id !== id))
+function createFavorite(look, season, type, product) {
+  return {
+    id: getSeasonalFavoriteId(look, product, type),
+    title: product.title,
+    vendor: product.vendor,
+    imageUrl: product.imageUrl,
+    price: product.price,
+    currencyCode: product.currencyCode,
+    productUrl: `${product.storefrontUrl}/products/${encodeURIComponent(product.handle)}`,
+    type,
+    lookTitle: look.title,
+    season,
+    style: look.style,
+    age: look.age,
+    gender: look.gender,
   }
-
-  return saveFavorites([
-    ...favorites,
-    {
-      id,
-      title: product.title,
-      vendor: product.vendor,
-      imageUrl: product.imageUrl,
-      price: product.price,
-      currencyCode: product.currencyCode,
-      productUrl: `${product.storefrontUrl}/products/${encodeURIComponent(product.handle)}`,
-      type,
-      lookTitle: look.title,
-      season,
-      style: look.style,
-      age: look.age,
-      gender: look.gender,
-    },
-  ])
 }
 
-export function removeSeasonalFavorite(id) {
-  const favorites = getSeasonalFavorites()
-  return saveFavorites(favorites.filter((favorite) => favorite.id !== id))
+export async function toggleSeasonalFavorite(look, season, type, product, isSaved) {
+  const favorite = createFavorite(look, season, type, product)
+  if (getAccessToken()) {
+    if (isSaved) {
+      await favoriteRequest(`/outfits/favorites?favorite_key=${encodeURIComponent(favorite.id)}`, {
+        method: 'DELETE',
+      })
+    } else {
+      await favoriteRequest('/outfits/favorites', {
+        method: 'POST',
+        body: JSON.stringify(favorite),
+      })
+    }
+    const favorites = await getSeasonalFavorites()
+    notifyFavoritesChanged(favorites)
+    return favorites
+  }
+
+  const favorites = getLocalFavorites()
+  return saveLocalFavorites(
+    isSaved
+      ? favorites.filter((item) => item.id !== favorite.id)
+      : [...favorites, { ...favorite, createdAt: new Date().toISOString() }],
+  )
+}
+
+export async function removeSeasonalFavorite(id) {
+  if (getAccessToken()) {
+    await favoriteRequest(`/outfits/favorites?favorite_key=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    })
+    const favorites = await getSeasonalFavorites()
+    notifyFavoritesChanged(favorites)
+    return favorites
+  }
+
+  const favorites = getLocalFavorites()
+  return saveLocalFavorites(favorites.filter((favorite) => favorite.id !== id))
 }
 
 export function getAiFashionFavoriteId(product) {
