@@ -50,8 +50,8 @@ fi
 
 dc config -q || fail 'Compose configuration is invalid.'
 dc pull duckdns caddy || fail 'Caddy/DuckDNS image pull failed.'
-dc run --rm --no-deps --no-build --entrypoint nginx web -t >/dev/null || fail 'Nginx configuration is invalid.'
-dc run --rm --no-deps --no-build --entrypoint caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null || fail 'Caddy configuration is invalid.'
+dc run --rm --no-deps --entrypoint nginx web -t >/dev/null || fail 'Nginx configuration is invalid.'
+dc run --rm --no-deps --entrypoint caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null || fail 'Caddy configuration is invalid.'
 
 # Keep the existing HTTP web container running during DNS setup and web build.
 dc up -d --no-deps --no-build duckdns || fail 'DuckDNS service did not start.'
@@ -77,7 +77,7 @@ done
 [[ "$dns_ok" == 1 ]] || fail 'DuckDNS does not resolve to this EC2 public IPv4; HTTP remains running.'
 
 dc build web || fail 'Web image build failed; HTTP remains running.'
-dc run --rm --no-deps --no-build --entrypoint sh web -ec \
+dc run --rm --no-deps --entrypoint sh web -ec \
   'test -s /usr/share/nginx/html/ai-fashion/images/AIfashion.png' || fail 'Built web image lacks the card image.'
 
 rollback_file="$(mktemp --suffix=.yaml)"
