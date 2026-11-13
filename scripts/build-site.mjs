@@ -9,6 +9,6 @@ for(const app of ['frontend','ai-fashion']){
   const require=createRequire(path.join(dir,'package.json'))
   const {build}=await import(pathToFileURL(require.resolve('vite')).href)
   await build({root:dir,...(check?{publicDir:false,build:{write:false}}:
-    app==='ai-fashion'?{build:{outDir:path.join(root,'frontend/dist/ai-fashion'),emptyOutDir:true}}:{})})
+    app==='ai-fashion'?{build:{outDir:path.join(root,'frontend/dist/ai-fashion'),emptyOutDir:false}}:{})})
 }
 console.log(check?'Both frontend code builds passed (no output written).':'Combined site: frontend/dist')
