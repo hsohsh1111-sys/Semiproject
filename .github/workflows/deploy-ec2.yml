@@ -56,8 +56,14 @@ jobs:
              git remote set-url origin https://github.com/hsohsh1111-sys/Semiproject.git
              git fetch --prune origin main
              git reset --hard origin/main
-             if [ ! -e /etc/nginx/sites-available/onfit ]; then
+             sudo -n install -d -m 0755 /var/www/certbot
+             if [ -L /etc/nginx/sites-enabled/default ]; then
+               sudo -n unlink /etc/nginx/sites-enabled/default
+             fi
+             if [ -s /etc/letsencrypt/live/onfit3.duckdns.org/fullchain.pem ]; then
                sudo -n install -m 0644 deploy/ec2/nginx.conf.example /etc/nginx/sites-available/onfit
+             else
+               sudo -n install -m 0644 deploy/ec2/nginx.bootstrap.conf /etc/nginx/sites-available/onfit
              fi
              sudo -n ln -sfn /etc/nginx/sites-available/onfit /etc/nginx/sites-enabled/onfit
              sudo -n nginx -t
@@ -68,7 +74,11 @@ jobs:
              if [ ! -s /etc/letsencrypt/live/onfit3.duckdns.org/fullchain.pem ]; then
                sudo -n apt-get update
                sudo -n apt-get install -y certbot python3-certbot-nginx
-               sudo -n certbot --nginx --non-interactive --agree-tos --register-unsafely-without-email --redirect -d onfit3.duckdns.org
+               sudo -n certbot certonly --webroot -w /var/www/certbot --non-interactive --agree-tos --register-unsafely-without-email -d onfit3.duckdns.org
+               sudo -n install -m 0644 deploy/ec2/nginx.conf.example /etc/nginx/sites-available/onfit
+               sudo -n install -d -m 0755 /etc/letsencrypt/renewal-hooks/deploy
+               printf "#!/bin/sh\nsystemctl reload nginx\n" | sudo -n tee /etc/letsencrypt/renewal-hooks/deploy/reload-nginx >/dev/null
+               sudo -n chmod 0755 /etc/letsencrypt/renewal-hooks/deploy/reload-nginx
              fi
              sudo -n nginx -t
              sudo -n systemctl reload nginx

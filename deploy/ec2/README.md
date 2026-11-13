@@ -7,7 +7,8 @@
 - `compose.yaml`: API와 웹 컨테이너 빌드 및 실행
 - `Dockerfile.web`: ONFIT과 AI 패션 앱을 빌드해 Nginx 이미지에 포함
 - `nginx.container.conf`: 컨테이너 Nginx의 정적 파일 제공 및 API 프록시
-- `nginx.conf.example`: EC2 호스트 Nginx의 리버스 프록시 예시
+- `nginx.bootstrap.conf`: 첫 인증서 발급용 임시 HTTP 설정
+- `nginx.conf.example`: 인증서 발급 후 사용하는 EC2 호스트 HTTPS 설정
 - `../../.github/workflows/deploy-ec2.yml`: GitHub `main` 푸시 및 수동 실행 배포
 
 ## 1. EC2 준비
@@ -60,17 +61,7 @@ TIDB_DATABASE=
 
 ## 3. 호스트 Nginx와 TLS
 
-호스트 Nginx 예시는 `onfit3.duckdns.org`에 맞춰져 있습니다. DNS A 레코드가 EC2를 가리키고 보안 그룹에서 80/443이 열려 있어야 합니다. 첫 GitHub Actions 배포 때 Certbot이 TLS 인증서를 발급하고 HTTPS 리다이렉트를 설정합니다.
-
-```bash
-sudo install -m 0644 /srv/onfit/app/deploy/ec2/nginx.conf.example /etc/nginx/sites-available/onfit
-sudoedit /etc/nginx/sites-available/onfit
-sudo ln -s /etc/nginx/sites-available/onfit /etc/nginx/sites-enabled/onfit
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-첫 배포 workflow는 앱 health check 통과 후 Certbot을 설치하고 `onfit3.duckdns.org` 인증서를 발급합니다. 이후 인증서 자동 갱신을 사용하며, 상태는 `sudo certbot renew --dry-run`으로 확인할 수 있습니다. `FRONTEND_ORIGINS`에는 `https://onfit3.duckdns.org`를 설정합니다.
+호스트 Nginx 설정은 workflow가 처리합니다. 인증서가 없으면 임시 HTTP 설정으로 앱과 ACME challenge를 제공하고, 인증서 발급 후 HTTPS 설정으로 전환합니다. 기본 Nginx 사이트가 활성화되어 있으면 workflow가 해당 `sites-enabled/default` 심볼릭 링크를 비활성화합니다. DNS A 레코드가 EC2를 가리키고 보안 그룹에서 80/443이 열려 있어야 합니다. 인증서 자동 갱신을 사용하며, 상태는 `sudo certbot renew --dry-run`으로 확인할 수 있습니다. `FRONTEND_ORIGINS`에는 `https://onfit3.duckdns.org`를 설정합니다.
 
 ## 4. 첫 수동 배포
 
