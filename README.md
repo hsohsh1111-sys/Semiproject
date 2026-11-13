@@ -134,3 +134,7 @@ Semiproject/
 - `.env`, `backend/.env`, `frontend/.env.local`은 개인 환경 설정용이며 Git 저장소에 올리지 않습니다.
 - `VITE_*` 변수는 브라우저 코드에 포함될 수 있으므로 비밀 키나 데이터베이스 비밀번호를 넣지 마세요.
 - API 키와 배포용 비밀 값은 로컬 환경 변수 또는 Render 환경 변수로 관리하세요.
+
+## EC2 배포
+
+Ubuntu EC2에 Nginx와 systemd로 프런트엔드 및 FastAPI를 배포하는 절차는 [`deploy/ec2/README.md`](deploy/ec2/README.md)를 참고하세요. 서비스 및 Nginx 설정 예시도 [`deploy/ec2/`](deploy/ec2/)에 있습니다.

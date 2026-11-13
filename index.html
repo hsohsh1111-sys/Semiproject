@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1eb">
+  <meta name="description" content="황상옥의 ONFIT 포트폴리오. 개인 맞춤형 패션 탐색과 가상 피팅을 위한 팀 프로젝트를 소개합니다.">
+  <link rel="icon" type="image/svg+xml" href="./frontend/public/onfit-favicon.svg">
+  <title>황상옥 | ONFIT 포트폴리오</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4f1eb;
+      --paper-deep: #e9e4db;
+      --ink: #20231f;
+      --muted: #77786f;
+      --line: rgba(32, 35, 31, .16);
+      --accent: #a94834;
+      --olive: #77806c;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --sans: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+      --page-width: 1240px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    img { display: block; max-width: 100%; }
+    ::selection { background: #d5a28f; color: #211c18; }
+    .shell { width: min(var(--page-width), calc(100% - 64px)); margin-inline: auto; }
+
+    .site-header { position: sticky; top: 0; z-index: 50; height: 84px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(244, 241, 235, .96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    .brand { display: inline-flex; align-items: center; gap: 13px; text-decoration: none; }
+    .brand-mark { width: 34px; height: 34px; object-fit: contain; }
+    .brand-name { font: 700 16px/1 var(--serif); letter-spacing: .14em; }
+    .brand-caption { color: var(--muted); font-size: 9px; letter-spacing: .17em; text-transform: uppercase; }
+    .main-nav { display: flex; align-items: center; gap: 34px; }
+    .main-nav a { color: #4b4d46; font-size: 11px; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; transition: color .2s ease; }
+    .main-nav a:hover { color: var(--accent); }
+    .nav-cta { padding: 12px 17px; border: 1px solid var(--ink); border-radius: 2px; }
+    .menu-toggle { display: none; border: 0; background: transparent; padding: 8px; cursor: pointer; }
+
+    .hero { display: grid; grid-template-columns: minmax(0, .94fr) minmax(420px, 1.06fr); align-items: center; gap: clamp(44px, 8vw, 112px); min-height: 690px; padding-block: 68px 96px; }
+    .eyebrow { display: flex; align-items: center; gap: 11px; margin: 0 0 25px; color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .eyebrow::before { width: 29px; height: 1px; background: currentColor; content: ""; }
+    .hero h1 { max-width: 630px; margin: 0; font-size: clamp(42px, 5.5vw, 76px); font-weight: 500; letter-spacing: -.075em; line-height: 1.17; }
+    .hero h1 em, .section-title em { color: var(--accent); font-family: var(--serif); font-weight: 400; letter-spacing: -.06em; }
+    .hero-copy { padding-bottom: 16px; }
+    .hero-description { max-width: 480px; margin: 26px 0 0; color: #66675f; font-size: 15px; line-height: 1.95; word-break: keep-all; }
+    .hero-description strong { color: var(--ink); font-weight: 600; }
+    .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+    .button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 0 19px; border: 1px solid var(--ink); border-radius: 2px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-decoration: none; transition: background .2s ease, color .2s ease, transform .2s ease; }
+    .button:hover { transform: translateY(-2px); }
+    .button-dark { background: var(--ink); color: var(--paper); }
+    .button-dark:hover { background: var(--accent); border-color: var(--accent); }
+    .button-light { background: transparent; }
+    .button-light:hover { background: var(--ink); color: var(--paper); }
+    .hero-meta { display: flex; align-items: center; gap: 14px; margin-top: 48px; color: var(--muted); font-size: 9px; letter-spacing: .13em; text-transform: uppercase; }
+    .hero-meta span + span::before { display: inline-block; width: 24px; height: 1px; margin: 0 13px 3px 0; background: #bdb7ac; content: ""; }
+
+    .hero-art { position: relative; width: min(100%, 560px); height: 510px; justify-self: end; }
+    .hero-photo { position: absolute; inset: 0 54px 0 86px; overflow: hidden; background: #d5c7b5; }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 29%; }
+    .hero-photo::after { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 54%, rgba(31, 25, 21, .38)); content: ""; pointer-events: none; }
+    .hero-photo-label { position: absolute; z-index: 1; right: 22px; bottom: 22px; left: 22px; display: flex; justify-content: space-between; color: white; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+    .hero-inset { position: absolute; z-index: 2; bottom: 42px; left: 0; width: 170px; padding: 7px; background: var(--paper); box-shadow: 0 14px 40px rgba(42, 35, 29, .13); transform: rotate(-4deg); }
+    .hero-inset img { width: 100%; height: 196px; object-fit: cover; object-position: center 24%; }
+    .hero-inset figcaption { display: flex; justify-content: space-between; padding: 10px 3px 3px; color: #63635c; font: 9px/1.2 var(--serif); letter-spacing: .1em; text-transform: uppercase; }
+    .hero-stamp { position: absolute; top: 20px; right: 0; width: 96px; height: 96px; display: grid; place-content: center; border: 1px solid rgba(32, 35, 31, .55); border-radius: 50%; background: var(--paper); color: var(--ink); text-align: center; transform: rotate(9deg); }
+    .hero-stamp span { font: 9px/1.6 var(--serif); letter-spacing: .2em; }
+    .hero-stamp strong { font-size: 13px; letter-spacing: .08em; }
+    .art-index { position: absolute; top: 116px; left: 10px; writing-mode: vertical-rl; color: #77786f; font-size: 9px; letter-spacing: .2em; }
+
+    .ticker { overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .ticker-track { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 18px; color: #4e5049; font: 12px var(--serif); letter-spacing: .15em; text-transform: uppercase; white-space: nowrap; }
+    .ticker-track span:nth-child(even) { color: var(--accent); font-size: 17px; }
+
+    .section { padding-block: 120px; }
+    .section-top { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 48px; }
+    .section-kicker { margin: 0 0 13px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .section-title { margin: 0; font-size: clamp(31px, 4.4vw, 54px); font-weight: 500; letter-spacing: -.07em; line-height: 1.25; }
+    .section-note { max-width: 360px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; word-break: keep-all; }
+
+    .project-overview { display: grid; grid-template-columns: .72fr 1.28fr; gap: 70px; padding-block: 100px 112px; border-bottom: 1px solid var(--line); }
+    .project-label { color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+    .project-overview h2 { margin: 18px 0 0; font-size: clamp(35px, 4vw, 54px); font-weight: 500; letter-spacing: -.075em; line-height: 1.18; }
+    .project-overview h2 span { color: var(--accent); font-family: var(--serif); font-weight: 400; }
+    .project-summary { max-width: 650px; margin: 4px 0 0; color: #62635b; font-size: 15px; line-height: 2; word-break: keep-all; }
+    .project-summary strong { color: var(--ink); font-weight: 600; }
+    .project-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 34px; }
+    .fact { padding-top: 13px; border-top: 1px solid var(--line); }
+    .fact small { display: block; color: var(--muted); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; }
+    .fact strong { display: block; margin-top: 9px; font-size: 12px; font-weight: 600; }
+
+    .work-section { padding-top: 106px; }
+    .work-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 28px; align-items: start; }
+    .work-card { min-width: 0; }
+    .work-card:nth-child(2) { margin-top: 100px; }
+    .work-heading { display: flex; align-items: start; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
+    .work-number { color: var(--accent); font: 15px var(--serif); }
+    .work-heading h3 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -.04em; }
+    .work-heading p { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .media-frame { position: relative; overflow: hidden; background: #ded8ce; aspect-ratio: 1.12 / 1; }
+    .media-frame--tall { aspect-ratio: .92 / 1; }
+    .media-poster { width: 100%; height: 100%; object-fit: cover; object-position: center 23%; transition: transform .75s cubic-bezier(.2,.7,.2,1); }
+    .media-frame:hover .media-poster { transform: scale(1.025); }
+    .media-video { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; background: #191919; object-fit: contain; }
+    .play-trigger { position: absolute; z-index: 2; right: 17px; bottom: 17px; display: inline-flex; align-items: center; gap: 10px; padding: 11px 14px; border: 1px solid rgba(255,255,255,.7); border-radius: 2px; background: rgba(24, 27, 23, .72); color: white; cursor: pointer; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; backdrop-filter: blur(10px); transition: background .2s ease, transform .2s ease; }
+    .play-trigger:hover { transform: translateY(-2px); background: var(--accent); }
+    .play-icon { width: 20px; height: 20px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.72); border-radius: 50%; font-size: 9px; }
+    .media-status { position: absolute; z-index: 1; top: 15px; left: 15px; padding: 8px 10px; background: rgba(244,241,235,.92); color: #54554e; font-size: 8px; letter-spacing: .13em; text-transform: uppercase; }
+    .media-note { position: absolute; z-index: 3; right: 14px; bottom: 63px; max-width: calc(100% - 28px); margin: 0; padding: 9px 12px; background: rgba(24, 27, 23, .86); color: white; font-size: 11px; line-height: 1.5; opacity: 0; pointer-events: none; transform: translateY(4px); transition: opacity .2s ease, transform .2s ease; }
+    .media-note.is-visible { opacity: 1; transform: translateY(0); }
+    .video-tools { position: absolute; z-index: 2; top: 13px; right: 13px; display: flex; gap: 7px; }
+    .loop-toggle { padding: 8px 10px; border: 1px solid rgba(255,255,255,.7); border-radius: 2px; background: rgba(24,27,23,.68); color: white; cursor: pointer; font-size: 9px; letter-spacing: .08em; }
+    .loop-toggle[aria-pressed="true"] { border-color: #f1c5a9; background: var(--accent); }
+    .work-caption { display: flex; justify-content: space-between; gap: 20px; padding-top: 12px; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .work-caption span:last-child { text-align: right; }
+
+    .feature-band { margin-top: 92px; padding: 34px 36px; background: #eae5dc; }
+    .feature-band h3 { margin: 0 0 24px; font: 400 23px var(--serif); }
+    .feature-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 0; padding: 0; list-style: none; }
+    .feature-list li { padding-top: 13px; border-top: 1px solid rgba(32,35,31,.2); }
+    .feature-list b { display: block; font-size: 12px; font-weight: 600; }
+    .feature-list span { display: block; margin-top: 8px; color: var(--muted); font-size: 10px; line-height: 1.7; }
+
+    .approach { display: grid; grid-template-columns: .86fr 1.14fr; gap: 70px; padding-block: 105px; border-top: 1px solid var(--line); }
+    .approach-copy { max-width: 400px; }
+    .approach-copy p:last-child { color: var(--muted); font-size: 13px; line-height: 1.95; word-break: keep-all; }
+    .steps { border-top: 1px solid var(--line); }
+    .step { display: grid; grid-template-columns: 62px 1fr; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+    .step-number { color: var(--accent); font: 15px var(--serif); }
+    .step h3 { margin: 0; font-size: 14px; font-weight: 600; }
+    .step p { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.75; }
+
+    .closing { position: relative; overflow: hidden; padding: 65px 60px; background: var(--ink); color: var(--paper); }
+    .closing::after { position: absolute; top: -140px; right: -45px; width: 370px; height: 370px; border: 1px solid rgba(244,241,235,.18); border-radius: 50%; box-shadow: 0 0 0 35px rgba(244,241,235,.035), 0 0 0 75px rgba(244,241,235,.025); content: ""; }
+    .closing .eyebrow { color: #d89b83; }
+    .closing h2 { position: relative; z-index: 1; max-width: 730px; margin: 0; font-size: clamp(34px, 5vw, 60px); font-weight: 400; letter-spacing: -.07em; line-height: 1.25; }
+    .closing h2 em { color: #d89b83; font: italic 400 1em var(--serif); }
+    .closing-actions { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 31px; }
+    .closing .button-light { border-color: rgba(244,241,235,.52); color: var(--paper); }
+    .closing .button-light:hover { background: var(--paper); color: var(--ink); }
+    .site-footer { display: flex; justify-content: space-between; gap: 24px; padding-block: 23px 30px; color: var(--muted); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+    .site-footer a { text-decoration: none; }
+    .site-footer a:hover { color: var(--accent); }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+    .reveal.is-visible { opacity: 1; transform: none; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; clip-path: inset(50%); }
+
+    @media (max-width: 900px) {
+      .shell { width: min(100% - 44px, var(--page-width)); }
+      .hero { grid-template-columns: 1fr 1fr; gap: 36px; min-height: 600px; }
+      .hero-art { height: 430px; }
+      .hero-photo { inset-inline: 56px 22px; }
+      .hero-inset { width: 135px; }
+      .hero-inset img { height: 154px; }
+      .hero-stamp { width: 80px; height: 80px; }
+      .project-overview, .approach { gap: 38px; }
+      .section { padding-block: 92px; }
+    }
+    @media (max-width: 680px) {
+      html { scroll-padding-top: 72px; }
+      .shell { width: calc(100% - 38px); }
+      .site-header { height: 70px; }
+      .brand-caption { display: none; }
+      .menu-toggle { display: inline-grid; place-items: center; }
+      .main-nav { position: absolute; z-index: 10; top: 70px; right: 19px; left: 19px; display: none; align-items: stretch; gap: 0; padding: 8px 17px; border: 1px solid var(--line); background: var(--paper); box-shadow: 0 18px 34px rgba(32,35,31,.1); }
+      .main-nav.is-open { display: flex; flex-direction: column; }
+      .main-nav a { padding: 15px 3px; border-bottom: 1px solid var(--line); }
+      .main-nav a:last-child { border-bottom: 0; }
+      .nav-cta { border: 0; }
+      .hero { grid-template-columns: 1fr; gap: 44px; min-height: 0; padding-block: 63px 58px; }
+      .hero h1 { font-size: clamp(43px, 12vw, 63px); }
+      .hero-description { margin-top: 20px; font-size: 13px; }
+      .hero-actions { margin-top: 27px; }
+      .hero-meta { margin-top: 30px; }
+      .hero-art { width: 100%; height: min(116vw, 465px); justify-self: stretch; }
+      .hero-photo { inset: 0 32px 0 66px; }
+      .hero-inset { bottom: 28px; width: 120px; }
+      .hero-inset img { height: 132px; }
+      .hero-stamp { top: 6px; right: 2px; width: 72px; height: 72px; }
+      .art-index { top: 74px; left: 2px; }
+      .ticker-track { min-height: 54px; justify-content: flex-start; gap: 17px; overflow: hidden; font-size: 10px; }
+      .ticker-track span:nth-child(n+5) { display: none; }
+      .section { padding-block: 72px; }
+      .section-top { display: block; margin-bottom: 31px; }
+      .section-title { font-size: 35px; }
+      .section-note { margin-top: 15px; font-size: 12px; }
+      .project-overview { grid-template-columns: 1fr; gap: 23px; padding-block: 72px; }
+      .project-overview h2 { font-size: 39px; }
+      .project-summary { font-size: 13px; }
+      .project-facts { gap: 12px; margin-top: 24px; }
+      .fact strong { font-size: 10px; }
+      .work-section { padding-top: 73px; }
+      .work-grid { grid-template-columns: 1fr; gap: 43px; }
+      .work-card:nth-child(2) { margin-top: 0; }
+      .media-frame { aspect-ratio: 1.05 / 1; }
+      .media-frame--tall { aspect-ratio: 1 / 1.08; }
+      .work-heading h3 { font-size: 18px; }
+      .feature-band { margin-top: 53px; padding: 25px 21px; }
+      .feature-list { grid-template-columns: repeat(2, 1fr); gap: 18px 14px; }
+      .approach { grid-template-columns: 1fr; gap: 25px; padding-block: 74px; }
+      .closing { padding: 42px 24px; }
+      .closing::after { top: -80px; right: -190px; }
+      .closing h2 { font-size: 38px; }
+      .site-footer { flex-direction: column; gap: 10px; padding-block: 19px 25px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header shell">
+    <a class="brand" href="#top" aria-label="ONFIT 포트폴리오 처음으로">
+      <img class="brand-mark" src="./frontend/public/onfit-mark.svg" alt="">
+      <span class="brand-name">ONFIT</span>
+      <span class="brand-caption">Portfolio · 2026</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="메뉴 열기">
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+    <nav class="main-nav" id="main-nav" aria-label="주요 메뉴">
+      <a href="#project">Project</a>
+      <a href="#works">Selected work</a>
+      <a href="#approach">Approach</a>
+      <a class="nav-cta" href="https://onfit3.netlify.app/" target="_blank" rel="noopener noreferrer">Live project ↗</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">ONFIT · PERSONAL FASHION PLATFORM</p>
+        <h1 id="hero-title">취향을 입고,<br><em>나답게 빛나다.</em></h1>
+        <p class="hero-description">안녕하세요, 프론트엔드와 공통 UI를 맡아 <strong>ONFIT</strong>을 함께 만든 황상옥입니다. 스타일 탐색부터 가상 피팅까지, 패션을 고르는 순간을 더 직관적인 웹 경험으로 연결합니다.</p>
+        <div class="hero-actions">
+          <a class="button button-dark" href="#project">프로젝트 보기 <span aria-hidden="true">↘</span></a>
+          <a class="button button-light" href="https://onfit3.netlify.app/" target="_blank" rel="noopener noreferrer">라이브 서비스 <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-meta"><span>Frontend · UI</span><span>Team project</span><span>2026</span></div>
+      </div>
+      <div class="hero-art reveal" aria-label="ONFIT 프로젝트의 스타일 전후 예시 이미지">
+        <span class="art-index">A PERSONAL WAY TO FIND YOUR FIT</span>
+        <div class="hero-photo">
+          <img src="./ai-fashion/public/images/style-after.png" alt="ONFIT 스타일 예시: 브라운 재킷을 더한 코디" fetchpriority="high">
+          <div class="hero-photo-label"><span>ONFIT / STYLE PREVIEW</span><span>01—02</span></div>
+        </div>
+        <figure class="hero-inset">
+          <img src="./ai-fashion/public/images/style-before.png" alt="ONFIT 스타일 예시: 코디 변경 전 이미지">
+          <figcaption><span>Before</span><span>Style study · 01</span></figcaption>
+        </figure>
+        <div class="hero-stamp" aria-hidden="true"><span>FIND</span><strong>YOUR FIT</strong><span>✳ ONFIT ✳</span></div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-label="프로젝트 핵심 분야">
+      <div class="ticker-track shell"><span>Personal style</span><span aria-hidden="true">✳</span><span>Virtual fitting</span><span aria-hidden="true">✳</span><span>Smart shopping</span><span aria-hidden="true">✳</span><span>One ONFIT experience</span></div>
+    </div>
+
+    <section class="project-overview shell reveal" id="project" aria-labelledby="project-title">
+      <div>
+        <span class="project-label">Selected project · 01</span>
+        <h2 id="project-title">ONFIT<br><span>패션을 고르는<br>새로운 흐름.</span></h2>
+      </div>
+      <div>
+        <p class="project-summary">ONFIT은 취향과 체형 정보를 바탕으로 코디와 상품을 탐색하는 <strong>개인 맞춤형 패션 플랫폼</strong>입니다. 스타일 프로필, 코디 큐레이션, 디지털 옷장, 가격 비교, 3D 피팅과 이미지 기반 패션 검색을 한 경험으로 연결합니다.</p>
+        <div class="project-facts">
+          <div class="fact"><small>My role</small><strong>공통 프론트엔드 · UI</strong></div>
+          <div class="fact"><small>Frontend</small><strong>React · Vite · Tailwind</strong></div>
+          <div class="fact"><small>Platform</small><strong>FastAPI · TiDB Cloud</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="work-section section shell" id="works" aria-labelledby="works-title">
+      <div class="section-top reveal">
+        <div><p class="section-kicker">Selected work · ONFIT</p><h2 class="section-title" id="works-title">작품과 프로젝트를<br><em>이미지로 살펴보세요.</em></h2></div>
+        <p class="section-note">저장소에 실제로 포함된 스타일 예시 이미지와 피팅 입력 샘플을 사용했습니다. 영상은 저장소에서 찾지 못해 임의로 만들지 않았으며, 실제 영상을 추가하면 같은 프레임에서 재생됩니다.</p>
+      </div>
+
+      <div class="work-grid">
+        <article class="work-card reveal">
+          <div class="work-heading"><div><h3>스타일 프리뷰</h3><p>AI Fashion · 코디 이미지 비교 예시</p></div><span class="work-number">01</span></div>
+          <!-- Set data-video-src to a repository-relative MP4/WebM path or a hosted video URL to enable in-place playback. -->
+          <div class="media-frame" data-video-stage data-video-src="" data-poster="./ai-fashion/public/images/style-before.png">
+            <img class="media-poster" src="./ai-fashion/public/images/style-before.png" alt="스타일 프리뷰 예시 이미지" loading="lazy">
+            <video class="media-video" controls playsinline preload="metadata" hidden aria-label="스타일 프리뷰 프로젝트 영상"></video>
+            <span class="media-status">Project image · Before</span>
+            <button class="play-trigger" type="button" data-video-play aria-label="스타일 프리뷰 영상 재생">
+              <span class="play-icon" aria-hidden="true">▶</span><span data-play-label>영상 미리보기</span>
+            </button>
+            <div class="video-tools" hidden><button class="loop-toggle" type="button" data-loop aria-pressed="false">반복 끔</button></div>
+            <p class="media-note" role="status" aria-live="polite"></p>
+          </div>
+          <div class="work-caption"><span>저장소의 스타일 전후 예시 이미지</span><span>영상 소스 미등록</span></div>
+        </article>
+
+        <article class="work-card reveal">
+          <div class="work-heading"><div><h3>가상 피팅 입력 샘플</h3><p>2D Try-On · 인물 사진과 의류 이미지</p></div><span class="work-number">02</span></div>
+          <div class="media-frame media-frame--tall" data-video-stage data-video-src="" data-poster="./frontend/public/examples/tryon2d/person-generated-v1.png">
+            <img class="media-poster" src="./frontend/public/examples/tryon2d/person-generated-v1.png" alt="2D 가상 피팅 예시 인물 이미지" loading="lazy">
+            <video class="media-video" controls playsinline preload="metadata" hidden aria-label="가상 피팅 프로젝트 영상"></video>
+            <div class="media-status">Example input · Person</div>
+            <figure class="garment-inset"><img src="./frontend/public/examples/tryon2d/shirt-generated-v1.png" alt="가상 피팅 예시 의류 이미지" loading="lazy"><figcaption>Garment input</figcaption></figure>
+            <button class="play-trigger" type="button" data-video-play aria-label="가상 피팅 영상 재생">
+              <span class="play-icon" aria-hidden="true">▶</span><span data-play-label>영상 미리보기</span>
+            </button>
+            <div class="video-tools" hidden><button class="loop-toggle" type="button" data-loop aria-pressed="false">반복 끔</button></div>
+            <p class="media-note" role="status" aria-live="polite"></p>
+          </div>
+          <div class="work-caption"><span>저장소의 예시 인물·의류 입력 이미지</span><span>실제 사용자 사진 아님</span></div>
+        </article>
+      </div>
+
+      <div class="feature-band reveal">
+        <h3>One project, connected experiences.</h3>
+        <ul class="feature-list">
+          <li><b>개인 스타일</b><span>스타일 프로필과 취향 기반 코디 탐색</span></li>
+          <li><b>가상 피팅</b><span>2D 피팅 입력 흐름과 3D 의류 피팅 화면</span></li>
+          <li><b>스마트 쇼핑</b><span>상품 검색, 동일 상품 매칭과 가격 비교</span></li>
+          <li><b>공통 UI</b><span>반응형 화면과 통합된 페이지 이동 경험</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="approach shell reveal" id="approach" aria-labelledby="approach-title">
+      <div class="approach-copy">
+        <p class="section-kicker">How the experience comes together</p>
+        <h2 class="section-title" id="approach-title">기술을 잇고,<br><em>사용 흐름을 정리합니다.</em></h2>
+        <p>각 기능이 따로 보이지 않도록 프로젝트의 공통 UI와 탐색 흐름을 중심으로 화면을 구성했습니다. 프론트엔드와 API가 맞물리는 지점을 확인하며 팀의 기능을 하나의 서비스로 통합했습니다.</p>
+      </div>
+      <div class="steps">
+        <article class="step"><span class="step-number">01</span><div><h3>발견</h3><p>스타일 프로필과 이미지 탐색으로 사용자의 관심을 구체화합니다.</p></div></article>
+        <article class="step"><span class="step-number">02</span><div><h3>비교</h3><p>코디와 상품 정보를 살펴보고 가격과 선택지를 함께 비교합니다.</p></div></article>
+        <article class="step"><span class="step-number">03</span><div><h3>확인</h3><p>가상 피팅과 디지털 옷장으로 구매 전 착용 경험을 지원합니다.</p></div></article>
+      </div>
+    </section>
+
+    <section class="closing shell reveal" id="contact" aria-labelledby="closing-title">
+      <p class="eyebrow">Explore ONFIT</p>
+      <h2 id="closing-title">프로젝트의 실제 화면과<br><em>코드를 확인해 보세요.</em></h2>
+      <div class="closing-actions">
+        <a class="button button-dark" href="https://onfit3.netlify.app/" target="_blank" rel="noopener noreferrer">라이브 서비스 보기 ↗</a>
+        <a class="button button-light" href="https://github.com/hsohsh1111-sys/Semiproject" target="_blank" rel="noopener noreferrer">GitHub 저장소 ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer shell"><span>© 2026 Hwang Sang-ok · ONFIT</span><a href="#top">Back to top ↑</a></footer>
+
+  <style>
+    .garment-inset { position: absolute; z-index: 1; top: 15px; right: 15px; width: 28%; margin: 0; padding: 5px; background: var(--paper); box-shadow: 0 8px 26px rgba(32,35,31,.13); }
+    .garment-inset img { width: 100%; aspect-ratio: .82 / 1; object-fit: cover; }
+    .garment-inset figcaption { padding: 7px 3px 3px; color: var(--muted); font: 8px var(--serif); letter-spacing: .1em; text-transform: uppercase; }
+  </style>
+  <script>
+    (() => {
+      const menuToggle = document.querySelector('.menu-toggle');
+      const menu = document.querySelector('.main-nav');
+      menuToggle?.addEventListener('click', () => {
+        const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+        menuToggle.setAttribute('aria-expanded', String(!isOpen));
+        menuToggle.setAttribute('aria-label', isOpen ? '메뉴 열기' : '메뉴 닫기');
+        menu.classList.toggle('is-open', !isOpen);
+      });
+      menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+        menu.classList.remove('is-open');
+        menuToggle?.setAttribute('aria-expanded', 'false');
+        menuToggle?.setAttribute('aria-label', '메뉴 열기');
+      }));
+
+      const revealItems = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, activeObserver) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              activeObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealItems.forEach((item) => observer.observe(item));
+      } else {
+        revealItems.forEach((item) => item.classList.add('is-visible'));
+      }
+
+      document.querySelectorAll('[data-video-stage]').forEach((stage) => {
+        const playButton = stage.querySelector('[data-video-play]');
+        const video = stage.querySelector('video');
+        const poster = stage.querySelector('.media-poster');
+        const status = stage.querySelector('.media-status');
+        const inset = stage.querySelector('.garment-inset');
+        const note = stage.querySelector('.media-note');
+        const tools = stage.querySelector('.video-tools');
+        const loopButton = stage.querySelector('[data-loop]');
+        let noteTimer;
+
+        stage.addEventListener('click', (event) => {
+          if (event.target.closest('button, video') || !poster || poster.hidden) return;
+          playButton.click();
+        });
+
+        const showPoster = () => {
+          video.pause();
+          try { video.currentTime = 0; } catch {}
+          video.hidden = true;
+          poster.hidden = false;
+          playButton.hidden = false;
+          if (status) status.hidden = false;
+          if (inset) inset.hidden = false;
+          tools.hidden = true;
+          loopButton.setAttribute('aria-pressed', 'false');
+          loopButton.textContent = '반복 끔';
+          video.loop = false;
+        };
+
+        playButton.addEventListener('click', async () => {
+          const source = stage.dataset.videoSrc?.trim();
+          if (!source) {
+            note.textContent = '현재 등록된 영상이 없습니다. 실제 영상 URL을 연결하면 이 자리에서 재생됩니다.';
+            note.classList.add('is-visible');
+            window.clearTimeout(noteTimer);
+            noteTimer = window.setTimeout(() => note.classList.remove('is-visible'), 3600);
+            return;
+          }
+          if (!video.src) {
+            video.src = source;
+            if (stage.dataset.poster) video.poster = stage.dataset.poster;
+            video.load();
+          }
+          poster.hidden = true;
+          playButton.hidden = true;
+          if (status) status.hidden = true;
+          if (inset) inset.hidden = true;
+          video.hidden = false;
+          tools.hidden = false;
+          try {
+            await video.play();
+          } catch (error) {
+            showPoster();
+            note.textContent = '영상을 재생할 수 없습니다. MP4 또는 WebM 주소를 확인해 주세요.';
+            note.classList.add('is-visible');
+            window.clearTimeout(noteTimer);
+            noteTimer = window.setTimeout(() => note.classList.remove('is-visible'), 4200);
+          }
+        });
+
+        loopButton.addEventListener('click', () => {
+          video.loop = !video.loop;
+          loopButton.setAttribute('aria-pressed', String(video.loop));
+          loopButton.textContent = video.loop ? '반복 켬' : '반복 끔';
+        });
+        video.addEventListener('ended', showPoster);
+        video.addEventListener('error', () => {
+          showPoster();
+          note.textContent = '영상 파일을 불러오지 못했습니다. 파일 경로와 MP4/WebM 형식을 확인해 주세요.';
+          note.classList.add('is-visible');
+          window.clearTimeout(noteTimer);
+          noteTimer = window.setTimeout(() => note.classList.remove('is-visible'), 4200);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
