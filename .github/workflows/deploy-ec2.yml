@@ -17,6 +17,7 @@ jobs:
     name: Deploy main to EC2
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    environment: production
     steps:
       - name: Configure SSH
         shell: bash
@@ -25,27 +26,57 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           EC2_KNOWN_HOSTS: ${{ secrets.EC2_KNOWN_HOSTS }}
+          EC2_ENV_FILE: ${{ secrets.EC2_ENV_FILE }}
         run: |
           set -euo pipefail
           test -n "$EC2_HOST" || { echo "Missing EC2_HOST secret"; exit 1; }
           test -n "$EC2_USER" || { echo "Missing EC2_USER secret"; exit 1; }
           test -n "$EC2_SSH_PRIVATE_KEY" || { echo "Missing EC2_SSH_PRIVATE_KEY secret"; exit 1; }
           test -n "$EC2_KNOWN_HOSTS" || { echo "Missing EC2_KNOWN_HOSTS secret"; exit 1; }
+          test -n "$EC2_ENV_FILE" || { echo "Missing EC2_ENV_FILE secret in the production environment"; exit 1; }
 
           install -d -m 700 "$HOME/.ssh"
           printf '%s\n' "$EC2_SSH_PRIVATE_KEY" > "$HOME/.ssh/onfit_ec2"
           printf '%s\n' "$EC2_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/onfit_ec2" "$HOME/.ssh/known_hosts"
 
+          printf '%s' "$EC2_ENV_FILE" | ssh -i "$HOME/.ssh/onfit_ec2" \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            "$EC2_USER@$EC2_HOST" \
+            'set -eu
+             sudo -n install -d -o "$USER" -g "$USER" -m 0750 /srv/onfit
+             sudo -n install -o root -g root -m 0600 /dev/null /srv/onfit/.env
+             sudo -n tee /srv/onfit/.env >/dev/null
+             sudo -n chmod 0600 /srv/onfit/.env'
+
           ssh -i "$HOME/.ssh/onfit_ec2" \
             -o BatchMode=yes \
             -o StrictHostKeyChecking=yes \
             "$EC2_USER@$EC2_HOST" \
             'set -eu
-             test -d /srv/onfit/app/.git
              test -s /srv/onfit/.env
+             if [ ! -d /srv/onfit/app/.git ]; then
+               git clone --branch main https://github.com/hsohsh1111-sys/Semiproject.git /srv/onfit/app
+             fi
              cd /srv/onfit/app
+             git remote set-url origin https://github.com/hsohsh1111-sys/Semiproject.git
              git fetch --prune origin main
              git reset --hard origin/main
+             if [ ! -e /etc/nginx/sites-available/onfit ]; then
+               sudo -n install -m 0644 deploy/ec2/nginx.conf.example /etc/nginx/sites-available/onfit
+             fi
+             sudo -n ln -sfn /etc/nginx/sites-available/onfit /etc/nginx/sites-enabled/onfit
+             sudo -n nginx -t
+             sudo -n systemctl reload nginx
              sudo -n docker compose --env-file /srv/onfit/.env -f deploy/ec2/compose.yaml up -d --build --remove-orphans
-             sudo -n docker compose --env-file /srv/onfit/.env -f deploy/ec2/compose.yaml ps'
+             sudo -n docker compose --env-file /srv/onfit/.env -f deploy/ec2/compose.yaml ps
+             curl -fsS http://127.0.0.1:8080/health
+             if [ ! -s /etc/letsencrypt/live/onfit3.duckdns.org/fullchain.pem ]; then
+               sudo -n apt-get update
+               sudo -n apt-get install -y certbot python3-certbot-nginx
+               sudo -n certbot --nginx --non-interactive --agree-tos --register-unsafely-without-email --redirect -d onfit3.duckdns.org
+             fi
+             sudo -n nginx -t
+             sudo -n systemctl reload nginx
+             curl -fsS --resolve onfit3.duckdns.org:443:127.0.0.1 https://onfit3.duckdns.org/health'

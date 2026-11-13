@@ -67,7 +67,7 @@ TIDB_DATABASE=
 
 ## 3. 호스트 Nginx와 TLS
 
-호스트 Nginx 예시를 설치하고 `server_name`을 실제 도메인으로 변경합니다. HTTPS는 도메인 DNS가 EC2를 가리킨 뒤 Certbot 등으로 인증서를 발급해 설정하세요.
+호스트 Nginx 예시는 `onfit3.duckdns.org`에 맞춰져 있습니다. DNS A 레코드가 EC2를 가리키고 보안 그룹에서 80/443이 열려 있어야 합니다. 첫 GitHub Actions 배포 때 Certbot이 TLS 인증서를 발급하고 HTTPS 리다이렉트를 설정합니다.
 
 ```bash
 sudo install -m 0644 /srv/onfit/app/deploy/ec2/nginx.conf.example /etc/nginx/sites-available/onfit
@@ -77,9 +77,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-예시는 HTTP 리버스 프록시만 포함합니다. 공개 로그인 전에 TLS 서버 블록과 HTTP→HTTPS 리다이렉트를 추가하세요. `FRONTEND_ORIGINS`에는 실제 HTTPS 주소를 사용합니다.
-
-Ubuntu에서는 `sudo apt install -y certbot python3-certbot-nginx` 후 `sudo certbot --nginx -d 실제도메인`으로 인증서를 발급하고 HTTPS 리다이렉트를 설정할 수 있습니다. 인증서 발급 후 자동 갱신 상태도 `sudo certbot renew --dry-run`으로 확인하세요.
+첫 배포 workflow는 앱 health check 통과 후 Certbot을 설치하고 `onfit3.duckdns.org` 인증서를 발급합니다. 이후 인증서 자동 갱신을 사용하며, 상태는 `sudo certbot renew --dry-run`으로 확인할 수 있습니다. `FRONTEND_ORIGINS`에는 `https://onfit3.duckdns.org`를 설정합니다.
 
 ## 4. 첫 수동 배포
 
@@ -100,7 +98,7 @@ curl -fsS http://127.0.0.1:8080/health
 
 EC2 SSH 사용자(예: `ubuntu`)의 공개 키가 EC2의 `authorized_keys`에 있어야 합니다. 해당 사용자는 Docker 명령을 비밀번호 입력 없이 실행할 수 있어야 합니다. Ubuntu 기본 `ubuntu` 사용자는 기본적으로 `sudo -n`이 가능하며, 별도 계정을 쓰면 Docker 그룹 또는 제한된 sudo 권한을 준비하세요.
 
-저장소 **Settings → Secrets and variables → Actions → New repository secret**에서 다음 secret을 등록합니다.
+저장소 **Settings → Environments → production**을 만들고, 해당 Environment의 **Environment secrets**에 다음 값을 등록합니다. Workflow job은 `production` Environment를 참조합니다.
 
 | Secret | 값 |
 | --- | --- |
@@ -108,6 +106,7 @@ EC2 SSH 사용자(예: `ubuntu`)의 공개 키가 EC2의 `authorized_keys`에 �
 | `EC2_USER` | SSH 사용자 이름(예: `ubuntu`) |
 | `EC2_SSH_PRIVATE_KEY` | EC2 접속용 SSH 개인 키 전체(PEM/OpenSSH 형식) |
 | `EC2_KNOWN_HOSTS` | EC2 호스트의 검증된 SSH host key 한 줄 이상 |
+| `EC2_ENV_FILE` | 운영 환경 변수 전체를 담은 dotenv 텍스트. `.env` 예시를 기반으로 하며 새 키를 사용 |
 
 host key를 로컬에서 수집한 뒤 EC2 콘솔/신뢰된 접속으로 지문을 확인하고 `EC2_KNOWN_HOSTS`에 저장하세요.
 
@@ -116,7 +115,7 @@ ssh-keyscan -t ed25519 -H EC2의_IP_또는_호스트명
 sudo ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub
 ```
 
-`EC2_KNOWN_HOSTS`에는 첫 명령 출력 전체를 넣습니다. 지문이 일치하는지 확인하지 않은 키를 등록하지 마세요. 이후 `main`에 push하면 `.github/workflows/deploy-ec2.yml`이 실행되어 EC2에서 최신 `main`을 가져오고 `docker compose up -d --build`를 수행합니다. **Actions → Deploy to EC2 → Run workflow**로 수동 배포도 가능합니다.
+`EC2_KNOWN_HOSTS`에는 첫 명령 출력 전체를 넣습니다. 지문이 일치하는지 확인하지 않은 키를 등록하지 마세요. 이후 `main`에 push하면 `.github/workflows/deploy-ec2.yml`이 `EC2_ENV_FILE`을 비밀 출력 없이 EC2의 `/srv/onfit/.env`에 기록하고, 최신 `main`을 가져와 Compose를 빌드·재기동합니다. 첫 배포에는 Nginx 사이트 설정과 TLS 인증서도 적용합니다. **Actions → Deploy to EC2 → Run workflow**로 수동 배포도 가능합니다.
 
 워크플로는 `/srv/onfit/app`을 `origin/main`으로 동기화합니다. 이 경로에서 서버에서 직접 수정한 파일은 다음 배포 때 덮어써집니다. 운영 환경 파일 `/srv/onfit/.env`는 저장소 바깥에 있어 유지됩니다.
 
