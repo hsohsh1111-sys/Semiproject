@@ -1,0 +1,33 @@
+name: onfit-ajb
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: deploy/ec2/Dockerfile.api
+    env_file:
+      - ./deploy/ec2/.env
+    expose:
+      - "8000"
+    init: true
+    shm_size: "128m"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).close()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/ec2/Dockerfile.web
+      args:
+        VITE_API_BASE_URL: /api
+    ports:
+      - "80:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
