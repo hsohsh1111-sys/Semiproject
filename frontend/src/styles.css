@@ -366,9 +366,11 @@ img {
   justify-content:center;
   flex-direction:column;
   padding:0;
+  background:transparent;
   font-family:inherit;
   cursor:pointer;
   transform:rotate(9deg);
+  text-decoration:none;
   transition:scale .2s,background .2s
 }
 .hero-stamp:hover {
@@ -378,13 +380,6 @@ img {
 .hero-stamp:focus-visible {
   outline:2px solid #fff;
   outline-offset:4px
-}
-.hero-stamp.is-spinning {
-  animation:hero-stamp-spin 3.2s linear infinite
-}
-@keyframes hero-stamp-spin {
-  from { transform:rotate(9deg) }
-  to { transform:rotate(369deg) }
 }
 .hero-stamp span {
   font-size:7px;

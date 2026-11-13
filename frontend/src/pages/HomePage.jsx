@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import BrandMark from '../components/common/BrandMark.jsx'
 import Icon from '../components/common/Icon.jsx'
 import ProductCard from '../components/common/ProductCard.jsx'
@@ -12,7 +11,6 @@ const projects = [
 ]
 
 export default function HomePage() {
-  const [stampSpinning, setStampSpinning] = useState(false)
   return <main>
     <section className="hero-shell">
       <div className="hero-copy">
@@ -26,7 +24,7 @@ export default function HomePage() {
         <div className="hero-photo-overlay" />
         <div className="hero-edition"><span>ONFIT</span><span>NO. 01 / 2026</span></div>
         <div className="hero-note"><span className="note-star">✳</span><small>CURATED FOR YOU</small><strong>Own your<br />everyday.</strong></div>
-        <button className={`hero-stamp${stampSpinning ? ' is-spinning' : ''}`} type="button" aria-label={`Find your fit ${stampSpinning ? '회전 멈추기' : '회전 시작하기'}`} aria-pressed={stampSpinning} onClick={() => setStampSpinning((spinning) => !spinning)}><span>FIND</span><strong>YOUR<br />FIT</strong><i>✦</i></button>
+        <a className="hero-stamp" href="#/fitting" aria-label="체형 맞춤 가상 피팅 시작하기"><span>FIND</span><strong>YOUR<br />FIT</strong><i>✦</i></a>
       </div>
       <div className="hero-index"><span>01</span><i /><span>03</span></div>
     </section>
