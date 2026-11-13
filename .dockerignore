@@ -13,3 +13,11 @@
 **/dist
 **/*.log
 **/logs
+assets/blender/
+database/
+docs/
+portfolio-site/
+산출물/
+진행일지/
+*.docx
+*.hwpx

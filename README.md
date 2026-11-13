@@ -137,4 +137,4 @@ Semiproject/
 
 ## EC2 배포
 
-Ubuntu EC2에 Nginx와 systemd로 프런트엔드 및 FastAPI를 배포하는 절차는 [`deploy/ec2/README.md`](deploy/ec2/README.md)를 참고하세요. 서비스 및 Nginx 설정 예시도 [`deploy/ec2/`](deploy/ec2/)에 있습니다.
+Ubuntu EC2에 Docker Compose로 프런트엔드와 FastAPI를 배포하는 절차는 [`deploy/ec2/README.md`](deploy/ec2/README.md)를 참고하세요. GitHub 저장소에 EC2 접속 Secrets를 등록하면 `main` 업데이트 때 자동 배포하는 workflow도 포함되어 있습니다.

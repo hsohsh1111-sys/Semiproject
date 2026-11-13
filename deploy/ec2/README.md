@@ -1,73 +1,129 @@
-# EC2 배포 (Ubuntu 22.04/24.04)
+# EC2 Docker 배포
 
-이 구성은 Nginx가 React 정적 파일을 제공하고, systemd가 FastAPI를 관리하는 단일 EC2 배포입니다. DB는 외부 TiDB/MySQL을 사용합니다. 실제 도메인과 DB 접속 정보는 배포 환경에서 설정하세요.
+`compose.yaml`이 FastAPI와 정적 웹 프런트엔드를 Docker로 실행합니다. 프런트엔드 컨테이너가 Nginx를 제공하고, EC2의 호스트 Nginx가 HTTPS를 종료한 뒤 `127.0.0.1:8080`으로 전달합니다. DB는 기존 외부 TiDB/MySQL을 사용합니다.
 
-## 1. 인스턴스 준비
+## 구성 파일
 
-- Ubuntu 22.04 또는 24.04, 메모리 4 GiB 이상 권장
-- 보안 그룹 인바운드: SSH 22(관리자 IP만), HTTP 80, HTTPS 443
-- DB 보안 그룹/방화벽은 EC2에서 오는 DB 포트만 허용
-- DNS A 레코드를 EC2의 고정 IP(Elastic IP 권장)에 연결
+- `compose.yaml`: API와 웹 컨테이너 빌드 및 실행
+- `Dockerfile.web`: ONFIT과 AI 패션 앱을 빌드해 Nginx 이미지에 포함
+- `nginx.container.conf`: 컨테이너 Nginx의 정적 파일 제공 및 API 프록시
+- `nginx.conf.example`: EC2 호스트 Nginx의 리버스 프록시 예시
+- `../../.github/workflows/deploy-ec2.yml`: GitHub `main` 푸시 및 수동 실행 배포
+
+## 1. EC2 준비
+
+Ubuntu 22.04/24.04 EC2를 준비하세요. 공개 접속 인바운드는 SSH(관리자 IP), HTTP 80, HTTPS 443만 허용하고, DB 방화벽은 EC2에서 오는 DB 연결만 허용하세요. 프런트엔드에는 약 650 MB의 3D 모델 파일이 포함되어 있어 **메모리 8 GiB와 여유 디스크 30 GiB 이상**을 권장합니다.
+
+Docker Engine 공식 APT 저장소를 등록하고 Docker Compose 플러그인을 설치한 뒤 저장소를 EC2에 한 번 복제합니다. 배포할 사용자를 실제 SSH 계정으로 바꿔 실행하세요(일반 Ubuntu AMI는 `ubuntu`).
 
 ```bash
 sudo apt update
-sudo apt install -y git nginx python3 python3-venv python3-pip nodejs npm \
-  tesseract-ocr tesseract-ocr-kor tesseract-ocr-eng fonts-dejavu-core
-sudo adduser --system --group --home /srv/onfit onfit
-sudo git clone https://github.com/hsohsh1111-sys/Semiproject.git /srv/onfit/repo
-sudo chown -R onfit:onfit /srv/onfit
+sudo apt install -y ca-certificates curl git nginx
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+sudo tee /etc/apt/sources.list.d/docker.sources >/dev/null <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl enable --now docker nginx
+sudo mkdir -p /srv/onfit
+sudo chown "$USER":"$USER" /srv/onfit
+git clone --branch main https://github.com/hsohsh1111-sys/Semiproject.git /srv/onfit/app
 ```
 
-프로젝트의 현재 `main`을 배포 대상으로 사용합니다. Node.js는 Vite 8 지원 버전(20.19+ 또는 22.12+)을 설치하세요. Ubuntu 기본 저장소의 Node 버전이 낮으면 Node.js 공식 배포 저장소에서 설치해야 합니다.
+현재 GitHub 저장소가 비공개라면 EC2 사용자의 SSH 공개 키를 저장소의 read-only Deploy key로 등록하고 `origin`을 SSH URL로 설정하세요. GitHub Actions가 EC2에 접속하는 키는 아래 별도 설정 단계에서 등록합니다.
 
-## 2. 백엔드 설정
+## 2. 운영 환경 변수
+
+EC2에만 비밀 환경 파일을 만듭니다. 저장소 안이나 GitHub Actions 로그에 실제 값을 기록하지 마세요.
 
 ```bash
-sudo -u onfit python3 -m venv /srv/onfit/repo/backend/.venv
-sudo -u onfit /srv/onfit/repo/backend/.venv/bin/pip install -r /srv/onfit/repo/backend/requirements.txt
-sudo mkdir -p /etc/onfit
-sudo install -o root -g onfit -m 0640 /dev/null /etc/onfit/backend.env
-sudoedit /etc/onfit/backend.env
+sudo install -o root -g root -m 0600 /dev/null /srv/onfit/.env
+sudoedit /srv/onfit/.env
 ```
 
-`/etc/onfit-backend.env`에 필요한 값만 입력하세요. 최소한 `APP_ENV=production`, `SECRET_KEY`(32바이트 이상의 임의 값), `DATABASE_URL` 또는 `TIDB_HOST`, `TIDB_PORT`, `TIDB_USERNAME`, `TIDB_PASSWORD`, `TIDB_DATABASE`, 그리고 `FRONTEND_ORIGINS=https://실제도메인`이 필요합니다. URL 방식과 `TIDB_*` 방식은 하나만 설정합니다. 메일 인증을 사용할 경우 SMTP/Brevo 값도 별도로 설정합니다. 비밀값은 Git 저장소, 프런트엔드 `VITE_*`, Docker 이미지에 넣지 마세요.
+[`deploy/ec2/.env.example`](.env.example)을 참고해 값을 설정합니다. 최소 항목은 다음과 같습니다.
 
-예시 systemd 파일은 `/etc/onfit/backend.env`를 읽습니다.
-
-```bash
-sudo mkdir -p /etc/onfit
-sudo install -o root -g onfit -m 0640 /dev/null /etc/onfit/backend.env
-sudoedit /etc/onfit/backend.env
-sudo install -o root -g root -m 0644 /srv/onfit/repo/deploy/ec2/onfit-api.service.example /etc/systemd/system/onfit-api.service
-sudo systemctl daemon-reload
-sudo systemctl enable --now onfit-api
-sudo systemctl status onfit-api
+```dotenv
+APP_ENV=production
+FRONTEND_ORIGINS=https://실제도메인
+SECRET_KEY=openssl-rand-hex-32로-생성한-64자리-값
+DATABASE_URL=
+TIDB_HOST=
+TIDB_PORT=4000
+TIDB_USERNAME=
+TIDB_PASSWORD=
+TIDB_DATABASE=
 ```
 
-## 3. 프런트엔드 빌드 및 Nginx
+`DATABASE_URL`을 쓰면 `TIDB_*` 값 대신 연결 문자열 하나를 입력하세요. URL 안의 특수문자 비밀번호는 percent-encoding해야 합니다. `.env` 값에 `$`, `#`, 공백이 포함되면 작은따옴표로 감싸세요. `SECRET_KEY`는 `openssl rand -hex 32`로 생성하고, 메일 인증이나 AI 기능을 쓸 때만 SMTP/Brevo/OpenAI 값을 추가합니다. Compose는 이 파일을 API 컨테이너에만 전달합니다. 프런트엔드 빌드 변수에는 비밀값을 넣지 않습니다.
+
+## 3. 호스트 Nginx와 TLS
+
+호스트 Nginx 예시를 설치하고 `server_name`을 실제 도메인으로 변경합니다. HTTPS는 도메인 DNS가 EC2를 가리킨 뒤 Certbot 등으로 인증서를 발급해 설정하세요.
 
 ```bash
-sudo -u onfit npm ci --prefix /srv/onfit/repo/frontend
-sudo -u onfit npm run build --prefix /srv/onfit/repo/frontend
-sudo install -o root -g root -m 0644 /srv/onfit/repo/deploy/ec2/nginx.conf.example /etc/nginx/sites-available/onfit
+sudo install -m 0644 /srv/onfit/app/deploy/ec2/nginx.conf.example /etc/nginx/sites-available/onfit
 sudoedit /etc/nginx/sites-available/onfit
 sudo ln -s /etc/nginx/sites-available/onfit /etc/nginx/sites-enabled/onfit
 sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-Nginx 예시의 `server_name`을 실제 도메인으로 바꾸세요. SSL 인증서를 발급하고 HTTPS를 설정한 다음 `FRONTEND_ORIGINS`도 HTTPS 도메인으로 맞춥니다. ONFIT 정적 파일은 `/srv/onfit/repo/frontend/dist`에서 제공합니다. `/ai-fashion/` 경로도 프런트엔드 빌드 결과에 포함되어 있어야 합니다.
+예시는 HTTP 리버스 프록시만 포함합니다. 공개 로그인 전에 TLS 서버 블록과 HTTP→HTTPS 리다이렉트를 추가하세요. `FRONTEND_ORIGINS`에는 실제 HTTPS 주소를 사용합니다.
 
-## 4. DB 및 점검
+Ubuntu에서는 `sudo apt install -y certbot python3-certbot-nginx` 후 `sudo certbot --nginx -d 실제도메인`으로 인증서를 발급하고 HTTPS 리다이렉트를 설정할 수 있습니다. 인증서 발급 후 자동 갱신 상태도 `sudo certbot renew --dry-run`으로 확인하세요.
 
-운영 DB 백업 후 `database/migrations/`의 SQL을 검토해 순서대로 적용하세요. 이 프로젝트는 애플리케이션 시작 시 운영 DB 스키마를 자동 변경하지 않습니다. DB TLS/인바운드 제한을 확인하고, 배포 후 아래 항목을 점검합니다.
+## 4. 첫 수동 배포
+
+`/srv/onfit/.env`와 Nginx 설정을 만든 다음 EC2에서 한 번 실행해 Docker 빌드와 연결을 확인합니다.
 
 ```bash
-curl -fsS http://127.0.0.1/health
-sudo journalctl -u onfit-api -n 100 --no-pager
-sudo tail -n 100 /var/log/nginx/error.log
+cd /srv/onfit/app
+sudo docker compose --env-file /srv/onfit/.env -f deploy/ec2/compose.yaml up -d --build
+sudo docker compose -f deploy/ec2/compose.yaml ps
+curl -fsS http://127.0.0.1:8080/health
 ```
 
-## 업데이트
+브라우저에서 `https://실제도메인/`과 `https://실제도메인/ai-fashion/`을 확인하세요. API 로그는 `sudo docker compose -f deploy/ec2/compose.yaml logs -f api`로 볼 수 있습니다.
 
-현재 서비스 경로는 `/srv/onfit/repo`입니다. Git에서 직접 pull하기 전에 배포 파일과 `.env`를 백업하고, 변경 사항을 검토하세요. 업데이트할 때는 새 릴리스를 별도 경로에 checkout해 프런트엔드를 다시 빌드한 뒤 서비스를 재시작하는 방식이 안전합니다. DB 변경은 애플리케이션 배포와 분리해 백업 후 적용하세요.
+운영 DB 백업 후 `database/migrations/` 변경 파일을 검토해 필요한 SQL을 순서대로 적용하세요. 애플리케이션은 시작할 때 운영 스키마를 자동 변경하지 않습니다.
+
+## 5. GitHub Actions 자동 배포 설정
+
+EC2 SSH 사용자(예: `ubuntu`)의 공개 키가 EC2의 `authorized_keys`에 있어야 합니다. 해당 사용자는 Docker 명령을 비밀번호 입력 없이 실행할 수 있어야 합니다. Ubuntu 기본 `ubuntu` 사용자는 기본적으로 `sudo -n`이 가능하며, 별도 계정을 쓰면 Docker 그룹 또는 제한된 sudo 권한을 준비하세요.
+
+저장소 **Settings → Secrets and variables → Actions → New repository secret**에서 다음 secret을 등록합니다.
+
+| Secret | 값 |
+| --- | --- |
+| `EC2_HOST` | EC2 Elastic IP 또는 DNS 이름 |
+| `EC2_USER` | SSH 사용자 이름(예: `ubuntu`) |
+| `EC2_SSH_PRIVATE_KEY` | EC2 접속용 SSH 개인 키 전체(PEM/OpenSSH 형식) |
+| `EC2_KNOWN_HOSTS` | EC2 호스트의 검증된 SSH host key 한 줄 이상 |
+
+host key를 로컬에서 수집한 뒤 EC2 콘솔/신뢰된 접속으로 지문을 확인하고 `EC2_KNOWN_HOSTS`에 저장하세요.
+
+```bash
+ssh-keyscan -t ed25519 -H EC2의_IP_또는_호스트명
+sudo ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub
+```
+
+`EC2_KNOWN_HOSTS`에는 첫 명령 출력 전체를 넣습니다. 지문이 일치하는지 확인하지 않은 키를 등록하지 마세요. 이후 `main`에 push하면 `.github/workflows/deploy-ec2.yml`이 실행되어 EC2에서 최신 `main`을 가져오고 `docker compose up -d --build`를 수행합니다. **Actions → Deploy to EC2 → Run workflow**로 수동 배포도 가능합니다.
+
+워크플로는 `/srv/onfit/app`을 `origin/main`으로 동기화합니다. 이 경로에서 서버에서 직접 수정한 파일은 다음 배포 때 덮어써집니다. 운영 환경 파일 `/srv/onfit/.env`는 저장소 바깥에 있어 유지됩니다.
+
+## 배포 후 확인
+
+```bash
+sudo docker compose -f /srv/onfit/app/deploy/ec2/compose.yaml ps
+sudo docker compose -f /srv/onfit/app/deploy/ec2/compose.yaml logs --tail=100 api web
+curl -fsS https://실제도메인/health
+```
