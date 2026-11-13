@@ -82,4 +82,4 @@ jobs:
              fi
              sudo -n nginx -t
              sudo -n systemctl reload nginx
-             curl -fsS --resolve onfit3.duckdns.org:443:127.0.0.1 https://onfit3.duckdns.org/health'
+             curl --noproxy "*" -fsS --resolve onfit3.duckdns.org:443:127.0.0.1 https://onfit3.duckdns.org/health'
