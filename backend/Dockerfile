@@ -10,7 +10,7 @@ WORKDIR /app
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        tesseract-ocr tesseract-ocr-kor tesseract-ocr-eng fonts-dejavu-core \
+        libatomic1 tesseract-ocr tesseract-ocr-kor tesseract-ocr-eng fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --create-home --uid 10001 onfit
 
