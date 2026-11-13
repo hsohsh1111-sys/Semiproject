@@ -59,9 +59,9 @@ class RecommendationError(Exception):
         self.diagnostics = diagnostics
 
 
-def _safe_image_host(url: str) -> bool:
+def _safe_image_host(url: str, allowed_hosts: frozenset[str] = frozenset({'image.msscdn.net'})) -> bool:
     parsed = urlparse(url)
-    if parsed.scheme != 'https' or parsed.hostname != 'image.msscdn.net' or parsed.port not in (None, 443):
+    if parsed.scheme != 'https' or parsed.hostname not in allowed_hosts or parsed.port not in (None, 443):
         return False
     try:
         addresses = socket.getaddrinfo(parsed.hostname, 443, type=socket.SOCK_STREAM)

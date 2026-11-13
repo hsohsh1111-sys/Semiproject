@@ -6,8 +6,8 @@ import PriceTrendChart from '../components/price/PriceTrendChart.jsx'
 import { mockProducts } from '../services/api.js'
 
 const projects = [
-  { number: '01', title: 'PERSONAL OUTFIT', korean: '취향 맞춤 코디', description: '체형, 좋아하는 색과 무드로\n오늘 나에게 가장 잘 어울리는 룩을 찾아요.', label: 'STYLE × AI', href: '#/outfits', image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1050&q=85', color: 'plum' },
-  { number: '02', title: 'SMART COMPARISON', korean: '같은 상품, 한눈에 비교', description: '브랜드와 상품 옵션을 매칭해\n판매처별 가격을 보기 쉽게 모아드려요.', label: 'CRAWL × MATCH', href: '#/compare', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1050&q=85', color: 'clay' },
+  { number: '01', title: '3D VIRTUAL FITTING', korean: '체형 맞춤 코디', description: '나만의 3D 아바타로 옷을 입어보고,\n내 체형에 어울리는 스타일을 확인하세요.', label: 'STYLE × AI', href: '#/fitting', image: '/images/3d-fitting-card.png', color: 'plum' },
+  { number: '02', title: 'AI FASHION SEARCH', korean: <>사진 속 스타일,<br />내 옷장으로</>, description: '마음에 드는 아이템을 사진에서 찾아보세요.\nAI가 비슷한 상품을 추천하고 가상 착용까지.', label: 'AI FASHION SEARCH', href: '#/ai-fashion', image: '/ai-fashion/images/AIfashion.png', color: 'clay' },
   { number: '03', title: 'SEASONAL OUTFIT', korean: '시즌 코디', description: '계절에 어울리는 스타일을 살펴보고\n마음에 드는 코디를 찾아보세요.', label: 'SEASON × CURATION', href: '#/seasonal', image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1050&q=85', color: 'olive' },
 ]
 
@@ -19,14 +19,13 @@ export default function HomePage() {
         <p className="eyebrow"><span className="eyebrow-line" />YOUR STYLE, IN YOUR OWN WAY</p>
         <h1>취향을 입고,<br /><em>나답게 빛나다.</em></h1>
         <p className="hero-description">옷장 속 작은 고민부터 새로운 발견까지.<br />ONFIT이 당신만의 스타일을 세심하게 큐레이션합니다.</p>
-        <div className="hero-ctas"><a className="button button-dark" href="#/style">나의 스타일 찾기 <Icon name="ArrowRight" size={17} /></a><a className="text-link" href="#projects">ONFIT 둘러보기 <Icon name="ArrowDownRight" size={16} /></a></div>
         <div className="hero-caption"><span>01</span><i /> PERSONAL STYLE, CONSIDERED</div>
       </div>
       <div className="hero-visual">
         <img src="https://images.unsplash.com/photo-1635360433659-3d56acc9fbb6?auto=format&fit=crop&w=1400&q=90" alt="도시적인 레드 룩을 입은 패션 모델" fetchPriority="high" />
         <div className="hero-photo-overlay" />
         <div className="hero-edition"><span>ONFIT</span><span>NO. 01 / 2026</span></div>
-        <div className="hero-note"><span className="note-star">✳</span><small>CURATED FOR YOU</small><strong>Own your<br />everyday.</strong><a href="#/style">DISCOVER <Icon name="ArrowRight" size={12} /></a></div>
+        <div className="hero-note"><span className="note-star">✳</span><small>CURATED FOR YOU</small><strong>Own your<br />everyday.</strong></div>
         <button className={`hero-stamp${stampSpinning ? ' is-spinning' : ''}`} type="button" aria-label={`Find your fit ${stampSpinning ? '회전 멈추기' : '회전 시작하기'}`} aria-pressed={stampSpinning} onClick={() => setStampSpinning((spinning) => !spinning)}><span>FIND</span><strong>YOUR<br />FIT</strong><i>✦</i></button>
       </div>
       <div className="hero-index"><span>01</span><i /><span>03</span></div>
@@ -36,7 +35,7 @@ export default function HomePage() {
 
     <section className="intro-section section-wrap">
       <div className="section-kicker"><span>THE ONFIT EDIT</span><i /></div>
-      <div className="intro-content"><h2>유행보다 먼저,<br /><em>당신의 감각을</em> 알아보는 곳.</h2><div className="intro-side"><p>좋아하는 무드와 매일의 생활을 읽어<br className="desktop-break" /> 옷과 신발, 액세서리까지 나에게 어울리는 선택으로 연결합니다.</p><a className="text-link" href="#/style">나의 취향 진단하기 <Icon name="ArrowRight" size={15} /></a></div></div>
+      <div className="intro-content"><h2>유행보다 먼저,<br /><em>당신의 감각을</em> 알아보는 곳.</h2><div className="intro-side"><p>좋아하는 무드와 매일의 생활을 읽어<br className="desktop-break" /> 옷과 신발, 액세서리까지 나에게 어울리는 선택으로 연결합니다.</p></div></div>
       <div className="intro-stats"><div><strong>01</strong><span>나를 알아가는 스타일 프로필</span></div><div><strong>02</strong><span>매일 입고 싶은 코디 큐레이션</span></div><div><strong>03</strong><span>가격까지 살펴보는 스마트 쇼핑</span></div></div>
     </section>
 
@@ -60,6 +59,6 @@ export default function HomePage() {
       <div className="price-feature-art"><div className="price-card"><div className="price-card-top"><span>WINTER PRICE WATCH · SAMPLE</span><span className="price-dot"><i /> DEMO INSIGHT</span></div><div className="price-item"><div className="price-mini-image"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=85" alt="겨울 코디를 입은 모델" loading="lazy" /></div><div><span>ONFIT SELECT · OUTERWEAR</span><strong>Soft Wool Coat</strong><small>겨울 아우터 가격 흐름 예시</small></div></div><PriceTrendChart demo /><div className="price-card-bottom"><div><span>샘플 최저가</span><strong>₩178,000</strong></div><div className="deal-pill">시연용 <b>예시 데이터</b></div><Icon name="ArrowUpRight" size={18} /></div></div><div className="price-orbit">PRICE<br /><b>JOURNAL</b><span>✳</span></div></div>
     </section>
 
-    <section className="closing-cta"><div className="closing-ornament">O</div><p className="eyebrow">YOUR NEXT FAVORITE LOOK IS HERE</p><h2>오늘의 나에게<br /><em>가장 잘 어울리는 핏.</em></h2><a className="button button-cream" href="#/style">나의 스타일 시작하기 <Icon name="ArrowRight" size={16} /></a><span className="closing-note">FIND YOUR OWN FIT · ONFIT</span></section>
+    <section className="closing-cta"><div className="closing-ornament">O</div><p className="eyebrow">YOUR NEXT FAVORITE LOOK IS HERE</p><h2>오늘의 나에게<br /><em>가장 잘 어울리는 핏.</em></h2><span className="closing-note">FIND YOUR OWN FIT · ONFIT</span></section>
   </main>
 }

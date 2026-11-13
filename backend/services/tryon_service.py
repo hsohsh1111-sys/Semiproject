@@ -32,6 +32,7 @@ LOWER_FAMILIES = {'pants', 'shorts', 'skirt'}
 ACCESSORY_REGIONS = {'bag', 'hat', 'glasses', 'watch', 'belt', 'accessory'}
 MAX_PRODUCT_BYTES = 5 * 1024 * 1024
 MAX_RESULT_BYTES = 12 * 1024 * 1024
+TRYON_IMAGE_HOSTS = frozenset({'image.msscdn.net', 'cdn.shopify.com'})
 _pending: dict[str, Future] = {}
 _lock = Lock()
 
@@ -141,13 +142,13 @@ def _product_image(url: str) -> bytes:
         return cached
     try:
         parsed = urlparse(url)
-        allowed_url = (parsed.scheme == 'https' and parsed.hostname == 'image.msscdn.net'
+        allowed_url = (parsed.scheme == 'https' and parsed.hostname in TRYON_IMAGE_HOSTS
                        and parsed.port in (None, 443))
     except ValueError:
         allowed_url = False
     if not allowed_url:
         raise TryOnError('허용되지 않은 상품 이미지 주소입니다.', 422)
-    if not _safe_image_host(url):
+    if not _safe_image_host(url, allowed_hosts=TRYON_IMAGE_HOSTS):
         raise TryOnError('상품 이미지 서버의 공개 IP를 확인할 수 없습니다.', 502)
     try:
         with httpx.stream('GET', url, timeout=10.0, follow_redirects=False) as response:
