@@ -46,16 +46,10 @@ jobs:
             "$EC2_USER@$EC2_HOST" \
             'set -eu
              sudo -n install -d -o "$USER" -g "$USER" -m 0750 /srv/onfit
-             sudo -n install -o root -g root -m 0600 /dev/null /srv/onfit/.env
-             sudo -n tee /srv/onfit/.env >/dev/null
-             sudo -n chmod 0600 /srv/onfit/.env'
-
-          ssh -i "$HOME/.ssh/onfit_ec2" \
-            -o BatchMode=yes \
-            -o StrictHostKeyChecking=yes \
-            "$EC2_USER@$EC2_HOST" \
-            'set -eu
-             test -s /srv/onfit/.env
+             sudo -n install -o root -g root -m 0600 /dev/null /tmp/onfit.env
+             trap "sudo -n rm -f /tmp/onfit.env" EXIT
+             sudo -n tee /tmp/onfit.env >/dev/null
+             sudo -n chmod 0600 /tmp/onfit.env
              if [ ! -d /srv/onfit/app/.git ]; then
                git clone --branch main https://github.com/hsohsh1111-sys/Semiproject.git /srv/onfit/app
              fi
@@ -69,8 +63,8 @@ jobs:
              sudo -n ln -sfn /etc/nginx/sites-available/onfit /etc/nginx/sites-enabled/onfit
              sudo -n nginx -t
              sudo -n systemctl reload nginx
-             sudo -n docker compose --env-file /srv/onfit/.env -f deploy/ec2/compose.yaml up -d --build --remove-orphans
-             sudo -n docker compose --env-file /srv/onfit/.env -f deploy/ec2/compose.yaml ps
+             sudo -n docker compose --env-file /tmp/onfit.env -f deploy/ec2/compose.yaml up -d --build --remove-orphans
+             sudo -n docker compose --env-file /tmp/onfit.env -f deploy/ec2/compose.yaml ps
              curl -fsS http://127.0.0.1:8080/health
              if [ ! -s /etc/letsencrypt/live/onfit3.duckdns.org/fullchain.pem ]; then
                sudo -n apt-get update

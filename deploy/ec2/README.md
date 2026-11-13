@@ -42,19 +42,12 @@ git clone --branch main https://github.com/hsohsh1111-sys/Semiproject.git /srv/o
 
 ## 2. 운영 환경 변수
 
-EC2에만 비밀 환경 파일을 만듭니다. 저장소 안이나 GitHub Actions 로그에 실제 값을 기록하지 마세요.
-
-```bash
-sudo install -o root -g root -m 0600 /dev/null /srv/onfit/.env
-sudoedit /srv/onfit/.env
-```
-
-[`deploy/ec2/.env.example`](.env.example)을 참고해 값을 설정합니다. 최소 항목은 다음과 같습니다.
+운영 값을 GitHub `production` Environment의 `EC2_ENV_FILE` secret에 dotenv 형식으로 저장합니다. [`deploy/ec2/.env.example`](.env.example)을 참고해 `APP_ENV`, 실제 도메인, DB 접속 정보, 새 `SECRET_KEY`를 설정하세요. `DATABASE_URL` 또는 모든 `TIDB_*` 값을 지정해야 합니다.
 
 ```dotenv
 APP_ENV=production
-FRONTEND_ORIGINS=https://실제도메인
-SECRET_KEY=openssl-rand-hex-32로-생성한-64자리-값
+FRONTEND_ORIGINS=https://onfit3.duckdns.org
+SECRET_KEY=
 DATABASE_URL=
 TIDB_HOST=
 TIDB_PORT=4000
@@ -63,7 +56,7 @@ TIDB_PASSWORD=
 TIDB_DATABASE=
 ```
 
-`DATABASE_URL`을 쓰면 `TIDB_*` 값 대신 연결 문자열 하나를 입력하세요. URL 안의 특수문자 비밀번호는 percent-encoding해야 합니다. `.env` 값에 `$`, `#`, 공백이 포함되면 작은따옴표로 감싸세요. `SECRET_KEY`는 `openssl rand -hex 32`로 생성하고, 메일 인증이나 AI 기능을 쓸 때만 SMTP/Brevo/OpenAI 값을 추가합니다. Compose는 이 파일을 API 컨테이너에만 전달합니다. 프런트엔드 빌드 변수에는 비밀값을 넣지 않습니다.
+`DATABASE_URL`을 쓰면 `TIDB_*` 값 대신 연결 문자열 하나를 입력하세요. URL 안의 특수문자 비밀번호는 percent-encoding해야 합니다. `.env` 값에 `$`, `#`, 공백이 포함되면 작은따옴표로 감싸세요. `SECRET_KEY`는 `openssl rand -hex 32`로 생성하고, 메일 인증이나 AI 기능을 쓸 때만 SMTP/Brevo/OpenAI 값을 추가합니다. `EC2_ENV_FILE`은 배포 중 임시 파일로 전달된 뒤 삭제되고, 앱 비밀값은 API 컨테이너 실행 환경에만 전달됩니다. GitHub Actions 로그나 프런트엔드 `VITE_*` 변수에는 비밀값을 넣지 마세요.
 
 ## 3. 호스트 Nginx와 TLS
 
@@ -81,12 +74,13 @@ sudo systemctl reload nginx
 
 ## 4. 첫 수동 배포
 
-`/srv/onfit/.env`와 Nginx 설정을 만든 다음 EC2에서 한 번 실행해 Docker 빌드와 연결을 확인합니다.
+GitHub Environment secrets를 등록한 뒤 workflow를 실행하면 환경 파일 전달, Compose 빌드, 시작이 자동으로 진행됩니다. 수동 배포가 필요하면 `EC2_ENV_FILE` 내용을 `/tmp/onfit.env`에 임시로 만들어 사용하고, 배포 후 삭제하세요.
 
 ```bash
 cd /srv/onfit/app
-sudo docker compose --env-file /srv/onfit/.env -f deploy/ec2/compose.yaml up -d --build
-sudo docker compose -f deploy/ec2/compose.yaml ps
+sudo docker compose --env-file /tmp/onfit.env -f deploy/ec2/compose.yaml up -d --build
+sudo docker compose --env-file /tmp/onfit.env -f deploy/ec2/compose.yaml ps
+sudo rm -f /tmp/onfit.env
 curl -fsS http://127.0.0.1:8080/health
 ```
 
@@ -115,9 +109,9 @@ ssh-keyscan -t ed25519 -H EC2의_IP_또는_호스트명
 sudo ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub
 ```
 
-`EC2_KNOWN_HOSTS`에는 첫 명령 출력 전체를 넣습니다. 지문이 일치하는지 확인하지 않은 키를 등록하지 마세요. 이후 `main`에 push하면 `.github/workflows/deploy-ec2.yml`이 `EC2_ENV_FILE`을 비밀 출력 없이 EC2의 `/srv/onfit/.env`에 기록하고, 최신 `main`을 가져와 Compose를 빌드·재기동합니다. 첫 배포에는 Nginx 사이트 설정과 TLS 인증서도 적용합니다. **Actions → Deploy to EC2 → Run workflow**로 수동 배포도 가능합니다.
+`EC2_KNOWN_HOSTS`에는 첫 명령 출력 전체를 넣습니다. 지문이 일치하는지 확인하지 않은 키를 등록하지 마세요. 이후 `main`에 push하면 `.github/workflows/deploy-ec2.yml`이 `EC2_ENV_FILE`을 비밀 출력 없이 임시로 전달해 최신 `main`을 Compose로 빌드·재기동하고 임시 파일을 삭제합니다. 앱이 실행되는 동안 값은 API 컨테이너 환경에 존재합니다. 첫 배포에는 Nginx 사이트 설정과 TLS 인증서도 적용합니다. **Actions → Deploy to EC2 → Run workflow**로 수동 배포도 가능합니다.
 
-워크플로는 `/srv/onfit/app`을 `origin/main`으로 동기화합니다. 이 경로에서 서버에서 직접 수정한 파일은 다음 배포 때 덮어써집니다. 운영 환경 파일 `/srv/onfit/.env`는 저장소 바깥에 있어 유지됩니다.
+워크플로는 `/srv/onfit/app`을 `origin/main`으로 동기화합니다. 이 경로에서 서버에서 직접 수정한 파일은 다음 배포 때 덮어써집니다. 영구적인 `.env` 파일은 EC2에 남기지 않습니다.
 
 ## 배포 후 확인
 

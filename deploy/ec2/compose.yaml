@@ -4,7 +4,7 @@ services:
       context: ../../backend
       dockerfile: Dockerfile
     env_file:
-      - ${ONFIT_ENV_FILE:-/srv/onfit/.env}
+      - ${ONFIT_ENV_FILE:-/tmp/onfit.env}
     environment:
       APP_ENV: production
     command:
