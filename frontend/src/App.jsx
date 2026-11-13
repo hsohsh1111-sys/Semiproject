@@ -13,15 +13,20 @@ import PriceTimingPage from './pages/PriceTimingPage.jsx'
 import PriceComparePage from './pages/PriceComparePage.jsx'
 import SeasonalOutfitPage from './pages/SeasonalOutfitPage.jsx'
 import AdminPage from './pages/AdminPage.jsx'
+import MyPage from './pages/MyPage.jsx'
+import { notifyAuthenticationChanged } from './services/auth.js'
 const FittingPage = lazy(() => import('./pages/FittingPage.jsx'))
+const AiFashionPage = lazy(() => import('./features/ai-fashion/Page.jsx'))
 
 function readRoute() {
   const value = window.location.hash.replace(/^#/, '')
-  return value.startsWith('/') ? value : '/home'
+  if (value.startsWith('/')) return value
+  return window.location.pathname.replace(/\/+$/, '') === '/ai-fashion' ? '/ai-fashion' : '/home'
 }
 
 const pages = {
   '/fitting': FittingPage,
+  '/ai-fashion': AiFashionPage,
   '/home': HomePage,
   '/style': StyleProfilePage,
   '/outfits': OutfitPage,
@@ -30,23 +35,55 @@ const pages = {
   '/compare': PriceComparePage,
   '/seasonal': SeasonalOutfitPage,
   '/admin': AdminPage,
+  '/admin-demo': AdminPage,
+  '/mypage': MyPage,
 }
 
 export default function App() {
   const [route, setRoute] = useState(readRoute)
+  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia('(min-width: 769px)').matches)
+  const [hasPcAiFashion, setHasPcAiFashion] = useState(() =>
+    window.matchMedia('(min-width: 769px)').matches && readRoute() === '/ai-fashion')
   const [authMode, setAuthMode] = useState(null)
+  const [demoActive, setDemoActive] = useState(false)
   const [session, setSession] = useState(null)
   const [restoring, setRestoring] = useState(true)
   const [restoreError, setRestoreError] = useState('')
   const [restoreAttempt, setRestoreAttempt] = useState(0)
   const restoreController = useRef(null)
   const authRevision = useRef(0)
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 769px)')
+    const update = () => setIsDesktop(query.matches)
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
+  useEffect(() => {
+    if (!isDesktop) setHasPcAiFashion(false)
+    else if (route === '/ai-fashion') setHasPcAiFashion(true)
+  }, [isDesktop, route])
+  useEffect(() => {
+    const handlePcAiFashionLink = (event) => {
+      if (!window.matchMedia('(min-width: 769px)').matches || event.defaultPrevented || event.button !== 0 ||
+          event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+      const link = event.composedPath().find((node) => node instanceof HTMLAnchorElement)
+      if (!link || (link.target && link.target !== '_self')) return
+      const href = link.getAttribute('href')
+      if (href === '/ai-fashion/' || (href === '/#/home' && readRoute() === '/ai-fashion')) {
+        event.preventDefault()
+        window.location.hash = href === '/ai-fashion/' ? '/ai-fashion' : '/home'
+      }
+    }
+    document.addEventListener('click', handlePcAiFashionLink, true)
+    return () => document.removeEventListener('click', handlePcAiFashionLink, true)
+  }, [])
   function updateSession(next) {
     const saved = saveLoginSession(next)
     if (session?.user?.id && session.user.id !== next?.user?.id) clearFittingMeasurements(session.user.id)
     authRevision.current += 1
     restoreController.current?.abort()
     setSession(saved); setRestoring(false); setRestoreError('')
+    notifyAuthenticationChanged()
   }
   useEffect(() => {
     const controller = new AbortController()
@@ -72,6 +109,9 @@ export default function App() {
   }, [session])
   useEffect(() => {
     const handleRoute = () => {
+      if (window.location.pathname.replace(/\/+$/, '') === '/ai-fashion' && window.location.hash) {
+        window.history.replaceState(window.history.state, '', `/${window.location.hash}`)
+      }
       setRoute(readRoute())
       if (window.location.hash === '#projects') requestAnimationFrame(() => document.getElementById('projects')?.scrollIntoView())
       else window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -79,16 +119,29 @@ export default function App() {
     window.addEventListener('hashchange', handleRoute)
     return () => window.removeEventListener('hashchange', handleRoute)
   }, [])
-  const Page = pages[route] || HomePage
+  useEffect(() => {
+    if (route === '/admin-demo' && !demoActive) window.location.hash = '#/'
+  }, [route, demoActive])
+  const Page = route === '/admin-demo' && !demoActive ? HomePage : pages[route] || HomePage
+  const showAiFashion = route === '/ai-fashion'
+  const retainPcAiFashion = showAiFashion || (isDesktop && hasPcAiFashion)
+  const adminDemo = route === '/admin-demo' && demoActive
+  const adminDenied = route === '/admin' && (session?.auth_type !== 'admin' || session?.user?.is_admin !== true)
   if (restoring) return <main className="inner-page"><p role="status">로그인 상태 확인 중…</p></main>
   return <div className="app-shell min-h-screen bg-canvas text-ink">
-    <Header onAuth={setAuthMode} session={session} onLogout={() => updateSession(null)} />
+    <Header onAuth={setAuthMode} session={session} demoActive={demoActive} onLogout={() => {
+      if (demoActive) { setDemoActive(false); window.location.hash = '#/' }
+      else updateSession(null)
+    }} />
     {restoreError && <div role="status">{restoreError} <button type="button" onClick={() => setRestoreAttempt(value => value + 1)}>다시 확인</button></div>}
     <Suspense fallback={<p role="status">화면을 불러오는 중입니다.</p>}>
-      <Page session={session} onSessionChange={updateSession} onRequestLogin={() => setAuthMode('login')} />
+      {!showAiFashion && (adminDenied ? <main className="inner-page"><section className="section-wrap"><h1>관리자 전용 화면입니다</h1><p>{session ? '이 계정에는 관리자 권한이 없습니다.' : '관리자 계정으로 로그인해 주세요.'}</p>{!session && <button className="button button-dark" onClick={() => setAuthMode('login')}>관리자 로그인</button>} <a href="#/home">홈으로</a></section></main> : <Page session={route === '/admin' || session?.auth_type !== 'admin' ? session : null} demo={adminDemo} onDemoExit={() => setDemoActive(false)} onSessionChange={updateSession} onRequestLogin={() => setAuthMode('login')} />)}
+      {retainPcAiFashion && <div hidden={!showAiFashion}><AiFashionPage active={showAiFashion} /></div>}
     </Suspense>
     <Footer />
     <ScrollToTopButton />
-    <AuthModal mode={authMode} onClose={(nextMode) => setAuthMode(nextMode || null)} onAuthenticated={updateSession} />
+    <AuthModal key={authMode || 'closed'} mode={authMode} onClose={(nextMode) => setAuthMode(nextMode || null)}
+      onAuthenticated={(result) => { setDemoActive(false); updateSession(result) }}
+      onDemo={() => { setDemoActive(true); window.location.hash = '#/admin-demo' }} />
   </div>
 }

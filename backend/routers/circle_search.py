@@ -1,6 +1,7 @@
 import io
 import json
 import math
+import re
 import warnings
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
@@ -10,12 +11,23 @@ from starlette.concurrency import run_in_threadpool
 from services.vision_service import VisionError, analyze
 from services.recommendation_service import RecommendationError, recommend
 from services.tryon_service import TryOnError, generate_tryon
+from services.memory_diagnostics import log_image
 
 router = APIRouter(prefix="/api/circle-search", tags=["circle-search"])
 MAX_FILE_BYTES = 10 * 1024 * 1024
 MAX_IMAGE_SIDE = 8000
 MAX_POLYGON_POINTS = 2048
 ALLOWED_FORMATS = {"JPEG": "image/jpeg", "PNG": "image/png", "WEBP": "image/webp"}
+
+
+def valid_tryon_product_id(product_id: object, source: object) -> bool:
+    if not isinstance(product_id, str):
+        return False
+    if source is None:
+        return product_id.isdecimal() and len(product_id) <= 20
+    if source == 'seasonal':
+        return re.fullmatch(r'seasonal:[\w:/. -]{1,240}', product_id) is not None
+    return False
 
 
 def fail(message: str) -> None:
@@ -112,6 +124,7 @@ async def segment(
     if not (1 <= width <= MAX_IMAGE_SIDE and 1 <= height <= MAX_IMAGE_SIDE):
         fail("width와 height는 1~8000 px 범위여야 합니다.")
     image_bytes, actual_size = await read_image(image)
+    log_image('segment_upload', len(image_bytes), actual_size)
     if actual_size != (width, height):
         fail("전달한 이미지 크기와 실제 이미지 크기가 다릅니다.")
     checked_point, checked_box, checked_polygon = validate_selection(
@@ -158,7 +171,8 @@ async def recommend_products(crop: UploadFile = File(...), analysis: str = Form(
     if (len(keywords) != 4 or any(not isinstance(word, str) or
                                   not (1 <= len(word.strip()) <= 100) for word in keywords)):
         fail('analysis: 핵심·대체 2개·광범위 검색어가 필요합니다.')
-    crop_bytes, _ = await read_image(crop)
+    crop_bytes, crop_size = await read_image(crop)
+    log_image('recommend_crop_upload', len(crop_bytes), crop_size)
     try:
         return await run_in_threadpool(recommend, crop_bytes, selected, keywords)
     except RecommendationError as exc:
@@ -178,10 +192,10 @@ async def try_on(image: UploadFile = File(...), product: str = Form(...),
         fail('상품 및 분석 정보는 올바른 JSON 객체여야 합니다.')
     product_id, name, image_url = (item.get('product_id'), item.get('product_name'),
                                    item.get('image_url'))
-    if (not isinstance(product_id, str) or not product_id.isdecimal() or len(product_id) > 20 or
+    if (not valid_tryon_product_id(product_id, item.get('source')) or
             not isinstance(name, str) or not (1 <= len(name.strip()) <= 200) or
             not isinstance(image_url, str) or not (1 <= len(image_url) <= 2048)):
-        fail('유효한 무신사 상품 ID, 상품명, 이미지 주소가 필요합니다.')
+        fail('유효한 상품 ID, 상품명, 이미지 주소가 필요합니다.')
     brand = item.get('brand')
     if brand is not None and (not isinstance(brand, str) or len(brand) > 100):
         fail('브랜드 정보가 올바르지 않습니다.')
@@ -199,6 +213,7 @@ async def try_on(image: UploadFile = File(...), product: str = Form(...),
             (category is not None and (not isinstance(category, str) or len(category) > 100))):
         fail('기존 상품 분석 정보가 올바르지 않습니다.')
     person_bytes, (width, height) = await read_image(image)
+    log_image('tryon_upload', len(person_bytes), (width, height))
     if box is not None:
         if (not isinstance(box, list) or len(box) != 4 or
                 any(type(value) not in (int, float) or not math.isfinite(value) for value in box)):

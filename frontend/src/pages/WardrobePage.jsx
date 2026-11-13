@@ -3,6 +3,7 @@ import Icon from '../components/common/Icon.jsx'
 import ProductCard from '../components/common/ProductCard.jsx'
 import WardrobeSummary from '../components/wardrobe/WardrobeSummary.jsx'
 import { mockProducts } from '../services/api.js'
+import { AUTH_CHANGE_EVENT, getAccessToken } from '../services/auth.js'
 import { getSeasonalFavorites, removeSeasonalFavorite } from '../services/seasonalFavorites.js'
 export default function WardrobePage() {
   const [active, setActive] = useState('전체')
@@ -10,16 +11,30 @@ export default function WardrobePage() {
   const [favoriteError, setFavoriteError] = useState('')
   const filters = ['전체', '상의', '가방', '신발', '액세서리']
   useEffect(() => {
-    try {
-      setFavoriteItems(getSeasonalFavorites())
-    } catch (error) {
-      setFavoriteError(error instanceof Error ? error.message : '찜한 코디를 불러오지 못했습니다.')
+    let active = true
+    const loadFavorites = async () => {
+      if (getAccessToken()) setFavoriteItems([])
+      try {
+        const loadedFavorites = await getSeasonalFavorites()
+        if (active) {
+          setFavoriteItems(loadedFavorites)
+          setFavoriteError('')
+        }
+      } catch (error) {
+        if (active) setFavoriteError(error instanceof Error ? error.message : '찜한 코디를 불러오지 못했습니다.')
+      }
+    }
+    loadFavorites()
+    window.addEventListener(AUTH_CHANGE_EVENT, loadFavorites)
+    return () => {
+      active = false
+      window.removeEventListener(AUTH_CHANGE_EVENT, loadFavorites)
     }
   }, [])
 
-  const handleRemoveFavorite = (id) => {
+  const handleRemoveFavorite = async (id) => {
     try {
-      setFavoriteItems(removeSeasonalFavorite(id))
+      setFavoriteItems(await removeSeasonalFavorite(id))
       setFavoriteError('')
     } catch (error) {
       setFavoriteError(error instanceof Error ? error.message : '찜한 코디를 삭제하지 못했습니다.')
@@ -40,13 +55,13 @@ export default function WardrobePage() {
               <article className="wardrobe-seasonal-card" key={favorite.id}>
                 <div className="wardrobe-seasonal-image">
                   <img src={favorite.imageUrl} alt={favorite.title} loading="lazy" />
-                  <span>{favorite.season} · {favorite.type}</span>
+                  <span>{favorite.source === 'ai-fashion' ? 'AI 패션 검색 · 추천 상품' : `${favorite.season} · ${favorite.type}`}</span>
                   <button type="button" className="seasonal-favorite-button is-saved" aria-label={`${favorite.title} 찜 취소`} onClick={() => handleRemoveFavorite(favorite.id)}>
                     <Icon name="Heart" size={17} />
                   </button>
                 </div>
                 <div className="wardrobe-seasonal-copy">
-                  <p>{favorite.lookTitle} <i /> {favorite.age} · {favorite.gender}</p>
+                  <p>{favorite.source === 'ai-fashion' ? 'AI 패션 검색' : <>{favorite.lookTitle} <i /> {favorite.age} · {favorite.gender}</>}</p>
                   <h3>{favorite.title}</h3>
                   <p>{favorite.vendor}</p>
                   {Number.isFinite(favorite.price) && <strong>{new Intl.NumberFormat('ko-KR', { style: 'currency', currency: favorite.currencyCode || 'KRW', maximumFractionDigits: 0 }).format(favorite.price)}</strong>}

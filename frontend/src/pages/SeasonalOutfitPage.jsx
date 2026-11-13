@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Icon from '../components/common/Icon.jsx'
 import { getMockProducts } from '../services/api.js'
+import { AUTH_CHANGE_EVENT, getAccessToken } from '../services/auth.js'
 import { getSeasonalFavoriteId, getSeasonalFavorites, toggleSeasonalFavorite } from '../services/seasonalFavorites.js'
 
 const ageGroups = ['전체', '10대', '20대', '30대', '40대', '50대', '60대']
@@ -200,6 +201,7 @@ export default function SeasonalOutfitPage() {
   const [productCatalog, setProductCatalog] = useState({})
   const [favorites, setFavorites] = useState([])
   const [favoriteError, setFavoriteError] = useState('')
+  const [savingFavoriteIds, setSavingFavoriteIds] = useState(() => new Set())
   const productAssignments = useMemo(() => getProductAssignments(productCatalog), [productCatalog])
   const season = '겨울'
   const seasonInfo = seasonDetails[season]
@@ -213,19 +215,41 @@ export default function SeasonalOutfitPage() {
       .filter((section) => section.looks.length > 0)
     : []
   useEffect(() => {
-    try {
-      setFavorites(getSeasonalFavorites())
-    } catch (error) {
-      setFavoriteError(error instanceof Error ? error.message : '찜 목록을 불러오지 못했습니다.')
+    let active = true
+    const loadFavorites = async () => {
+      if (getAccessToken()) setFavorites([])
+      try {
+        const loadedFavorites = await getSeasonalFavorites()
+        if (active) {
+          setFavorites(loadedFavorites)
+          setFavoriteError('')
+        }
+      } catch (error) {
+        if (active) setFavoriteError(error instanceof Error ? error.message : '찜 목록을 불러오지 못했습니다.')
+      }
+    }
+    loadFavorites()
+    window.addEventListener(AUTH_CHANGE_EVENT, loadFavorites)
+    return () => {
+      active = false
+      window.removeEventListener(AUTH_CHANGE_EVENT, loadFavorites)
     }
   }, [])
 
-  const handleFavorite = (look, slot, product) => {
+  const handleFavorite = async (look, slot, product, isSaved) => {
+    const favoriteId = getSeasonalFavoriteId(look, product, slot.type)
+    setSavingFavoriteIds((current) => new Set(current).add(favoriteId))
     try {
-      setFavorites(toggleSeasonalFavorite(look, season, slot.type, product))
+      setFavorites(await toggleSeasonalFavorite(look, season, slot.type, product, isSaved))
       setFavoriteError('')
     } catch (error) {
       setFavoriteError(error instanceof Error ? error.message : '찜 목록을 저장하지 못했습니다.')
+    } finally {
+      setSavingFavoriteIds((current) => {
+        const next = new Set(current)
+        next.delete(favoriteId)
+        return next
+      })
     }
   }
 
@@ -276,7 +300,8 @@ export default function SeasonalOutfitPage() {
                     className={`seasonal-favorite-button${isFavorite ? ' is-saved' : ''}`}
                     aria-label={isFavorite ? `${product.title} 찜 취소` : `${product.title} 찜하기`}
                     aria-pressed={Boolean(isFavorite)}
-                    onClick={() => handleFavorite(look, slot, product)}
+                    disabled={savingFavoriteIds.has(getSeasonalFavoriteId(look, product, slot.type))}
+                    onClick={() => handleFavorite(look, slot, product, Boolean(isFavorite))}
                   >
                     <Icon name="Heart" size={17} />
                   </button>

@@ -18,6 +18,7 @@ from openai import APIConnectionError, APIStatusError, APITimeoutError, OpenAI
 from PIL import Image, ImageOps, UnidentifiedImageError
 
 from services.musinsa_service import product_family
+from services.memory_diagnostics import log_image
 from services.recommendation_service import _safe_image_host, cache_catalog_image, cached_catalog_image
 from services.tryon_prompt import build_tryon_prompt
 
@@ -31,6 +32,7 @@ LOWER_FAMILIES = {'pants', 'shorts', 'skirt'}
 ACCESSORY_REGIONS = {'bag', 'hat', 'glasses', 'watch', 'belt', 'accessory'}
 MAX_PRODUCT_BYTES = 5 * 1024 * 1024
 MAX_RESULT_BYTES = 12 * 1024 * 1024
+TRYON_IMAGE_HOSTS = frozenset({'image.msscdn.net', 'cdn.shopify.com'})
 _pending: dict[str, Future] = {}
 _lock = Lock()
 
@@ -109,9 +111,10 @@ def _selected_region(selected: dict) -> str | None:
     return region
 
 
-def _jpeg(data: bytes, max_side: int, quality: int) -> bytes:
+def _jpeg(data: bytes, max_side: int, quality: int, diagnostic_stage=None) -> bytes:
     try:
         with Image.open(io.BytesIO(data)) as source:
+            source_size = source.size
             if source.format not in ('JPEG', 'PNG', 'WEBP') or max(source.size) > 8000:
                 raise ValueError('unsupported image')
             source.load()
@@ -124,7 +127,10 @@ def _jpeg(data: bytes, max_side: int, quality: int) -> bytes:
             image.thumbnail((max_side, max_side), Image.Resampling.LANCZOS)
             output = io.BytesIO()
             image.save(output, format='JPEG', quality=quality, optimize=True)
-            return output.getvalue()
+            prepared = output.getvalue()
+            if diagnostic_stage:
+                log_image(diagnostic_stage, len(data), source_size, len(prepared), image.size)
+            return prepared
     except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError) as exc:
         raise TryOnError('가상 착용 입력 이미지를 처리할 수 없습니다.', 422) from exc
 
@@ -136,13 +142,13 @@ def _product_image(url: str) -> bytes:
         return cached
     try:
         parsed = urlparse(url)
-        allowed_url = (parsed.scheme == 'https' and parsed.hostname == 'image.msscdn.net'
+        allowed_url = (parsed.scheme == 'https' and parsed.hostname in TRYON_IMAGE_HOSTS
                        and parsed.port in (None, 443))
     except ValueError:
         allowed_url = False
     if not allowed_url:
         raise TryOnError('허용되지 않은 상품 이미지 주소입니다.', 422)
-    if not _safe_image_host(url):
+    if not _safe_image_host(url, allowed_hosts=TRYON_IMAGE_HOSTS):
         raise TryOnError('상품 이미지 서버의 공개 IP를 확인할 수 없습니다.', 502)
     try:
         with httpx.stream('GET', url, timeout=10.0, follow_redirects=False) as response:
@@ -205,7 +211,7 @@ def _generate(person_bytes: bytes, product: dict, selected: dict,
         raise TryOnError('backend/.env에 OPENAI_API_KEY를 설정하세요.', 503)
     model, quality, size = _settings(width, height)
     catalog_bytes = _product_image(product['image_url'])
-    person_input = _jpeg(person_bytes, 1536, 88)
+    person_input = _jpeg(person_bytes, 1536, 88, diagnostic_stage='tryon_person_prepared')
     catalog_input = _jpeg(catalog_bytes, 1024, 90)
     prompt = build_tryon_prompt(product['product_name'], product.get('brand'),
                                 selected['product_type'], selected.get('description') or '',

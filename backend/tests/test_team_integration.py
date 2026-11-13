@@ -3,12 +3,23 @@ import json
 from PIL import Image
 from fastapi.testclient import TestClient
 from app.main import app
-from tests.test_auth import client, signup
+from tests.test_auth import client, signup, login
 
-def test_public_members_adapter_uses_canonical_user_name_and_masks_data(client):
+def test_public_members_adapter_uses_canonical_user_name_and_masks_data(client, monkeypatch):
+    from app.core.config import settings
     c, engine = client
     assert signup(c).status_code == 201
-    response = c.get('/api/auth/public-members')
+    assert c.get('/api/auth/public-members').status_code == 401
+    token = login(c).json()['access_token']
+    headers = {'Authorization': 'Bearer ' + token}
+    assert c.get('/api/auth/public-members', headers=headers).status_code == 403
+    from app.core.security import password_hasher
+    from app.features.auth import admin_auth
+    monkeypatch.setattr(settings, 'admin_username', 'test-admin')
+    monkeypatch.setattr(settings, 'admin_password_hash', password_hasher.hash('test-only-admin-password'))
+    admin_auth._attempts.clear()
+    result=c.post('/api/auth/admin/login',json={'username':'test-admin','password':'test-only-admin-password'})
+    response = c.get('/api/auth/public-members', headers={'Authorization':'Bearer '+result.json()['access_token']})
     assert response.status_code == 200
     data = response.json()
     assert data['total_count'] == data['visible_count'] == 1

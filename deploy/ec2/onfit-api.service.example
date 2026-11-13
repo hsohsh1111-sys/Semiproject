@@ -1,4 +1,4 @@
-# Example only. Requires an existing onfit user and /srv/onfit checkout.
+# Example only. Requires an existing onfit user and /srv/onfit/repo checkout.
 # Install dependencies in the Linux venv before enabling this service.
 [Unit]
 Description=ONFIT FastAPI
@@ -9,10 +9,10 @@ After=network-online.target
 Type=simple
 User=onfit
 Group=onfit
-WorkingDirectory=/srv/onfit/backend
+WorkingDirectory=/srv/onfit/repo/backend
 EnvironmentFile=/etc/onfit/backend.env
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/srv/onfit/backend/.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips=127.0.0.1
+ExecStart=/srv/onfit/repo/backend/.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips=127.0.0.1
 Restart=on-failure
 RestartSec=5
 
