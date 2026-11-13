@@ -42,7 +42,7 @@ git clone --branch main https://github.com/hsohsh1111-sys/Semiproject.git /srv/o
 
 ## 2. 운영 환경 변수
 
-운영 값을 GitHub `production` Environment의 `EC2_ENV_FILE` secret에 dotenv 형식으로 저장합니다. [`deploy/ec2/.env.example`](.env.example)을 참고해 `APP_ENV`, 실제 도메인, DB 접속 정보, 새 `SECRET_KEY`를 설정하세요. `DATABASE_URL` 또는 모든 `TIDB_*` 값을 지정해야 합니다.
+운영 값을 GitHub Repository secret `EC2_ENV_FILE`에 dotenv 형식으로 저장합니다. [`deploy/ec2/.env.example`](.env.example)을 참고해 `APP_ENV`, 실제 도메인, DB 접속 정보, 새 `SECRET_KEY`를 설정하세요. `DATABASE_URL` 또는 모든 `TIDB_*` 값을 지정해야 합니다.
 
 ```dotenv
 APP_ENV=production
@@ -74,7 +74,7 @@ sudo systemctl reload nginx
 
 ## 4. 첫 수동 배포
 
-GitHub Environment secrets를 등록한 뒤 workflow를 실행하면 환경 파일 전달, Compose 빌드, 시작이 자동으로 진행됩니다. 수동 배포가 필요하면 `EC2_ENV_FILE` 내용을 `/tmp/onfit.env`에 임시로 만들어 사용하고, 배포 후 삭제하세요.
+GitHub Repository secrets를 등록한 뒤 workflow를 실행하면 환경 파일 전달, Compose 빌드, 시작이 자동으로 진행됩니다. 수동 배포가 필요하면 `EC2_ENV_FILE` 내용을 `/tmp/onfit.env`에 임시로 만들어 사용하고, 배포 후 삭제하세요.
 
 ```bash
 cd /srv/onfit/app
@@ -92,24 +92,16 @@ curl -fsS http://127.0.0.1:8080/health
 
 EC2 SSH 사용자(예: `ubuntu`)의 공개 키가 EC2의 `authorized_keys`에 있어야 합니다. 해당 사용자는 Docker 명령을 비밀번호 입력 없이 실행할 수 있어야 합니다. Ubuntu 기본 `ubuntu` 사용자는 기본적으로 `sudo -n`이 가능하며, 별도 계정을 쓰면 Docker 그룹 또는 제한된 sudo 권한을 준비하세요.
 
-저장소 **Settings → Environments → production**을 만들고, 해당 Environment의 **Environment secrets**에 다음 값을 등록합니다. Workflow job은 `production` Environment를 참조합니다.
+저장소 **Settings → Secrets and variables → Actions → Repository secrets**에 다음 값을 등록합니다.
 
 | Secret | 값 |
 | --- | --- |
 | `EC2_HOST` | EC2 Elastic IP 또는 DNS 이름 |
 | `EC2_USER` | SSH 사용자 이름(예: `ubuntu`) |
-| `EC2_SSH_PRIVATE_KEY` | EC2 접속용 SSH 개인 키 전체(PEM/OpenSSH 형식) |
-| `EC2_KNOWN_HOSTS` | EC2 호스트의 검증된 SSH host key 한 줄 이상 |
+| `EC2_SSH_KEY` | EC2 접속용 SSH 개인 키 전체(PEM/OpenSSH 형식) |
 | `EC2_ENV_FILE` | 운영 환경 변수 전체를 담은 dotenv 텍스트. `.env` 예시를 기반으로 하며 새 키를 사용 |
 
-host key를 로컬에서 수집한 뒤 EC2 콘솔/신뢰된 접속으로 지문을 확인하고 `EC2_KNOWN_HOSTS`에 저장하세요.
-
-```bash
-ssh-keyscan -t ed25519 -H EC2의_IP_또는_호스트명
-sudo ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub
-```
-
-`EC2_KNOWN_HOSTS`에는 첫 명령 출력 전체를 넣습니다. 지문이 일치하는지 확인하지 않은 키를 등록하지 마세요. 이후 `main`에 push하면 `.github/workflows/deploy-ec2.yml`이 `EC2_ENV_FILE`을 비밀 출력 없이 임시로 전달해 최신 `main`을 Compose로 빌드·재기동하고 임시 파일을 삭제합니다. 앱이 실행되는 동안 값은 API 컨테이너 환경에 존재합니다. 첫 배포에는 Nginx 사이트 설정과 TLS 인증서도 적용합니다. **Actions → Deploy to EC2 → Run workflow**로 수동 배포도 가능합니다.
+워크플로는 `EC2_HOST`에 대해 `ssh-keyscan`을 실행해 SSH host key 확인 파일을 만들고 strict host checking을 적용합니다. 이후 `main`에 push하면 `.github/workflows/deploy-ec2.yml`이 `EC2_ENV_FILE`을 비밀 출력 없이 임시로 전달해 최신 `main`을 Compose로 빌드·재기동하고 임시 파일을 삭제합니다. 앱이 실행되는 동안 값은 API 컨테이너 환경에 존재합니다. 첫 배포에는 Nginx 사이트 설정과 TLS 인증서도 적용합니다. **Actions → Deploy to EC2 → Run workflow**로 수동 배포도 가능합니다.
 
 워크플로는 `/srv/onfit/app`을 `origin/main`으로 동기화합니다. 이 경로에서 서버에서 직접 수정한 파일은 다음 배포 때 덮어써집니다. 영구적인 `.env` 파일은 EC2에 남기지 않습니다.
 
