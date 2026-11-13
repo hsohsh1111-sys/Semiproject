@@ -176,13 +176,13 @@ export function getAiFashionFavoriteId(product) {
   return `ai-fashion:musinsa:${product.product_id}`
 }
 
-export function toggleAiFashionFavorite(product) {
-  const favorites = getSeasonalFavorites()
+export async function toggleAiFashionFavorite(product) {
+  const favorites = await getSeasonalFavorites()
   const id = getAiFashionFavoriteId(product)
   if (favorites.some((favorite) => favorite.id === id)) {
-    return saveFavorites(favorites.filter((favorite) => favorite.id !== id))
+    return removeSeasonalFavorite(id)
   }
-  return saveFavorites([...favorites, {
+  const favorite = {
     id,
     source: 'ai-fashion',
     productId: String(product.product_id),
@@ -195,7 +195,14 @@ export function toggleAiFashionFavorite(product) {
     type: '추천 상품',
     lookTitle: 'AI 패션 검색',
     season: 'AI 패션 검색',
-  }])
+  }
+  if (getAccessToken()) {
+    await favoriteRequest('/outfits/favorites', { method: 'POST', body: JSON.stringify(favorite) })
+    const updated = await getSeasonalFavorites()
+    notifyFavoritesChanged(updated)
+    return updated
+  }
+  return saveLocalFavorites([...favorites, favorite])
 }
 
 export function favoriteToTryOnProduct(favorite) {

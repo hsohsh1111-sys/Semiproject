@@ -11,7 +11,7 @@ const nav = [
   ['스타일 추천', '#/outfits'], ['시즌 코디', '#/seasonal'], ['나의 옷장', '#/wardrobe'], ['가격 인사이트', '#/price'],
 ]
 
-export default function Header({ onAuth, session, onLogout }) {
+export default function Header({ onAuth, session, demoActive = false, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [favoriteCount, setFavoriteCount] = useState(0)
   useEffect(() => {
@@ -54,10 +54,10 @@ export default function Header({ onAuth, session, onLogout }) {
           <a href="#projects">ONFIT 큐레이션</a>
         </nav>
         <div className="header-actions">
-          <FeatureSearch isAdmin={session?.auth_type === 'admin' && session.user?.is_admin === true} />
+          <FeatureSearch isAdmin={!demoActive && session?.auth_type === 'admin' && session.user?.is_admin === true} />
           <a className="icon-button bag-action" aria-label={`나의 옷장, 찜한 아이템 ${favoriteCount}개`} href="#/wardrobe"><Icon name="ShoppingBag" /><b>{favoriteCount}</b></a>
           <span className="header-divider" />
-          {session ? <><span className="header-member" title={session.user?.name}>{session.user?.name || '회원'}님</span>{session.auth_type === 'admin' && session.user?.is_admin === true ? <a className="text-action" href="#/admin">관리자</a> : <a className="text-action" href="#/mypage">마이페이지</a>}<button className="text-action" onClick={onLogout}>로그아웃</button></> : <>
+          {demoActive ? <><span className="header-member">관리자님</span><a className="text-action" href="#/admin-demo">관리자 페이지</a><button className="text-action" onClick={onLogout}>로그아웃</button></> : session ? <><span className="header-member" title={session.user?.name}>{session.user?.name || '회원'}님</span>{session.auth_type === 'admin' && session.user?.is_admin === true ? <a className="text-action" href="#/admin">관리자</a> : <a className="text-action" href="#/mypage">마이페이지</a>}<button className="text-action" onClick={onLogout}>로그아웃</button></> : <>
             <button className="text-action" onClick={() => onAuth('login')}>로그인</button>
             <button className="signup-button" onClick={() => onAuth('signup')}>회원가입 <Icon name="ArrowUpRight" size={14} /></button>
           </>}

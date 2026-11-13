@@ -229,12 +229,6 @@ img {
   line-height:1.9;
   margin:0
 }
-.hero-ctas {
-  display:flex;
-  align-items:center;
-  gap:28px;
-  margin-top:35px
-}
 .ai-fashion-cta {
   margin-top:12px
 }
@@ -338,6 +332,7 @@ img {
   display:flex;
   flex-direction:column;
   align-items:flex-start;
+  justify-content:center;
   box-shadow:0 12px 28px #25151c2b
 }
 .note-star {
@@ -356,14 +351,6 @@ img {
   line-height:1.14;
   font-weight:500;
   margin-top:10px
-}
-.hero-note a {
-  font-size:7px;
-  letter-spacing:.16em;
-  display:flex;
-  align-items:center;
-  gap:7px;
-  margin-top:auto
 }
 .hero-stamp {
   position:absolute;
@@ -497,7 +484,7 @@ img {
   font-size:12px;
   line-height:1.85;
   color:#756d69;
-  margin:0 0 21px
+  margin:0
 }
 .intro-stats {
   display:grid;
@@ -1018,7 +1005,7 @@ img {
   font-size:13px
 }
 .closing-cta {
-  min-height:390px;
+  min-height:330px;
   background:#decfc0;
   position:relative;
   text-align:center;
@@ -1058,7 +1045,7 @@ img {
 }
 .closing-cta h2 {
   font-size:43px;
-  margin:17px auto 24px
+  margin:17px auto 0
 }
 .closing-note {
   position:absolute;
@@ -2229,10 +2216,6 @@ img {
   .hero-description {
     font-size:11px
   }
-  .hero-ctas {
-    margin-top:25px;
-    gap:16px
-  }
   .button {
     height:44px;
     padding:0 14px;
@@ -2417,7 +2400,7 @@ img {
     font-size:9px
   }
   .closing-cta {
-    min-height:350px;
+    min-height:300px;
     padding-top:65px
   }
   .closing-cta h2 {

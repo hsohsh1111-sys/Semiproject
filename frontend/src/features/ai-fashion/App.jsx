@@ -151,18 +151,25 @@ export default function App({ active = true }) {
 
   useEffect(() => {
     if (isMobile) return undefined
-    const update = (event) => {
+    let activeEffect = true
+    let requestId = 0
+    const update = async (event) => {
+      const currentRequest = ++requestId
       try {
-        setSavedItems(Array.isArray(event?.detail) ? event.detail : getSeasonalFavorites())
+        const favorites = Array.isArray(event?.detail) ? event.detail : await getSeasonalFavorites()
+        if (!activeEffect || currentRequest !== requestId) return
+        if (!Array.isArray(favorites)) throw new Error('찜 목록 형식이 올바르지 않습니다.')
+        setSavedItems(favorites)
         setFavoritesError('')
       } catch (caught) {
-        setFavoritesError(caught.message)
+        if (activeEffect && currentRequest === requestId) setFavoritesError(caught.message)
       }
     }
     update()
     window.addEventListener(FAVORITES_CHANGE_EVENT, update)
     window.addEventListener('storage', update)
     return () => {
+      activeEffect = false
       window.removeEventListener(FAVORITES_CHANGE_EVENT, update)
       window.removeEventListener('storage', update)
     }
@@ -423,18 +430,18 @@ export default function App({ active = true }) {
     }
   }
 
-  function changeFavorite(product) {
+  async function changeFavorite(product) {
     try {
-      toggleAiFashionFavorite(product)
+      await toggleAiFashionFavorite(product)
       setFavoritesError('')
     } catch (caught) {
       setFavoritesError(caught.message)
     }
   }
 
-  function removeSavedFavorite(id) {
+  async function removeSavedFavorite(id) {
     try {
-      removeSeasonalFavorite(id)
+      await removeSeasonalFavorite(id)
       setFavoritesError('')
     } catch (caught) {
       setFavoritesError(caught.message)

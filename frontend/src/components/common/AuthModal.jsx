@@ -4,7 +4,7 @@ import { authenticateAccount } from '../../services/auth.js'
 import './AuthModal.css'
 import SignupTerms, { requiredTermsAccepted } from './SignupTerms.jsx'
 
-export default function AuthModal({ mode, onClose, onAuthenticated }) {
+export default function AuthModal({ mode, onClose, onAuthenticated, onDemo }) {
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
   const [email, setEmail] = useState('')
@@ -40,7 +40,8 @@ export default function AuthModal({ mode, onClose, onAuthenticated }) {
       onAuthenticated?.(result)
       setNotice(`${result.user.name}님, ${signup ? '회원가입이 완료되었습니다.' : '로그인되었습니다.'}`)
       onClose()
-      if (result.auth_type === 'admin') window.location.hash = '#/admin'
+      if (signup) window.location.hash = '#/'
+      else if (result.auth_type === 'admin') window.location.hash = '#/admin'
     } catch (error) {
       setNotice(error instanceof TypeError ? '서버에 연결할 수 없습니다. FastAPI 실행 상태를 확인해 주세요.' : error.message)
     } finally {
@@ -66,6 +67,10 @@ export default function AuthModal({ mode, onClose, onAuthenticated }) {
         </form>}
         {notice && <p className="auth-notice" role="status">{notice}</p>}
         <p className="auth-switch">{signup ? '이미 계정이 있나요?' : '아직 회원이 아니신가요?'} <button disabled={busy} onClick={() => { setNotice(''); onClose(signup ? 'login' : 'signup') }}>{signup ? '로그인' : '회원가입'}</button></p>
+        <div className="auth-demo">
+          <button type="button" className="auth-demo-button" disabled={busy} onClick={() => { onClose(); onDemo?.() }}>관리자 데모 체험하기</button>
+          <p>회원가입 없이 관리자 화면과 주요 기능을 둘러보세요.</p>
+        </div>
       </section>
     </div>
   )

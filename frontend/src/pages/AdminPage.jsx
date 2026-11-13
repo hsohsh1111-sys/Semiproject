@@ -10,24 +10,31 @@ function formatDate(value, compact = false) {
   return new Intl.DateTimeFormat('ko-KR', options).format(new Date(value))
 }
 
-export default function AdminPage({ session }) {
+export default function AdminPage({ session, demo = false, onDemoExit }) {
   const [memberData, setMemberData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [refreshKey, setRefreshKey] = useState(0)
+  const [loadedForDemo, setLoadedForDemo] = useState(null)
 
   useEffect(() => {
     const controller = new AbortController()
     async function loadMembers() {
+      setLoadedForDemo(demo)
+      setMemberData(null)
       setLoading(true)
       setError('')
       try {
-        const response = await fetch(`${API_BASE}/auth/public-members`, { signal: controller.signal, headers: {Authorization: `Bearer ${session.access_token}`} })
+        const response = await fetch(`${API_BASE}/auth/${demo ? 'demo-members' : 'public-members'}`, {
+          signal: controller.signal,
+          ...(demo ? { cache: 'no-store' } : {}),
+          ...(demo ? {} : { headers: { Authorization: `Bearer ${session.access_token}` } }),
+        })
         const result = await response.json()
         if (!response.ok) throw new Error(result.detail || '가입 정보를 불러오지 못했습니다.')
-        setMemberData(result)
+        if (!controller.signal.aborted) setMemberData(result)
       } catch (requestError) {
-        if (requestError.name !== 'AbortError') {
+        if (!controller.signal.aborted && requestError.name !== 'AbortError') {
           setError('가입 정보를 가져오지 못했습니다. 백엔드 배포 상태를 확인해 주세요.')
         }
       } finally {
@@ -36,72 +43,85 @@ export default function AdminPage({ session }) {
     }
     loadMembers()
     return () => controller.abort()
-  }, [refreshKey, session.access_token])
+  }, [refreshKey, session?.access_token, demo])
 
-  const members = memberData?.members ?? []
+  const displayedData = loadedForDemo === demo ? memberData : null
+  const displayedError = loadedForDemo === demo ? error : ''
+  const displayedLoading = loadedForDemo !== demo || loading || (!displayedData && !displayedError)
+  const members = displayedData?.members ?? []
   const latestSignup = members[0]?.created_at
 
   return (
     <main className="inner-page admin-page">
       <section className="admin-hero">
         <div className="section-wrap">
-          <span className="eyebrow">ONFIT · ADMIN</span>
-          <h1>가입 현황을 한눈에</h1>
-          <p>서비스 가입 통계와 최근 가입 내역을 확인할 수 있습니다.</p>
+          <span className="eyebrow">ONFIT · ADMIN{demo ? ' DEMO' : ''}</span>
+          <h1>{demo ? '관리자 데모 대시보드' : '가입 현황을 한눈에'}</h1>
+          <p>{demo ? 'TiDB에 저장된 실제 가입 데이터를 마스킹하여 표시합니다.' : '서비스 가입 통계와 최근 가입 내역을 확인할 수 있습니다.'}</p>
+          {demo && <a className="admin-refresh" href="#/home" onClick={onDemoExit}>데모 종료</a>}
         </div>
       </section>
 
       <section className="section-wrap admin-dashboard">
         <div className="admin-public-note">
-          <strong>관리자 전용</strong>
-          <span>권한이 있는 계정만 접근할 수 있습니다. 닉네임과 연락처는 일부만 표시합니다.</span>
+          <strong>{demo ? '데모 모드' : '관리자 전용'}</strong>
+          <span>{demo ? '이름·아이디·이메일·연락처는 일부만 표시합니다.' : '권한이 있는 계정만 접근할 수 있습니다. 닉네임과 연락처는 일부만 표시합니다.'}</span>
         </div>
 
         <div className="admin-stat-grid">
           <article className="admin-stat-card">
             <span>전체 가입자</span>
-            <strong>{loading ? '—' : (memberData?.total_count ?? 0).toLocaleString('ko-KR')}</strong>
+            <strong>{displayedLoading || displayedError ? '—' : (displayedData?.total_count ?? 0).toLocaleString('ko-KR')}</strong>
           </article>
           <article className="admin-stat-card">
             <span>화면에 표시된 가입자</span>
-            <strong>{loading ? '—' : (memberData?.visible_count ?? 0).toLocaleString('ko-KR')}</strong>
+            <strong>{displayedLoading || displayedError ? '—' : (displayedData?.visible_count ?? 0).toLocaleString('ko-KR')}</strong>
           </article>
           <article className="admin-stat-card">
             <span>최근 가입일</span>
-            <strong>{loading ? '—' : formatDate(latestSignup, true)}</strong>
+            <strong>{displayedLoading || displayedError ? '—' : demo ? (latestSignup?.slice(5) || '—') : formatDate(latestSignup, true)}</strong>
           </article>
         </div>
 
         <div className="admin-table-heading">
           <div>
-            <span className="eyebrow">MEMBER DATA · LATEST 100</span>
+            <span className="eyebrow">{demo ? 'DEMO MEMBER DATA' : 'MEMBER DATA · LATEST 100'}</span>
             <h2>최근 가입 정보</h2>
           </div>
-          <button className="admin-refresh" type="button" onClick={() => setRefreshKey((value) => value + 1)} disabled={loading}>
-            <Icon name="RefreshCw" size={14} /> 새로고침
+          <button className="admin-refresh" type="button" onClick={() => setRefreshKey((value) => value + 1)} disabled={displayedLoading}>
+            <Icon name="RefreshCw" size={14} /> {demo ? '데이터 새로고침' : '새로고침'}
           </button>
         </div>
 
         <div className="admin-table-wrap">
-          {loading ? (
+          {displayedLoading ? (
             <p className="admin-state" role="status">가입 정보를 불러오는 중입니다…</p>
-          ) : error ? (
-            <p className="admin-state admin-state-error" role="alert">{error}</p>
+          ) : displayedError ? (
+            <p className="admin-state admin-state-error" role="alert">{displayedError}</p>
           ) : members.length === 0 ? (
             <p className="admin-state">아직 가입한 회원이 없습니다.</p>
           ) : (
             <table className="admin-member-table">
               <thead>
-                <tr><th>회원</th><th>닉네임 (마스킹)</th><th>연락처 (마스킹)</th><th>이벤트 문자</th><th>가입일</th></tr>
+                {demo ? <tr><th>회원</th><th>이름</th><th>아이디</th><th>이메일</th><th>연락처</th><th>가입일</th></tr>
+                  : <tr><th>회원</th><th>닉네임 (마스킹)</th><th>연락처 (마스킹)</th><th>이벤트 문자</th><th>가입일</th></tr>}
               </thead>
               <tbody>
                 {members.map((member) => (
-                  <tr key={member.id}>
+                  <tr key={demo ? member.member_label : member.id}>
                     <td>{member.member_label}</td>
-                    <td>{member.masked_name}</td>
-                    <td>{member.masked_phone || member.masked_email || '미등록'}</td>
-                    <td>{member.sms_marketing_consent ? '수신 동의' : '미동의'}</td>
-                    <td>{formatDate(member.created_at)}</td>
+                    {demo ? <>
+                      <td>{member.masked_name}</td>
+                      <td>{member.masked_username || '미등록'}</td>
+                      <td>{member.masked_email || '미등록'}</td>
+                      <td>{member.masked_phone || '미등록'}</td>
+                      <td>{member.created_at}</td>
+                    </> : <>
+                      <td>{member.masked_name}</td>
+                      <td>{member.masked_phone || member.masked_email || '미등록'}</td>
+                      <td>{member.sms_marketing_consent ? '수신 동의' : '미동의'}</td>
+                      <td>{formatDate(member.created_at)}</td>
+                    </>}
                   </tr>
                 ))}
               </tbody>
